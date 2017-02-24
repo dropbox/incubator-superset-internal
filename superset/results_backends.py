@@ -35,13 +35,14 @@ class S3Cache(BaseCache):
     https://aws.amazon.com/blogs/aws/amazon-s3-object-expiration/.
     """
 
-    def __init__(self, default_timeout=300):
+    def __init__(
+            self, s3_bucket, key_prefix, default_timeout=300):
         self.default_timeout = default_timeout
 
         self.s3_client = boto3.client('s3')
 
-        self.bucket = config.get('S3_CACHE_BUCKET')
-        self.key_prefix = config.get('S3_CACHE_KEY_PREFIX')
+        self.bucket = s3_bucket
+        self.key_prefix = key_prefix
 
     def get(self, key):
         """Look up key in the cache and return the value for it.
