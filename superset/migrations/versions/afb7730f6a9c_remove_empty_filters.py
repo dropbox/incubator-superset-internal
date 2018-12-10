@@ -41,7 +41,8 @@ def upgrade():
                 # Remove empty in/not-in filters.
                 if value:
                     params[key] = [
-                        x for x in value
+                        x
+                        for x in value
                         if not (x['op'] in ('in', 'not in') and not x['val'])
                     ]
 

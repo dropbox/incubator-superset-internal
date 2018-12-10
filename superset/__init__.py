@@ -17,7 +17,10 @@ from superset import config
 from superset.connectors.connector_registry import ConnectorRegistry
 from superset.security import SupersetSecurityManager
 from superset.utils.core import (
-    get_update_perms_flag, pessimistic_connection_handling, setup_cache)
+    get_update_perms_flag,
+    pessimistic_connection_handling,
+    setup_cache,
+)
 
 APP_DIR = os.path.dirname(__file__)
 CONFIG_MODULE = os.environ.get('SUPERSET_CONFIG', 'superset.config')
@@ -131,11 +134,13 @@ if app.config.get('ENABLE_TIME_ROTATE'):
         app.config.get('FILENAME'),
         when=app.config.get('ROLLOVER'),
         interval=app.config.get('INTERVAL'),
-        backupCount=app.config.get('BACKUP_COUNT'))
+        backupCount=app.config.get('BACKUP_COUNT'),
+    )
     logging.getLogger().addHandler(handler)
 
 if app.config.get('ENABLE_CORS'):
     from flask_cors import CORS
+
     CORS(app, **app.config.get('CORS_OPTIONS'))
 
 if app.config.get('ENABLE_PROXY_FIX'):
@@ -177,7 +182,8 @@ if not issubclass(custom_sm, SupersetSecurityManager):
     raise Exception(
         """Your CUSTOM_SECURITY_MANAGER must now extend SupersetSecurityManager,
          not FAB's security manager.
-         See [4565] in UPDATING.md""")
+         See [4565] in UPDATING.md"""
+    )
 
 appbuilder = AppBuilder(
     app,

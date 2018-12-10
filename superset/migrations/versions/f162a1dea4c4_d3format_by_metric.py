@@ -15,8 +15,12 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('metrics', sa.Column('d3format', sa.String(length=128), nullable=True))
-    op.add_column('sql_metrics', sa.Column('d3format', sa.String(length=128), nullable=True))
+    op.add_column(
+        'metrics', sa.Column('d3format', sa.String(length=128), nullable=True)
+    )
+    op.add_column(
+        'sql_metrics', sa.Column('d3format', sa.String(length=128), nullable=True)
+    )
 
 
 def downgrade():

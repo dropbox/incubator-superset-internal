@@ -27,11 +27,11 @@ def upgrade():
         sa.Column('description', sa.Text(), nullable=True),
         sa.Column('changed_by_fk', sa.Integer(), nullable=True),
         sa.Column('created_by_fk', sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id'], ),
-        sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id'], ),
-        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id'], ),
-        sa.ForeignKeyConstraint(['db_id'], ['dbs.id'], ),
-        sa.PrimaryKeyConstraint('id')
+        sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id']),
+        sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id']),
+        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id']),
+        sa.ForeignKeyConstraint(['db_id'], ['dbs.id']),
+        sa.PrimaryKeyConstraint('id'),
     )
 
 

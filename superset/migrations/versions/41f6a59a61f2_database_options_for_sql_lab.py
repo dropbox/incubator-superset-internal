@@ -15,11 +15,10 @@ down_revision = '3c3ffe173e4f'
 
 def upgrade():
     op.add_column('dbs', sa.Column('allow_ctas', sa.Boolean(), nullable=True))
+    op.add_column('dbs', sa.Column('expose_in_sqllab', sa.Boolean(), nullable=True))
     op.add_column(
-        'dbs', sa.Column('expose_in_sqllab', sa.Boolean(), nullable=True))
-    op.add_column(
-        'dbs',
-        sa.Column('force_ctas_schema', sa.String(length=250), nullable=True))
+        'dbs', sa.Column('force_ctas_schema', sa.String(length=250), nullable=True)
+    )
 
 
 def downgrade():

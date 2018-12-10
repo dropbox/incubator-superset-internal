@@ -16,40 +16,50 @@ from sqlalchemy.ext.declarative import declarative_base
 from flask_appbuilder.models.mixins import AuditMixin
 from sqlalchemy.orm import relationship
 from flask_appbuilder import Model
-from sqlalchemy import (
-    Column, Integer, ForeignKey, Table)
+from sqlalchemy import Column, Integer, ForeignKey, Table
 
 Base = declarative_base()
 
+
 class User(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'ab_user'
     id = Column(Integer, primary_key=True)
 
-slice_user = Table('slice_user', Base.metadata,
+
+slice_user = Table(
+    'slice_user',
+    Base.metadata,
     Column('id', Integer, primary_key=True),
     Column('user_id', Integer, ForeignKey('ab_user.id')),
-    Column('slice_id', Integer, ForeignKey('slices.id'))
+    Column('slice_id', Integer, ForeignKey('slices.id')),
 )
 
 dashboard_user = Table(
-    'dashboard_user', Base.metadata,
+    'dashboard_user',
+    Base.metadata,
     Column('id', Integer, primary_key=True),
     Column('user_id', Integer, ForeignKey('ab_user.id')),
-    Column('dashboard_id', Integer, ForeignKey('dashboards.id'))
+    Column('dashboard_id', Integer, ForeignKey('dashboards.id')),
 )
+
 
 class Slice(Base, AuditMixin):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'slices'
     id = Column(Integer, primary_key=True)
     owners = relationship("User", secondary=slice_user)
 
+
 class Dashboard(Base, AuditMixin):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'dashboards'
     id = Column(Integer, primary_key=True)
     owners = relationship("User", secondary=dashboard_user)
+
 
 def upgrade():
     bind = op.get_bind()

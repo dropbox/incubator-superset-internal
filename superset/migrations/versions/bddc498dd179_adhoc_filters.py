@@ -21,7 +21,9 @@ from sqlalchemy import Column, Integer, Text
 
 from superset import db
 from superset.utils.core import (
-    convert_legacy_filters_into_adhoc, split_adhoc_filters_into_base_filters)
+    convert_legacy_filters_into_adhoc,
+    split_adhoc_filters_into_base_filters,
+)
 
 
 Base = declarative_base()

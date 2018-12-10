@@ -24,6 +24,7 @@ Base = declarative_base()
 
 class Dashboard(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'dashboards'
     id = sa.Column(sa.Integer, primary_key=True)
     dashboard_title = sa.Column(sa.String(500))
@@ -32,8 +33,7 @@ class Dashboard(Base):
 
 def is_v2_dash(positions):
     return (
-        isinstance(positions, dict) and
-        positions.get('DASHBOARD_VERSION_KEY') == 'v2'
+        isinstance(positions, dict) and positions.get('DASHBOARD_VERSION_KEY') == 'v2'
     )
 
 
@@ -48,14 +48,18 @@ def upgrade():
         if is_v2_dash(position_json):
             # re-dump the json data and remove leading and trailing white spaces
             text = json.dumps(
-                position_json, indent=None, separators=(',', ':'), sort_keys=True)
+                position_json, indent=None, separators=(',', ':'), sort_keys=True
+            )
             # remove DASHBOARD_ and _TYPE prefix/suffix in all the component ids
             text = re.sub(r'DASHBOARD_(?!VERSION)', '', text)
             text = text.replace('_TYPE', '')
 
             dashboard.position_json = text
-            print('dash id:{} position_json size from {} to {}'.format(
-                dashboard.id, len(original_text), len(text)))
+            print(
+                'dash id:{} position_json size from {} to {}'.format(
+                    dashboard.id, len(original_text), len(text)
+                )
+            )
             session.merge(dashboard)
             session.commit()
 

@@ -8,7 +8,7 @@ Create Date: 2016-09-22 11:31:50.543820
 from alembic import op
 from superset import db
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import (Column, Integer, Boolean)
+from sqlalchemy import Column, Integer, Boolean
 
 # revision identifiers, used by Alembic.
 revision = 'eca4694defa7'

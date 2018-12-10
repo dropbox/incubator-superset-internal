@@ -112,6 +112,7 @@ class BaseTemplateProcessor(object):
     and are given access to the ``models.Database`` object and schema
     name. For globally available methods use ``@classmethod``.
     """
+
     engine = None
 
     def __init__(self, database=None, query=None, table=None, **kwargs):
@@ -153,6 +154,7 @@ class PrestoTemplateProcessor(BaseTemplateProcessor):
     The methods described here are namespaced under ``presto`` in the
     jinja context as in ``SELECT '{{ presto.some_macro_call() }}'``
     """
+
     engine = 'presto'
 
     @staticmethod
@@ -164,15 +166,14 @@ class PrestoTemplateProcessor(BaseTemplateProcessor):
     def latest_partition(self, table_name):
         table_name, schema = self._schema_table(table_name, self.schema)
         return self.database.db_engine_spec.latest_partition(
-            table_name, schema, self.database)[1]
+            table_name, schema, self.database
+        )[1]
 
     def latest_sub_partition(self, table_name, **kwargs):
         table_name, schema = self._schema_table(table_name, self.schema)
         return self.database.db_engine_spec.latest_sub_partition(
-            table_name=table_name,
-            schema=schema,
-            database=self.database,
-            **kwargs)
+            table_name=table_name, schema=schema, database=self.database, **kwargs
+        )
 
 
 class HiveTemplateProcessor(PrestoTemplateProcessor):

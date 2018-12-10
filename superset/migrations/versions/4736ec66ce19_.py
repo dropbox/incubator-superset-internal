@@ -42,8 +42,7 @@ def upgrade():
     # Add the new less restrictive uniqueness constraint.
     with op.batch_alter_table('datasources', naming_convention=conv) as batch_op:
         batch_op.create_unique_constraint(
-            'uq_datasources_cluster_name',
-            ['cluster_name', 'datasource_name'],
+            'uq_datasources_cluster_name', ['cluster_name', 'datasource_name']
         )
 
     # Augment the tables which have a foreign key constraint related to the
@@ -73,11 +72,9 @@ def upgrade():
         # Migrate the existing data.
         for datasource in bind.execute(datasources.select()):
             bind.execute(
-                table.update().where(
-                    table.c.datasource_name == datasource.datasource_name,
-                ).values(
-                    datasource_id=datasource.id,
-                ),
+                table.update()
+                .where(table.c.datasource_name == datasource.datasource_name)
+                .values(datasource_id=datasource.id)
             )
 
         with op.batch_alter_table(foreign, naming_convention=conv) as batch_op:
@@ -86,10 +83,7 @@ def upgrade():
             # due to prior revisions (1226819ee0e3, 3b626e2a6783) there may
             # incorectly be multiple duplicate constraints.
             names = generic_find_fk_constraint_names(
-                foreign,
-                {'datasource_name'},
-                'datasources',
-                insp,
+                foreign, {'datasource_name'}, 'datasources', insp
             )
 
             for name in names:
@@ -105,10 +99,9 @@ def upgrade():
         with op.batch_alter_table('datasources', naming_convention=conv) as batch_op:
             batch_op.drop_constraint(
                 generic_find_uq_constraint_name(
-                    'datasources',
-                    {'datasource_name'},
-                    insp,
-                ) or 'uq_datasources_datasource_name',
+                    'datasources', {'datasource_name'}, insp
+                )
+                or 'uq_datasources_datasource_name',
                 type_='unique',
             )
     except Exception as e:
@@ -116,7 +109,8 @@ def upgrade():
             'Constraint drop failed, you may want to do this '
             'manually on your database. For context, this is a known '
             'issue around undeterministic contraint names on Postgres '
-            'and perhaps more databases through SQLAlchemy.')
+            'and perhaps more databases through SQLAlchemy.'
+        )
         logging.exception(e)
 
 
@@ -129,8 +123,7 @@ def downgrade():
     # datasources.datasource_name column is no longer unique.
     with op.batch_alter_table('datasources', naming_convention=conv) as batch_op:
         batch_op.create_unique_constraint(
-            'uq_datasources_datasource_name',
-            ['datasource_name'],
+            'uq_datasources_datasource_name', ['datasource_name']
         )
 
     # Augment the tables which have a foreign key constraint related to the
@@ -160,19 +153,16 @@ def downgrade():
         # Migrate the existing data.
         for datasource in bind.execute(datasources.select()):
             bind.execute(
-                table.update().where(
-                    table.c.datasource_id == datasource.id,
-                ).values(
-                    datasource_name=datasource.datasource_name,
-                ),
+                table.update()
+                .where(table.c.datasource_id == datasource.id)
+                .values(datasource_name=datasource.datasource_name)
             )
 
         with op.batch_alter_table(foreign, naming_convention=conv) as batch_op:
 
             # Drop the datasource_id column and associated constraint.
             batch_op.drop_constraint(
-                'fk_{}_datasource_id_datasources'.format(foreign),
-                type_='foreignkey',
+                'fk_{}_datasource_id_datasources'.format(foreign), type_='foreignkey'
             )
 
             batch_op.drop_column('datasource_id')
@@ -183,21 +173,18 @@ def downgrade():
         # associated with the cluster_name column needs to be dropped.
         batch_op.drop_constraint(
             generic_find_fk_constraint_name(
-                'datasources',
-                {'cluster_name'},
-                'clusters',
-                insp,
-            ) or 'fk_datasources_cluster_name_clusters',
+                'datasources', {'cluster_name'}, 'clusters', insp
+            )
+            or 'fk_datasources_cluster_name_clusters',
             type_='foreignkey',
         )
 
         # Drop the old less restrictive uniqueness constraint.
         batch_op.drop_constraint(
             generic_find_uq_constraint_name(
-                'datasources',
-                {'cluster_name', 'datasource_name'},
-                insp,
-            ) or 'uq_datasources_cluster_name',
+                'datasources', {'cluster_name', 'datasource_name'}, insp
+            )
+            or 'uq_datasources_cluster_name',
             type_='unique',
         )
 

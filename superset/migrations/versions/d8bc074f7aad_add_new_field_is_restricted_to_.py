@@ -14,26 +14,32 @@ from alembic import op
 import sqlalchemy as sa
 from superset import db
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import (
-    Column, Integer, Boolean)
+from sqlalchemy import Column, Integer, Boolean
 
 Base = declarative_base()
 
+
 class DruidMetric(Base):
     """Declarative class used to do query in upgrade"""
+
     __tablename__ = 'metrics'
     id = Column(Integer, primary_key=True)
     is_restricted = Column(Boolean, default=False, nullable=True)
 
+
 class SqlMetric(Base):
     """Declarative class used to do query in upgrade"""
+
     __tablename__ = 'sql_metrics'
     id = Column(Integer, primary_key=True)
     is_restricted = Column(Boolean, default=False, nullable=True)
 
+
 def upgrade():
     op.add_column('metrics', sa.Column('is_restricted', sa.Boolean(), nullable=True))
-    op.add_column('sql_metrics', sa.Column('is_restricted', sa.Boolean(), nullable=True))
+    op.add_column(
+        'sql_metrics', sa.Column('is_restricted', sa.Boolean(), nullable=True)
+    )
 
     bind = op.get_bind()
     session = db.Session(bind=bind)

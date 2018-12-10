@@ -15,9 +15,14 @@ from superset.connectors.base.views import DatasourceModelView
 from superset.connectors.connector_registry import ConnectorRegistry
 from superset.utils import core as utils
 from superset.views.base import (
-    BaseSupersetView, DatasourceFilter, DeleteMixin,
-    get_datasource_exist_error_msg, ListWidgetWithCheckboxes, SupersetModelView,
-    validate_json, YamlExportMixin,
+    BaseSupersetView,
+    DatasourceFilter,
+    DeleteMixin,
+    get_datasource_exist_error_msg,
+    ListWidgetWithCheckboxes,
+    SupersetModelView,
+    validate_json,
+    YamlExportMixin,
 )
 from . import models
 
@@ -33,12 +38,30 @@ class DruidColumnInlineView(CompactCRUDMixin, SupersetModelView):  # noqa
     list_widget = ListWidgetWithCheckboxes
 
     edit_columns = [
-        'column_name', 'verbose_name', 'description', 'dimension_spec_json', 'datasource',
-        'groupby', 'filterable', 'count_distinct', 'sum', 'min', 'max']
+        'column_name',
+        'verbose_name',
+        'description',
+        'dimension_spec_json',
+        'datasource',
+        'groupby',
+        'filterable',
+        'count_distinct',
+        'sum',
+        'min',
+        'max',
+    ]
     add_columns = edit_columns
     list_columns = [
-        'column_name', 'verbose_name', 'type', 'groupby', 'filterable', 'count_distinct',
-        'sum', 'min', 'max']
+        'column_name',
+        'verbose_name',
+        'type',
+        'groupby',
+        'filterable',
+        'count_distinct',
+        'sum',
+        'min',
+        'max',
+    ]
     can_delete = False
     page_size = 500
     label_columns = {
@@ -57,7 +80,8 @@ class DruidColumnInlineView(CompactCRUDMixin, SupersetModelView):  # noqa
     description_columns = {
         'filterable': _(
             'Whether this column is exposed in the `Filters` section '
-            'of the explore view.'),
+            'of the explore view.'
+        ),
         'dimension_spec_json': utils.markdown(
             'this field can be used to specify  '
             'a `dimensionSpec` as documented [here]'
@@ -65,7 +89,8 @@ class DruidColumnInlineView(CompactCRUDMixin, SupersetModelView):  # noqa
             'Make sure to input valid JSON and that the '
             '`outputName` matches the `column_name` defined '
             'above.',
-            True),
+            True,
+        ),
     }
 
     def pre_update(self, col):
@@ -85,8 +110,10 @@ class DruidColumnInlineView(CompactCRUDMixin, SupersetModelView):  # noqa
             # `outputName` should be the same as the `column_name`
             if dimension_spec['outputName'] != col.column_name:
                 raise ValueError(
-                    '`outputName` [{}] unequal to `column_name` [{}]'
-                    .format(dimension_spec['outputName'], col.column_name))
+                    '`outputName` [{}] unequal to `column_name` [{}]'.format(
+                        dimension_spec['outputName'], col.column_name
+                    )
+                )
 
     def post_update(self, col):
         col.refresh_metrics()
@@ -108,23 +135,32 @@ class DruidMetricInlineView(CompactCRUDMixin, SupersetModelView):  # noqa
 
     list_columns = ['metric_name', 'verbose_name', 'metric_type']
     edit_columns = [
-        'metric_name', 'description', 'verbose_name', 'metric_type', 'json',
-        'datasource', 'd3format', 'is_restricted', 'warning_text']
+        'metric_name',
+        'description',
+        'verbose_name',
+        'metric_type',
+        'json',
+        'datasource',
+        'd3format',
+        'is_restricted',
+        'warning_text',
+    ]
     add_columns = edit_columns
     page_size = 500
-    validators_columns = {
-        'json': [validate_json],
-    }
+    validators_columns = {'json': [validate_json]}
     description_columns = {
         'metric_type': utils.markdown(
             'use `postagg` as the metric type if you are defining a '
             '[Druid Post Aggregation]'
             '(http://druid.io/docs/latest/querying/post-aggregations.html)',
-            True),
-        'is_restricted': _('Whether access to this metric is restricted '
-                           'to certain roles. Only roles with the permission '
-                           "'metric access on XXX (the name of this metric)' "
-                           'are allowed to access this metric'),
+            True,
+        ),
+        'is_restricted': _(
+            'Whether access to this metric is restricted '
+            'to certain roles. Only roles with the permission '
+            "'metric access on XXX (the name of this metric)' "
+            'are allowed to access this metric'
+        ),
     }
     label_columns = {
         'metric_name': _('Metric'),
@@ -158,8 +194,12 @@ class DruidClusterModelView(SupersetModelView, DeleteMixin, YamlExportMixin):  #
     edit_title = _('Edit Druid Cluster')
 
     add_columns = [
-        'verbose_name', 'broker_host', 'broker_port',
-        'broker_endpoint', 'cache_timeout', 'cluster_name',
+        'verbose_name',
+        'broker_host',
+        'broker_port',
+        'broker_endpoint',
+        'cache_timeout',
+        'cluster_name',
     ]
     edit_columns = add_columns
     list_columns = ['cluster_name', 'metadata_last_refreshed']
@@ -177,7 +217,8 @@ class DruidClusterModelView(SupersetModelView, DeleteMixin, YamlExportMixin):  #
         'cache_timeout': _(
             'Duration (in seconds) of the caching timeout for this cluster. '
             'A timeout of 0 indicates that the cache never expires. '
-            'Note this defaults to the global timeout if undefined.'),
+            'Note this defaults to the global timeout if undefined.'
+        )
     }
 
     def pre_add(self, cluster):
@@ -201,7 +242,9 @@ appbuilder.add_view(
 )
 
 
-class DruidDatasourceModelView(DatasourceModelView, DeleteMixin, YamlExportMixin):  # noqa
+class DruidDatasourceModelView(
+    DatasourceModelView, DeleteMixin, YamlExportMixin
+):  # noqa
     datamodel = SQLAInterface(models.DruidDatasource)
 
     list_title = _('List Druid Datasource')
@@ -209,18 +252,22 @@ class DruidDatasourceModelView(DatasourceModelView, DeleteMixin, YamlExportMixin
     add_title = _('Add Druid Datasource')
     edit_title = _('Edit Druid Datasource')
 
-    list_columns = [
-        'datasource_link', 'cluster', 'changed_by_', 'modified']
+    list_columns = ['datasource_link', 'cluster', 'changed_by_', 'modified']
     order_columns = ['datasource_link', 'modified']
     related_views = [DruidColumnInlineView, DruidMetricInlineView]
     edit_columns = [
-        'datasource_name', 'cluster', 'description', 'owner',
+        'datasource_name',
+        'cluster',
+        'description',
+        'owner',
         'is_hidden',
-        'filter_select_enabled', 'fetch_values_from',
-        'default_endpoint', 'offset', 'cache_timeout']
-    search_columns = (
-        'datasource_name', 'cluster', 'description', 'owner',
-    )
+        'filter_select_enabled',
+        'fetch_values_from',
+        'default_endpoint',
+        'offset',
+        'cache_timeout',
+    ]
+    search_columns = ('datasource_name', 'cluster', 'description', 'owner')
     add_columns = edit_columns
     show_columns = add_columns + ['perm', 'slices']
     page_size = 500
@@ -233,29 +280,35 @@ class DruidDatasourceModelView(DatasourceModelView, DeleteMixin, YamlExportMixin
             'Also note that charts need to point to a datasource, so '
             'this form will fail at saving if removing charts from a '
             'datasource. If you want to change the datasource for a chart, '
-            "overwrite the chart from the 'explore view'"),
+            "overwrite the chart from the 'explore view'"
+        ),
         'offset': _('Timezone offset (in hours) for this datasource'),
         'description': Markup(
             'Supports <a href="'
-            'https://daringfireball.net/projects/markdown/">markdown</a>'),
+            'https://daringfireball.net/projects/markdown/">markdown</a>'
+        ),
         'fetch_values_from': _(
             'Time expression to use as a predicate when retrieving '
             'distinct values to populate the filter component. '
             'Only applies when `Enable Filter Select` is on. If '
             'you enter `7 days ago`, the distinct list of values in '
             'the filter will be populated based on the distinct value over '
-            'the past week'),
+            'the past week'
+        ),
         'filter_select_enabled': _(
             "Whether to populate the filter's dropdown in the explore "
             "view's filter section with a list of distinct values fetched "
-            'from the backend on the fly'),
+            'from the backend on the fly'
+        ),
         'default_endpoint': _(
             'Redirects to this endpoint when clicking on the datasource '
-            'from the datasource list'),
+            'from the datasource list'
+        ),
         'cache_timeout': _(
             'Duration (in seconds) of the caching timeout for this datasource. '
             'A timeout of 0 indicates that the cache never expires. '
-            'Note this defaults to the cluster timeout if undefined.'),
+            'Note this defaults to the cluster timeout if undefined.'
+        ),
     }
     base_filters = [['id', DatasourceFilter, lambda: []]]
     label_columns = {
@@ -277,16 +330,12 @@ class DruidDatasourceModelView(DatasourceModelView, DeleteMixin, YamlExportMixin
 
     def pre_add(self, datasource):
         with db.session.no_autoflush:
-            query = (
-                db.session.query(models.DruidDatasource)
-                .filter(models.DruidDatasource.datasource_name ==
-                        datasource.datasource_name,
-                        models.DruidDatasource.cluster_name ==
-                        datasource.cluster.id)
+            query = db.session.query(models.DruidDatasource).filter(
+                models.DruidDatasource.datasource_name == datasource.datasource_name,
+                models.DruidDatasource.cluster_name == datasource.cluster.id,
             )
             if db.session.query(query.exists()).scalar():
-                raise Exception(get_datasource_exist_error_msg(
-                    datasource.full_name))
+                raise Exception(get_datasource_exist_error_msg(datasource.full_name))
 
     def post_add(self, datasource):
         datasource.refresh_metrics()
@@ -307,7 +356,8 @@ appbuilder.add_view(
     label=__('Druid Datasources'),
     category='Sources',
     category_label=__('Sources'),
-    icon='fa-cube')
+    icon='fa-cube',
+)
 
 
 class Druid(BaseSupersetView):
@@ -326,15 +376,17 @@ class Druid(BaseSupersetView):
             except Exception as e:
                 flash(
                     "Error while processing cluster '{}'\n{}".format(
-                        cluster_name, utils.error_msg_from_exception(e)),
-                    'danger')
+                        cluster_name, utils.error_msg_from_exception(e)
+                    ),
+                    'danger',
+                )
                 logging.exception(e)
                 return redirect('/druidclustermodelview/list/')
             cluster.metadata_last_refreshed = datetime.now()
             flash(
-                _('Refreshed metadata from cluster [{}]').format(
-                    cluster.cluster_name),
-                'info')
+                _('Refreshed metadata from cluster [{}]').format(cluster.cluster_name),
+                'info',
+            )
         session.commit()
         return redirect('/druiddatasourcemodelview/list/')
 
@@ -357,7 +409,8 @@ appbuilder.add_link(
     category='Sources',
     category_label=__('Sources'),
     category_icon='fa-database',
-    icon='fa-refresh')
+    icon='fa-refresh',
+)
 appbuilder.add_link(
     'Refresh Druid Metadata',
     label=__('Refresh Druid Metadata'),
@@ -365,7 +418,8 @@ appbuilder.add_link(
     category='Sources',
     category_label=__('Sources'),
     category_icon='fa-database',
-    icon='fa-cog')
+    icon='fa-cog',
+)
 
 
 appbuilder.add_separator('Sources')

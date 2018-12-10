@@ -10,11 +10,7 @@ Create Date: 2018-11-12 13:31:07.578090
 import json
 
 from alembic import op
-from sqlalchemy import (
-    Column,
-    Integer,
-    Text,
-)
+from sqlalchemy import Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 
 from superset import db
@@ -27,6 +23,7 @@ Base = declarative_base()
 
 class Dashboard(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'dashboards'
     id = Column(Integer, primary_key=True)
     json_metadata = Column(Text)
@@ -48,8 +45,11 @@ def upgrade():
             if default_filters and default_filters != '{}':
                 try:
                     filters = json.loads(default_filters)
-                    keys = [key for key, val in filters.items() if
-                            val.get('__from') or val.get('__to')]
+                    keys = [
+                        key
+                        for key, val in filters.items()
+                        if val.get('__from') or val.get('__to')
+                    ]
                     if len(keys):
                         for key in keys:
                             val = filters[key]
@@ -68,8 +68,11 @@ def upgrade():
             # key: chart id, value: field names that escape from filters
             filter_immune_slice_fields = json_metadata.get('filter_immune_slice_fields')
             if filter_immune_slice_fields:
-                keys = [key for key, val in filter_immune_slice_fields.items() if
-                        '__from' in val or '__to' in val]
+                keys = [
+                    key
+                    for key, val in filter_immune_slice_fields.items()
+                    if '__from' in val or '__to' in val
+                ]
                 if len(keys):
                     for key in keys:
                         val = filter_immune_slice_fields[key]
@@ -81,8 +84,9 @@ def upgrade():
                         # just abandon __from and __to
                         if '__time_range' not in val:
                             val.append('__time_range')
-                    json_metadata['filter_immune_slice_fields'] = \
-                        filter_immune_slice_fields
+                    json_metadata[
+                        'filter_immune_slice_fields'
+                    ] = filter_immune_slice_fields
                     has_update = True
 
             if has_update:

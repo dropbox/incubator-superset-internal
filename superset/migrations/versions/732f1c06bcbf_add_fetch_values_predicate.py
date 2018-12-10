@@ -13,9 +13,16 @@ down_revision = 'd6db5a5cdb5d'
 from alembic import op
 import sqlalchemy as sa
 
+
 def upgrade():
-    op.add_column('datasources', sa.Column('fetch_values_from', sa.String(length=100), nullable=True))
-    op.add_column('tables', sa.Column('fetch_values_predicate', sa.String(length=1000), nullable=True))
+    op.add_column(
+        'datasources',
+        sa.Column('fetch_values_from', sa.String(length=100), nullable=True),
+    )
+    op.add_column(
+        'tables',
+        sa.Column('fetch_values_predicate', sa.String(length=1000), nullable=True),
+    )
 
 
 def downgrade():

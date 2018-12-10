@@ -41,7 +41,8 @@ def load_world_bank_health_n_pop():
             'country_name': String(255),
             'region': String(255),
         },
-        index=False)
+        index=False,
+    )
 
     print('Creating table [wb_health_population] reference')
     tbl = db.session.query(TBL).filter_by(table_name=tbl_name).first()
@@ -86,7 +87,9 @@ def load_world_bank_health_n_pop():
                 defaults,
                 viz_type='filter_box',
                 date_filter=False,
-                groupby=['region', 'country_name'])),
+                groupby=['region', 'country_name'],
+            ),
+        ),
         Slice(
             slice_name="World's Population",
             viz_type='big_number',
@@ -98,7 +101,9 @@ def load_world_bank_health_n_pop():
                 viz_type='big_number',
                 compare_lag='10',
                 metric='sum__SP_POP_TOTL',
-                compare_suffix='over 10Y')),
+                compare_suffix='over 10Y',
+            ),
+        ),
         Slice(
             slice_name='Most Populated Countries',
             viz_type='table',
@@ -108,7 +113,9 @@ def load_world_bank_health_n_pop():
                 defaults,
                 viz_type='table',
                 metrics=['sum__SP_POP_TOTL'],
-                groupby=['country_name'])),
+                groupby=['country_name'],
+            ),
+        ),
         Slice(
             slice_name='Growth Rate',
             viz_type='line',
@@ -120,7 +127,9 @@ def load_world_bank_health_n_pop():
                 since='1960-01-01',
                 metrics=['sum__SP_POP_TOTL'],
                 num_period_compare='10',
-                groupby=['country_name'])),
+                groupby=['country_name'],
+            ),
+        ),
         Slice(
             slice_name='% Rural',
             viz_type='world_map',
@@ -130,7 +139,9 @@ def load_world_bank_health_n_pop():
                 defaults,
                 viz_type='world_map',
                 metric='sum__SP_RUR_TOTL_ZS',
-                num_period_compare='10')),
+                num_period_compare='10',
+            ),
+        ),
         Slice(
             slice_name='Life Expectancy VS Rural %',
             viz_type='bubble',
@@ -148,14 +159,30 @@ def load_world_bank_health_n_pop():
                 y='sum__SP_DYN_LE00_IN',
                 size='sum__SP_POP_TOTL',
                 max_bubble_size='50',
-                filters=[{
-                    'col': 'country_code',
-                    'val': [
-                        'TCA', 'MNP', 'DMA', 'MHL', 'MCO', 'SXM', 'CYM',
-                        'TUV', 'IMY', 'KNA', 'ASM', 'ADO', 'AMA', 'PLW',
-                    ],
-                    'op': 'not in'}],
-            )),
+                filters=[
+                    {
+                        'col': 'country_code',
+                        'val': [
+                            'TCA',
+                            'MNP',
+                            'DMA',
+                            'MHL',
+                            'MCO',
+                            'SXM',
+                            'CYM',
+                            'TUV',
+                            'IMY',
+                            'KNA',
+                            'ASM',
+                            'ADO',
+                            'AMA',
+                            'PLW',
+                        ],
+                        'op': 'not in',
+                    }
+                ],
+            ),
+        ),
         Slice(
             slice_name='Rural Breakdown',
             viz_type='sunburst',
@@ -167,7 +194,9 @@ def load_world_bank_health_n_pop():
                 groupby=['region', 'country_name'],
                 secondary_metric='sum__SP_RUR_TOTL',
                 since='2011-01-01',
-                until='2011-01-01')),
+                until='2011-01-01',
+            ),
+        ),
         Slice(
             slice_name="World's Pop Growth",
             viz_type='area',
@@ -178,7 +207,9 @@ def load_world_bank_health_n_pop():
                 since='1960-01-01',
                 until='now',
                 viz_type='area',
-                groupby=['region'])),
+                groupby=['region'],
+            ),
+        ),
         Slice(
             slice_name='Box plot',
             viz_type='box_plot',
@@ -190,7 +221,9 @@ def load_world_bank_health_n_pop():
                 until='now',
                 whisker_options='Min/max (no outliers)',
                 viz_type='box_plot',
-                groupby=['region'])),
+                groupby=['region'],
+            ),
+        ),
         Slice(
             slice_name='Treemap',
             viz_type='treemap',
@@ -202,7 +235,9 @@ def load_world_bank_health_n_pop():
                 until='now',
                 viz_type='treemap',
                 metrics=['sum__SP_POP_TOTL'],
-                groupby=['region', 'country_code'])),
+                groupby=['region', 'country_code'],
+            ),
+        ),
         Slice(
             slice_name='Parallel Coordinates',
             viz_type='para',
@@ -214,12 +249,11 @@ def load_world_bank_health_n_pop():
                 until='2011-01-01',
                 viz_type='para',
                 limit=100,
-                metrics=[
-                    'sum__SP_POP_TOTL',
-                    'sum__SP_RUR_TOTL_ZS',
-                    'sum__SH_DYN_AIDS'],
+                metrics=['sum__SP_POP_TOTL', 'sum__SP_RUR_TOTL_ZS', 'sum__SH_DYN_AIDS'],
                 secondary_metric='sum__SP_POP_TOTL',
-                series='country_name')),
+                series='country_name',
+            ),
+        ),
     ]
     misc_dash_slices.add(slices[-1].slice_name)
     for slc in slices:
@@ -232,7 +266,8 @@ def load_world_bank_health_n_pop():
 
     if not dash:
         dash = Dash()
-    js = textwrap.dedent("""\
+    js = textwrap.dedent(
+        """\
 {
     "CHART-36bfc934": {
         "children": [],
@@ -448,7 +483,8 @@ def load_world_bank_health_n_pop():
     },
     "DASHBOARD_VERSION_KEY": "v2"
 }
-    """)
+    """
+    )
     pos = json.loads(js)
     update_slice_ids(pos, slices)
 

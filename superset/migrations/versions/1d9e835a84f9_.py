@@ -21,7 +21,9 @@ def upgrade():
             'allow_csv_upload',
             sa.Boolean(),
             nullable=False,
-            server_default=expression.true()))
+            server_default=expression.true(),
+        ),
+    )
 
 
 def downgrade():

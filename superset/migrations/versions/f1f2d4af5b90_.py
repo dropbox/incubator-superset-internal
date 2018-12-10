@@ -15,10 +15,13 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('datasources', sa.Column('filter_select_enabled',
-                                           sa.Boolean(), default=False))
-    op.add_column('tables', sa.Column('filter_select_enabled',
-                                      sa.Boolean(), default=False))
+    op.add_column(
+        'datasources', sa.Column('filter_select_enabled', sa.Boolean(), default=False)
+    )
+    op.add_column(
+        'tables', sa.Column('filter_select_enabled', sa.Boolean(), default=False)
+    )
+
 
 def downgrade():
     op.drop_column('tables', 'filter_select_enabled')

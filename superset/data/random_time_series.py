@@ -6,14 +6,7 @@ from sqlalchemy import DateTime
 
 from superset import db
 from superset.utils import core as utils
-from .helpers import (
-    config,
-    DATA_FOLDER,
-    get_slice_json,
-    merge_slice,
-    Slice,
-    TBL,
-)
+from .helpers import config, DATA_FOLDER, get_slice_json, merge_slice, Slice, TBL
 
 
 def load_random_time_series_data():
@@ -26,10 +19,9 @@ def load_random_time_series_data():
         db.engine,
         if_exists='replace',
         chunksize=500,
-        dtype={
-            'ds': DateTime,
-        },
-        index=False)
+        dtype={'ds': DateTime},
+        index=False,
+    )
     print('Done loading table!')
     print('-' * 80)
 

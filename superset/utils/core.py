@@ -47,12 +47,9 @@ logging.getLogger('MARKDOWN').setLevel(logging.INFO)
 PY3K = sys.version_info >= (3, 0)
 EPOCH = datetime(1970, 1, 1)
 DTTM_ALIAS = '__timestamp'
-ADHOC_METRIC_EXPRESSION_TYPES = {
-    'SIMPLE': 'SIMPLE',
-    'SQL': 'SQL',
-}
+ADHOC_METRIC_EXPRESSION_TYPES = {'SIMPLE': 'SIMPLE', 'SQL': 'SQL'}
 
-JS_MAX_INTEGER = 9007199254740991   # Largest int Java Script can handle 2^53-1
+JS_MAX_INTEGER = 9007199254740991  # Largest int Java Script can handle 2^53-1
 
 
 def flasher(msg, severity=None):
@@ -113,8 +110,10 @@ def memoized(func=None, watch=None):
     if func:
         return _memoized(func)
     else:
+
         def wrapper(f):
             return _memoized(f, watch)
+
         return wrapper
 
 
@@ -158,7 +157,7 @@ class DimSelector(Having):
                 'type': 'dimSelector',
                 'dimension': args['dimension'],
                 'value': args['value'],
-            },
+            }
         }
 
 
@@ -211,8 +210,7 @@ def parse_human_datetime(s):
 
 
 def dttm_from_timtuple(d):
-    return datetime(
-        d.tm_year, d.tm_mon, d.tm_mday, d.tm_hour, d.tm_min, d.tm_sec)
+    return datetime(d.tm_year, d.tm_mon, d.tm_mday, d.tm_hour, d.tm_min, d.tm_sec)
 
 
 def decode_dashboards(o):
@@ -221,9 +219,7 @@ def decode_dashboards(o):
     Recreates the dashboard object from a json representation.
     """
     import superset.models.core as models
-    from superset.connectors.sqla.models import (
-        SqlaTable, SqlMetric, TableColumn,
-    )
+    from superset.connectors.sqla.models import SqlaTable, SqlMetric, TableColumn
 
     if '__Dashboard__' in o:
         d = models.Dashboard()
@@ -255,8 +251,7 @@ class DashboardEncoder(json.JSONEncoder):
     # pylint: disable=E0202
     def default(self, o):
         try:
-            vals = {
-                k: v for k, v in o.__dict__.items() if k != '_sa_instance_state'}
+            vals = {k: v for k, v in o.__dict__.items() if k != '_sa_instance_state'}
             return {'__{}__'.format(o.__class__.__name__): vals}
         except Exception:
             if type(o) == datetime:
@@ -345,7 +340,8 @@ def json_iso_dttm_ser(obj, pessimistic=False):
             return 'Unserializable [{}]'.format(type(obj))
         else:
             raise TypeError(
-                'Unserializable object {} of type {}'.format(obj, type(obj)))
+                'Unserializable object {} of type {}'.format(obj, type(obj))
+            )
     return obj
 
 
@@ -378,8 +374,7 @@ def json_int_dttm_ser(obj):
     elif isinstance(obj, date):
         obj = (obj - EPOCH.date()).total_seconds() * 1000
     else:
-        raise TypeError(
-            'Unserializable object {} of type {}'.format(obj, type(obj)))
+        raise TypeError('Unserializable object {} of type {}'.format(obj, type(obj)))
     return obj
 
 
@@ -411,17 +406,45 @@ def error_msg_from_exception(e):
 
 
 def markdown(s, markup_wrap=False):
-    safe_markdown_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'b', 'i',
-                          'strong', 'em', 'tt', 'p', 'br', 'span',
-                          'div', 'blockquote', 'code', 'hr', 'ul', 'ol',
-                          'li', 'dd', 'dt', 'img', 'a']
-    safe_markdown_attrs = {'img': ['src', 'alt', 'title'],
-                           'a': ['href', 'alt', 'title']}
-    s = md.markdown(s or '', extensions=[
-        'markdown.extensions.tables',
-        'markdown.extensions.fenced_code',
-        'markdown.extensions.codehilite',
-    ])
+    safe_markdown_tags = [
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'b',
+        'i',
+        'strong',
+        'em',
+        'tt',
+        'p',
+        'br',
+        'span',
+        'div',
+        'blockquote',
+        'code',
+        'hr',
+        'ul',
+        'ol',
+        'li',
+        'dd',
+        'dt',
+        'img',
+        'a',
+    ]
+    safe_markdown_attrs = {
+        'img': ['src', 'alt', 'title'],
+        'a': ['href', 'alt', 'title'],
+    }
+    s = md.markdown(
+        s or '',
+        extensions=[
+            'markdown.extensions.tables',
+            'markdown.extensions.fenced_code',
+            'markdown.extensions.codehilite',
+        ],
+    )
     s = bleach.clean(s, safe_markdown_tags, safe_markdown_attrs)
     if markup_wrap:
         s = Markup(s)
@@ -446,7 +469,10 @@ def generic_find_constraint_name(table, columns, referenced, db):
 def generic_find_fk_constraint_name(table, columns, referenced, insp):
     """Utility to find a foreign-key constraint name in alembic migrations"""
     for fk in insp.get_foreign_keys(table):
-        if fk['referred_table'] == referenced and set(fk['referred_columns']) == columns:
+        if (
+            fk['referred_table'] == referenced
+            and set(fk['referred_columns']) == columns
+        ):
             return fk['name']
 
 
@@ -455,7 +481,10 @@ def generic_find_fk_constraint_names(table, columns, referenced, insp):
     names = set()
 
     for fk in insp.get_foreign_keys(table):
-        if fk['referred_table'] == referenced and set(fk['referred_columns']) == columns:
+        if (
+            fk['referred_table'] == referenced
+            and set(fk['referred_columns']) == columns
+        ):
             names.add(fk['name'])
 
     return names
@@ -571,19 +600,36 @@ class QueryStatus(object):
     TIMED_OUT = 'timed_out'
 
 
-def notify_user_about_perm_udate(
-        granter, user, role, datasource, tpl_name, config):
-    msg = render_template(tpl_name, granter=granter, user=user, role=role,
-                          datasource=datasource)
+def notify_user_about_perm_udate(granter, user, role, datasource, tpl_name, config):
+    msg = render_template(
+        tpl_name, granter=granter, user=user, role=role, datasource=datasource
+    )
     logging.info(msg)
-    subject = __('[Superset] Access to the datasource %(name)s was granted',
-                 name=datasource.full_name)
-    send_email_smtp(user.email, subject, msg, config, bcc=granter.email,
-                    dryrun=not config.get('EMAIL_NOTIFICATIONS'))
+    subject = __(
+        '[Superset] Access to the datasource %(name)s was granted',
+        name=datasource.full_name,
+    )
+    send_email_smtp(
+        user.email,
+        subject,
+        msg,
+        config,
+        bcc=granter.email,
+        dryrun=not config.get('EMAIL_NOTIFICATIONS'),
+    )
 
 
-def send_email_smtp(to, subject, html_content, config, files=None,
-                    dryrun=False, cc=None, bcc=None, mime_subtype='mixed'):
+def send_email_smtp(
+    to,
+    subject,
+    html_content,
+    config,
+    files=None,
+    dryrun=False,
+    cc=None,
+    bcc=None,
+    mime_subtype='mixed',
+):
     """
     Send an email with html content, eg:
     send_email_smtp(
@@ -619,7 +665,9 @@ def send_email_smtp(to, subject, html_content, config, files=None,
                 MIMEApplication(
                     f.read(),
                     Content_Disposition="attachment; filename='%s'" % basename,
-                    Name=basename))
+                    Name=basename,
+                )
+            )
 
     send_MIME_email(smtp_mail_from, recipients, msg, config, dryrun=dryrun)
 
@@ -633,8 +681,11 @@ def send_MIME_email(e_from, e_to, mime_msg, config, dryrun=False):
     SMTP_SSL = config.get('SMTP_SSL')
 
     if not dryrun:
-        s = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) if SMTP_SSL else \
-            smtplib.SMTP(SMTP_HOST, SMTP_PORT)
+        s = (
+            smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT)
+            if SMTP_SSL
+            else smtplib.SMTP(SMTP_HOST, SMTP_PORT)
+        )
         if SMTP_STARTTLS:
             s.starttls()
         if SMTP_USER and SMTP_PASSWORD:
@@ -721,15 +772,15 @@ def to_adhoc(filt, expressionType='SIMPLE', clause='where'):
     }
 
     if expressionType == 'SIMPLE':
-        result.update({
-            'comparator': filt.get('val'),
-            'operator': filt.get('op'),
-            'subject': filt.get('col'),
-        })
+        result.update(
+            {
+                'comparator': filt.get('val'),
+                'operator': filt.get('op'),
+                'subject': filt.get('col'),
+            }
+        )
     elif expressionType == 'SQL':
-        result.update({
-            'sqlExpression': filt.get(clause),
-        })
+        result.update({'sqlExpression': filt.get(clause)})
 
     return result
 
@@ -744,9 +795,8 @@ def merge_extra_filters(form_data):
         # boundaries. The rest of extra_filters are simple
         # [column_name in list_of_values]. `__` prefix is there to avoid
         # potential conflicts with column that would be named `from` or `to`
-        if (
-            'adhoc_filters' not in form_data or
-            not isinstance(form_data['adhoc_filters'], list)
+        if 'adhoc_filters' not in form_data or not isinstance(
+            form_data['adhoc_filters'], list
         ):
             form_data['adhoc_filters'] = []
         date_options = {
@@ -767,9 +817,9 @@ def merge_extra_filters(form_data):
         existing_filters = {}
         for existing in form_data['adhoc_filters']:
             if (
-                existing['expressionType'] == 'SIMPLE' and
-                existing['comparator'] is not None and
-                existing['subject'] is not None
+                existing['expressionType'] == 'SIMPLE'
+                and existing['comparator'] is not None
+                and existing['subject'] is not None
             ):
                 existing_filters[get_filter_key(existing)] = existing['comparator']
 
@@ -787,9 +837,8 @@ def merge_extra_filters(form_data):
                         if isinstance(existing_filters[filter_key], list):
                             # Add filters for unequal lists
                             # order doesn't matter
-                            if (
-                                sorted(existing_filters[filter_key]) !=
-                                sorted(filtr['val'])
+                            if sorted(existing_filters[filter_key]) != sorted(
+                                filtr['val']
                             ):
                                 form_data['adhoc_filters'].append(to_adhoc(filtr))
                         else:
@@ -846,28 +895,25 @@ def get_or_create_main_db():
 
 def get_main_database(session):
     from superset.models import core as models
-    return (
-        session.query(models.Database)
-        .filter_by(database_name='main')
-        .first()
-    )
+
+    return session.query(models.Database).filter_by(database_name='main').first()
 
 
 def is_adhoc_metric(metric):
     return (
-        isinstance(metric, dict) and
-        (
+        isinstance(metric, dict)
+        and (
             (
-                metric['expressionType'] == ADHOC_METRIC_EXPRESSION_TYPES['SIMPLE'] and
-                metric['column'] and
-                metric['aggregate']
-            ) or
-            (
-                metric['expressionType'] == ADHOC_METRIC_EXPRESSION_TYPES['SQL'] and
-                metric['sqlExpression']
+                metric['expressionType'] == ADHOC_METRIC_EXPRESSION_TYPES['SIMPLE']
+                and metric['column']
+                and metric['aggregate']
             )
-        ) and
-        metric['label']
+            or (
+                metric['expressionType'] == ADHOC_METRIC_EXPRESSION_TYPES['SQL']
+                and metric['sqlExpression']
+            )
+        )
+        and metric['label']
     )
 
 
@@ -887,10 +933,12 @@ def ensure_path_exists(path):
             raise
 
 
-def get_since_until(time_range: Optional[str] = None,
-                    since: Optional[str] = None,
-                    until: Optional[str] = None,
-                    time_shift: Optional[str] = None) -> (datetime, datetime):
+def get_since_until(
+    time_range: Optional[str] = None,
+    since: Optional[str] = None,
+    until: Optional[str] = None,
+    time_shift: Optional[str] = None,
+) -> (datetime, datetime):
     """Return `since` and `until` date time tuple from string representations of
     time_range, since, until and time_shift.
 
@@ -973,7 +1021,7 @@ def add_ago_to_since(since):
     """
     since_words = since.split(' ')
     grains = ['days', 'years', 'hours', 'day', 'year', 'weeks']
-    if (len(since_words) == 2 and since_words[1] in grains):
+    if len(since_words) == 2 and since_words[1] in grains:
         since += ' ago'
     return since
 
@@ -1015,17 +1063,21 @@ def split_adhoc_filters_into_base_filters(fd):
             clause = adhoc_filter.get('clause')
             if expression_type == 'SIMPLE':
                 if clause == 'WHERE':
-                    simple_where_filters.append({
-                        'col': adhoc_filter.get('subject'),
-                        'op': adhoc_filter.get('operator'),
-                        'val': adhoc_filter.get('comparator'),
-                    })
+                    simple_where_filters.append(
+                        {
+                            'col': adhoc_filter.get('subject'),
+                            'op': adhoc_filter.get('operator'),
+                            'val': adhoc_filter.get('comparator'),
+                        }
+                    )
                 elif clause == 'HAVING':
-                    simple_having_filters.append({
-                        'col': adhoc_filter.get('subject'),
-                        'op': adhoc_filter.get('operator'),
-                        'val': adhoc_filter.get('comparator'),
-                    })
+                    simple_having_filters.append(
+                        {
+                            'col': adhoc_filter.get('subject'),
+                            'op': adhoc_filter.get('operator'),
+                            'val': adhoc_filter.get('comparator'),
+                        }
+                    )
             elif expression_type == 'SQL':
                 if clause == 'WHERE':
                     sql_where_filters.append(adhoc_filter.get('sqlExpression'))

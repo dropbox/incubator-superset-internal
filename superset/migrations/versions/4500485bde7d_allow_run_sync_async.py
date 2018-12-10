@@ -25,4 +25,3 @@ def downgrade():
         op.drop_column('dbs', 'allow_run_async')
     except Exception:
         pass
-

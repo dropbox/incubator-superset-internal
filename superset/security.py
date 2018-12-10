@@ -11,11 +11,7 @@ from superset import sql_parse
 from superset.connectors.connector_registry import ConnectorRegistry
 from superset.exceptions import SupersetSecurityException
 
-READ_ONLY_MODEL_VIEWS = {
-    'DatabaseAsync',
-    'DatabaseView',
-    'DruidClusterModelView',
-}
+READ_ONLY_MODEL_VIEWS = {'DatabaseAsync', 'DatabaseView', 'DruidClusterModelView'}
 
 USER_MODEL_VIEWS = {
     'UserDBModelView',
@@ -45,9 +41,7 @@ ADMIN_ONLY_VIEW_MENUS = {
     'Security',
 } | USER_MODEL_VIEWS
 
-ALPHA_ONLY_VIEW_MENUS = {
-    'Upload a CSV',
-}
+ALPHA_ONLY_VIEW_MENUS = {'Upload a CSV'}
 
 ADMIN_ONLY_PERMISSIONS = {
     'all_database_access',
@@ -59,26 +53,16 @@ ADMIN_ONLY_PERMISSIONS = {
     'can_update_role',
 }
 
-READ_ONLY_PERMISSION = {
-    'can_show',
-    'can_list',
-}
+READ_ONLY_PERMISSION = {'can_show', 'can_list'}
 
-ALPHA_ONLY_PERMISSIONS = set([
-    'muldelete',
-    'all_datasource_access',
-])
+ALPHA_ONLY_PERMISSIONS = set(['muldelete', 'all_datasource_access'])
 
-OBJECT_SPEC_PERMISSIONS = set([
-    'database_access',
-    'schema_access',
-    'datasource_access',
-    'metric_access',
-])
+OBJECT_SPEC_PERMISSIONS = set(
+    ['database_access', 'schema_access', 'datasource_access', 'metric_access']
+)
 
 
 class SupersetSecurityManager(SecurityManager):
-
     def get_schema_perm(self, database, schema):
         if schema:
             return '[{}].[{}]'.format(database, schema)
@@ -91,47 +75,48 @@ class SupersetSecurityManager(SecurityManager):
         return self._has_view_access(user, permission_name, view_name)
 
     def all_datasource_access(self):
-        return self.can_access(
-            'all_datasource_access', 'all_datasource_access')
+        return self.can_access('all_datasource_access', 'all_datasource_access')
 
     def database_access(self, database):
-        return (
-            self.can_access(
-                'all_database_access', 'all_database_access') or
-            self.can_access('database_access', database.perm)
-        )
+        return self.can_access(
+            'all_database_access', 'all_database_access'
+        ) or self.can_access('database_access', database.perm)
 
     def schema_access(self, datasource):
         return (
-            self.database_access(datasource.database) or
-            self.all_datasource_access() or
-            self.can_access('schema_access', datasource.schema_perm)
+            self.database_access(datasource.database)
+            or self.all_datasource_access()
+            or self.can_access('schema_access', datasource.schema_perm)
         )
 
     def datasource_access(self, datasource):
-        return (
-            self.schema_access(datasource) or
-            self.can_access('datasource_access', datasource.perm)
+        return self.schema_access(datasource) or self.can_access(
+            'datasource_access', datasource.perm
         )
 
     def get_datasource_access_error_msg(self, datasource):
         return """This endpoint requires the datasource {}, database or
-            `all_datasource_access` permission""".format(datasource.name)
+            `all_datasource_access` permission""".format(
+            datasource.name
+        )
 
     def get_datasource_access_link(self, datasource):
         from superset import conf
+
         return conf.get('PERMISSION_INSTRUCTIONS_LINK')
 
     def get_table_access_error_msg(self, table_name):
         return """You need access to the following tables: {}, all database access or
-              `all_datasource_access` permission""".format(table_name)
+              `all_datasource_access` permission""".format(
+            table_name
+        )
 
     def get_table_access_link(self, tables):
         from superset import conf
+
         return conf.get('PERMISSION_INSTRUCTIONS_LINK')
 
-    def datasource_access_by_name(
-            self, database, datasource_name, schema=None):
+    def datasource_access_by_name(self, database, datasource_name, schema=None):
         from superset import db
 
         if self.database_access(database) or self.all_datasource_access():
@@ -142,7 +127,8 @@ class SupersetSecurityManager(SecurityManager):
             return True
 
         datasources = ConnectorRegistry.query_datasources_by_name(
-            db.session, database, datasource_name, schema=schema)
+            db.session, database, datasource_name, schema=schema
+        )
         for datasource in datasources:
             if self.can_access('datasource_access', datasource.perm):
                 return True
@@ -158,34 +144,33 @@ class SupersetSecurityManager(SecurityManager):
             table_name = table_name_pieces[0]
         return (table_schema, table_name)
 
-    def datasource_access_by_fullname(
-            self, database, table_in_query, schema):
+    def datasource_access_by_fullname(self, database, table_in_query, schema):
         table_schema, table_name = self.get_schema_and_table(table_in_query, schema)
-        return self.datasource_access_by_name(
-            database, table_name, schema=table_schema)
+        return self.datasource_access_by_name(database, table_name, schema=table_schema)
 
     def rejected_datasources(self, sql, database, schema):
         superset_query = sql_parse.SupersetQuery(sql)
         return [
-            t for t in superset_query.tables if not
-            self.datasource_access_by_fullname(database, t, schema)]
+            t
+            for t in superset_query.tables
+            if not self.datasource_access_by_fullname(database, t, schema)
+        ]
 
     def user_datasource_perms(self):
         datasource_perms = set()
         for r in g.user.roles:
             for perm in r.permissions:
-                if (
-                        perm.permission and
-                        'datasource_access' == perm.permission.name):
+                if perm.permission and 'datasource_access' == perm.permission.name:
                     datasource_perms.add(perm.view_menu.name)
         return datasource_perms
 
     def schemas_accessible_by_user(self, database, schemas, hierarchical=True):
         from superset import db
         from superset.connectors.sqla.models import SqlaTable
-        if (hierarchical and
-                (self.database_access(database) or
-                 self.all_datasource_access())):
+
+        if hierarchical and (
+            self.database_access(database) or self.all_datasource_access()
+        ):
             return schemas
 
         subset = set()
@@ -198,10 +183,7 @@ class SupersetSecurityManager(SecurityManager):
         if perms:
             tables = (
                 db.session.query(SqlaTable)
-                .filter(
-                    SqlaTable.perm.in_(perms),
-                    SqlaTable.database_id == database.id,
-                )
+                .filter(SqlaTable.perm.in_(perms), SqlaTable.database_id == database.id)
                 .all()
             )
             for t in tables:
@@ -211,6 +193,7 @@ class SupersetSecurityManager(SecurityManager):
 
     def accessible_by_user(self, database, datasource_names, schema=None):
         from superset import db
+
         if self.database_access(database) or self.all_datasource_access():
             return datasource_names
 
@@ -221,11 +204,10 @@ class SupersetSecurityManager(SecurityManager):
 
         user_perms = self.user_datasource_perms()
         user_datasources = ConnectorRegistry.query_datasources_by_permissions(
-            db.session, database, user_perms)
+            db.session, database, user_perms
+        )
         if schema:
-            names = {
-                d.table_name
-                for d in user_datasources if d.schema == schema}
+            names = {d.table_name for d in user_datasources if d.schema == schema}
             return [d for d in datasource_names if d in names]
         else:
             full_names = {d.full_name for d in user_datasources}
@@ -239,8 +221,11 @@ class SupersetSecurityManager(SecurityManager):
         view_menu = self.find_view_menu(view_menu_name)
         pv = None
         if permission and view_menu:
-            pv = self.get_session.query(self.permissionview_model).filter_by(
-                permission=permission, view_menu=view_menu).first()
+            pv = (
+                self.get_session.query(self.permissionview_model)
+                .filter_by(permission=permission, view_menu=view_menu)
+                .first()
+            )
         if not pv and permission_name and view_menu_name:
             self.add_permission_view_menu(permission_name, view_menu_name)
 
@@ -257,8 +242,7 @@ class SupersetSecurityManager(SecurityManager):
         from superset import db
         from superset.models import core as models
 
-        logging.info(
-            'Fetching a set of all perms to lookup which ones are missing')
+        logging.info('Fetching a set of all perms to lookup which ones are missing')
         all_pvs = set()
         for pv in self.get_session.query(self.permissionview_model).all():
             if pv.permission and pv.view_menu:
@@ -293,12 +277,11 @@ class SupersetSecurityManager(SecurityManager):
         """FAB leaves faulty permissions that need to be cleaned up"""
         logging.info('Cleaning faulty perms')
         sesh = self.get_session
-        pvms = (
-            sesh.query(ab_models.PermissionView)
-            .filter(or_(
+        pvms = sesh.query(ab_models.PermissionView).filter(
+            or_(
                 ab_models.PermissionView.permission == None,  # NOQA
                 ab_models.PermissionView.view_menu == None,  # NOQA
-            ))
+            )
         )
         deleted_count = pvms.delete()
         sesh.commit()
@@ -308,6 +291,7 @@ class SupersetSecurityManager(SecurityManager):
     def sync_role_definitions(self):
         """Inits the Superset application with security roles and such"""
         from superset import conf
+
         logging.info('Syncing role definition')
 
         self.create_custom_permissions()
@@ -341,21 +325,25 @@ class SupersetSecurityManager(SecurityManager):
 
     def is_admin_only(self, pvm):
         # not readonly operations on read only model views allowed only for admins
-        if (pvm.view_menu.name in READ_ONLY_MODEL_VIEWS and
-                pvm.permission.name not in READ_ONLY_PERMISSION):
+        if (
+            pvm.view_menu.name in READ_ONLY_MODEL_VIEWS
+            and pvm.permission.name not in READ_ONLY_PERMISSION
+        ):
             return True
         return (
-            pvm.view_menu.name in ADMIN_ONLY_VIEW_MENUS or
-            pvm.permission.name in ADMIN_ONLY_PERMISSIONS
+            pvm.view_menu.name in ADMIN_ONLY_VIEW_MENUS
+            or pvm.permission.name in ADMIN_ONLY_PERMISSIONS
         )
 
     def is_alpha_only(self, pvm):
-        if (pvm.view_menu.name in GAMMA_READ_ONLY_MODEL_VIEWS and
-                pvm.permission.name not in READ_ONLY_PERMISSION):
+        if (
+            pvm.view_menu.name in GAMMA_READ_ONLY_MODEL_VIEWS
+            and pvm.permission.name not in READ_ONLY_PERMISSION
+        ):
             return True
         return (
-            pvm.view_menu.name in ALPHA_ONLY_VIEW_MENUS or
-            pvm.permission.name in ALPHA_ONLY_PERMISSIONS
+            pvm.view_menu.name in ALPHA_ONLY_VIEW_MENUS
+            or pvm.permission.name in ALPHA_ONLY_PERMISSIONS
         )
 
     def is_admin_pvm(self, pvm):
@@ -365,25 +353,32 @@ class SupersetSecurityManager(SecurityManager):
         return not (self.is_user_defined_permission(pvm) or self.is_admin_only(pvm))
 
     def is_gamma_pvm(self, pvm):
-        return not (self.is_user_defined_permission(pvm) or self.is_admin_only(pvm) or
-                    self.is_alpha_only(pvm))
+        return not (
+            self.is_user_defined_permission(pvm)
+            or self.is_admin_only(pvm)
+            or self.is_alpha_only(pvm)
+        )
 
     def is_sql_lab_pvm(self, pvm):
         return (
-            pvm.view_menu.name in {
-                'SQL Lab', 'SQL Editor', 'Query Search', 'Saved Queries',
-            } or
-            pvm.permission.name in {
-                'can_sql_json', 'can_csv', 'can_search_queries', 'can_sqllab_viz',
+            pvm.view_menu.name
+            in {'SQL Lab', 'SQL Editor', 'Query Search', 'Saved Queries'}
+            or pvm.permission.name
+            in {
+                'can_sql_json',
+                'can_csv',
+                'can_search_queries',
+                'can_sqllab_viz',
                 'can_sqllab',
-            } or
-            (pvm.view_menu.name in USER_MODEL_VIEWS and
-             pvm.permission.name == 'can_list'))
+            }
+            or (
+                pvm.view_menu.name in USER_MODEL_VIEWS
+                and pvm.permission.name == 'can_list'
+            )
+        )
 
     def is_granter_pvm(self, pvm):
-        return pvm.permission.name in {
-            'can_override_role_permissions', 'can_approve',
-        }
+        return pvm.permission.name in {'can_override_role_permissions', 'can_approve'}
 
     def set_perm(self, mapper, connection, target):  # noqa
         if target.perm != target.get_perm():
@@ -391,7 +386,7 @@ class SupersetSecurityManager(SecurityManager):
             connection.execute(
                 link_table.update()
                 .where(link_table.c.id == target.id)
-                .values(perm=target.get_perm()),
+                .values(perm=target.get_perm())
             )
 
         # add to view menu if not already exists
@@ -402,31 +397,30 @@ class SupersetSecurityManager(SecurityManager):
         pv = None
 
         if not permission:
-            permission_table = self.permission_model.__table__  # noqa: E501 pylint: disable=no-member
-            connection.execute(
-                permission_table.insert()
-                .values(name=permission_name),
-            )
+            permission_table = (
+                self.permission_model.__table__
+            )  # noqa: E501 pylint: disable=no-member
+            connection.execute(permission_table.insert().values(name=permission_name))
             permission = self.find_permission(permission_name)
         if not view_menu:
             view_menu_table = self.viewmenu_model.__table__  # pylint: disable=no-member
-            connection.execute(
-                view_menu_table.insert()
-                .values(name=view_menu_name),
-            )
+            connection.execute(view_menu_table.insert().values(name=view_menu_name))
             view_menu = self.find_view_menu(view_menu_name)
 
         if permission and view_menu:
-            pv = self.get_session.query(self.permissionview_model).filter_by(
-                permission=permission, view_menu=view_menu).first()
+            pv = (
+                self.get_session.query(self.permissionview_model)
+                .filter_by(permission=permission, view_menu=view_menu)
+                .first()
+            )
         if not pv and permission and view_menu:
-            permission_view_table = self.permissionview_model.__table__  # noqa: E501 pylint: disable=no-member
+            permission_view_table = (
+                self.permissionview_model.__table__
+            )  # noqa: E501 pylint: disable=no-member
             connection.execute(
-                permission_view_table.insert()
-                .values(
-                    permission_id=permission.id,
-                    view_menu_id=view_menu.id,
-                ),
+                permission_view_table.insert().values(
+                    permission_id=permission.id, view_menu_id=view_menu.id
+                )
             )
 
     def assert_datasource_permission(self, datasource):

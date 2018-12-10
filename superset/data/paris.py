@@ -28,7 +28,8 @@ def load_paris_iris_geojson():
             'features': Text,
             'type': Text,
         },
-        index=False)
+        index=False,
+    )
     print('Creating table {} reference'.format(tbl_name))
     tbl = db.session.query(TBL).filter_by(table_name=tbl_name).first()
     if not tbl:

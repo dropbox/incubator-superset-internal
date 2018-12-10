@@ -15,14 +15,15 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.create_table('favstar',
+    op.create_table(
+        'favstar',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('user_id', sa.Integer(), nullable=True),
         sa.Column('class_name', sa.String(length=50), nullable=True),
         sa.Column('obj_id', sa.Integer(), nullable=True),
         sa.Column('dttm', sa.DateTime(), nullable=True),
-        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id'], ),
-        sa.PrimaryKeyConstraint('id')
+        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id']),
+        sa.PrimaryKeyConstraint('id'),
     )
 
 

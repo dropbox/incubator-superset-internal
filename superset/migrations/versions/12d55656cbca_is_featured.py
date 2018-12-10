@@ -20,4 +20,3 @@ def upgrade():
 
 def downgrade():
     op.drop_column('tables', 'is_featured')
-

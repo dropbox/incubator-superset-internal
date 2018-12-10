@@ -38,7 +38,8 @@ def load_multiformat_time_series():
             'string2': String(100),
             'string3': String(100),
         },
-        index=False)
+        index=False,
+    )
     print('Done loading table!')
     print('-' * 80)
     print('Creating table [multiformat_time_series] reference')

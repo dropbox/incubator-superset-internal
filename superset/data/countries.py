@@ -8,7 +8,7 @@ countries = [
         "capital": "Luanda",
         "lat": -12.5,
         "lng": 18.5,
-        "cca3": "AGO"
+        "cca3": "AGO",
     },
     {
         "name": "Algeria",
@@ -18,7 +18,7 @@ countries = [
         "capital": "Algiers",
         "lat": 28,
         "lng": 3,
-        "cca3": "DZA"
+        "cca3": "DZA",
     },
     {
         "name": "Egypt",
@@ -28,7 +28,7 @@ countries = [
         "capital": "Cairo",
         "lat": 27,
         "lng": 30,
-        "cca3": "EGY"
+        "cca3": "EGY",
     },
     {
         "name": "Bangladesh",
@@ -38,7 +38,7 @@ countries = [
         "capital": "Dhaka",
         "lat": 24,
         "lng": 90,
-        "cca3": "BGD"
+        "cca3": "BGD",
     },
     {
         "name": "Niger",
@@ -48,7 +48,7 @@ countries = [
         "capital": "Niamey",
         "lat": 16,
         "lng": 8,
-        "cca3": "NER"
+        "cca3": "NER",
     },
     {
         "name": "Liechtenstein",
@@ -58,7 +58,7 @@ countries = [
         "capital": "Vaduz",
         "lat": 47.26666666,
         "lng": 9.53333333,
-        "cca3": "LIE"
+        "cca3": "LIE",
     },
     {
         "name": "Namibia",
@@ -68,7 +68,7 @@ countries = [
         "capital": "Windhoek",
         "lat": -22,
         "lng": 17,
-        "cca3": "NAM"
+        "cca3": "NAM",
     },
     {
         "name": "Bulgaria",
@@ -78,7 +78,7 @@ countries = [
         "capital": "Sofia",
         "lat": 43,
         "lng": 25,
-        "cca3": "BGR"
+        "cca3": "BGR",
     },
     {
         "name": "Bolivia",
@@ -88,7 +88,7 @@ countries = [
         "capital": "Sucre",
         "lat": -17,
         "lng": -65,
-        "cca3": "BOL"
+        "cca3": "BOL",
     },
     {
         "name": "Ghana",
@@ -98,7 +98,7 @@ countries = [
         "capital": "Accra",
         "lat": 8,
         "lng": -2,
-        "cca3": "GHA"
+        "cca3": "GHA",
     },
     {
         "name": "Cocos (Keeling) Islands",
@@ -108,7 +108,7 @@ countries = [
         "capital": "West Island",
         "lat": -12.5,
         "lng": 96.83333333,
-        "cca3": "CCK"
+        "cca3": "CCK",
     },
     {
         "name": "Pakistan",
@@ -118,7 +118,7 @@ countries = [
         "capital": "Islamabad",
         "lat": 30,
         "lng": 70,
-        "cca3": "PAK"
+        "cca3": "PAK",
     },
     {
         "name": "Cape Verde",
@@ -128,7 +128,7 @@ countries = [
         "capital": "Praia",
         "lat": 16,
         "lng": -24,
-        "cca3": "CPV"
+        "cca3": "CPV",
     },
     {
         "name": "Jordan",
@@ -138,7 +138,7 @@ countries = [
         "capital": "Amman",
         "lat": 31,
         "lng": 36,
-        "cca3": "JOR"
+        "cca3": "JOR",
     },
     {
         "name": "Liberia",
@@ -148,7 +148,7 @@ countries = [
         "capital": "Monrovia",
         "lat": 6.5,
         "lng": -9.5,
-        "cca3": "LBR"
+        "cca3": "LBR",
     },
     {
         "name": "Libya",
@@ -158,7 +158,7 @@ countries = [
         "capital": "Tripoli",
         "lat": 25,
         "lng": 17,
-        "cca3": "LBY"
+        "cca3": "LBY",
     },
     {
         "name": "Malaysia",
@@ -168,7 +168,7 @@ countries = [
         "capital": "Kuala Lumpur",
         "lat": 2.5,
         "lng": 112.5,
-        "cca3": "MYS"
+        "cca3": "MYS",
     },
     {
         "name": "Dominican Republic",
@@ -178,7 +178,7 @@ countries = [
         "capital": "Santo Domingo",
         "lat": 19,
         "lng": -70.66666666,
-        "cca3": "DOM"
+        "cca3": "DOM",
     },
     {
         "name": "Puerto Rico",
@@ -188,7 +188,7 @@ countries = [
         "capital": "San Juan",
         "lat": 18.25,
         "lng": -66.5,
-        "cca3": "PRI"
+        "cca3": "PRI",
     },
     {
         "name": "Mayotte",
@@ -198,7 +198,7 @@ countries = [
         "capital": "Mamoudzou",
         "lat": -12.83333333,
         "lng": 45.16666666,
-        "cca3": "MYT"
+        "cca3": "MYT",
     },
     {
         "name": "North Korea",
@@ -208,7 +208,7 @@ countries = [
         "capital": "Pyongyang",
         "lat": 40,
         "lng": 127,
-        "cca3": "PRK"
+        "cca3": "PRK",
     },
     {
         "name": "Palestine",
@@ -218,7 +218,7 @@ countries = [
         "capital": "Ramallah",
         "lat": 31.9,
         "lng": 35.2,
-        "cca3": "PSE"
+        "cca3": "PSE",
     },
     {
         "name": "Tanzania",
@@ -228,7 +228,7 @@ countries = [
         "capital": "Dodoma",
         "lat": -6,
         "lng": 35,
-        "cca3": "TZA"
+        "cca3": "TZA",
     },
     {
         "name": "Botswana",
@@ -238,7 +238,7 @@ countries = [
         "capital": "Gaborone",
         "lat": -22,
         "lng": 24,
-        "cca3": "BWA"
+        "cca3": "BWA",
     },
     {
         "name": "Cambodia",
@@ -248,7 +248,7 @@ countries = [
         "capital": "Phnom Penh",
         "lat": 13,
         "lng": 105,
-        "cca3": "KHM"
+        "cca3": "KHM",
     },
     {
         "name": "Nicaragua",
@@ -258,7 +258,7 @@ countries = [
         "capital": "Managua",
         "lat": 13,
         "lng": -85,
-        "cca3": "NIC"
+        "cca3": "NIC",
     },
     {
         "name": "Trinidad and Tobago",
@@ -268,7 +268,7 @@ countries = [
         "capital": "Port of Spain",
         "lat": 11,
         "lng": -61,
-        "cca3": "TTO"
+        "cca3": "TTO",
     },
     {
         "name": "Ethiopia",
@@ -278,7 +278,7 @@ countries = [
         "capital": "Addis Ababa",
         "lat": 8,
         "lng": 38,
-        "cca3": "ETH"
+        "cca3": "ETH",
     },
     {
         "name": "Paraguay",
@@ -288,7 +288,7 @@ countries = [
         "capital": "Asuncion",
         "lat": -23,
         "lng": -58,
-        "cca3": "PRY"
+        "cca3": "PRY",
     },
     {
         "name": "Hong Kong",
@@ -298,7 +298,7 @@ countries = [
         "capital": "City of Victoria",
         "lat": 22.267,
         "lng": 114.188,
-        "cca3": "HKG"
+        "cca3": "HKG",
     },
     {
         "name": "Saudi Arabia",
@@ -308,7 +308,7 @@ countries = [
         "capital": "Riyadh",
         "lat": 25,
         "lng": 45,
-        "cca3": "SAU"
+        "cca3": "SAU",
     },
     {
         "name": "Lebanon",
@@ -318,7 +318,7 @@ countries = [
         "capital": "Beirut",
         "lat": 33.83333333,
         "lng": 35.83333333,
-        "cca3": "LBN"
+        "cca3": "LBN",
     },
     {
         "name": "Slovenia",
@@ -328,7 +328,7 @@ countries = [
         "capital": "Ljubljana",
         "lat": 46.11666666,
         "lng": 14.81666666,
-        "cca3": "SVN"
+        "cca3": "SVN",
     },
     {
         "name": "Burkina Faso",
@@ -338,7 +338,7 @@ countries = [
         "capital": "Ouagadougou",
         "lat": 13,
         "lng": -2,
-        "cca3": "BFA"
+        "cca3": "BFA",
     },
     {
         "name": "Switzerland",
@@ -348,7 +348,7 @@ countries = [
         "capital": "Bern",
         "lat": 47,
         "lng": 8,
-        "cca3": "CHE"
+        "cca3": "CHE",
     },
     {
         "name": "Mauritania",
@@ -358,7 +358,7 @@ countries = [
         "capital": "Nouakchott",
         "lat": 20,
         "lng": -12,
-        "cca3": "MRT"
+        "cca3": "MRT",
     },
     {
         "name": "Croatia",
@@ -368,7 +368,7 @@ countries = [
         "capital": "Zagreb",
         "lat": 45.16666666,
         "lng": 15.5,
-        "cca3": "HRV"
+        "cca3": "HRV",
     },
     {
         "name": "Chile",
@@ -378,7 +378,7 @@ countries = [
         "capital": "Santiago",
         "lat": -30,
         "lng": -71,
-        "cca3": "CHL"
+        "cca3": "CHL",
     },
     {
         "name": "China",
@@ -388,7 +388,7 @@ countries = [
         "capital": "Beijing",
         "lat": 35,
         "lng": 105,
-        "cca3": "CHN"
+        "cca3": "CHN",
     },
     {
         "name": "Saint Kitts and Nevis",
@@ -398,7 +398,7 @@ countries = [
         "capital": "Basseterre",
         "lat": 17.33333333,
         "lng": -62.75,
-        "cca3": "KNA"
+        "cca3": "KNA",
     },
     {
         "name": "Sierra Leone",
@@ -408,7 +408,7 @@ countries = [
         "capital": "Freetown",
         "lat": 8.5,
         "lng": -11.5,
-        "cca3": "SLE"
+        "cca3": "SLE",
     },
     {
         "name": "Jamaica",
@@ -418,7 +418,7 @@ countries = [
         "capital": "Kingston",
         "lat": 18.25,
         "lng": -77.5,
-        "cca3": "JAM"
+        "cca3": "JAM",
     },
     {
         "name": "San Marino",
@@ -428,7 +428,7 @@ countries = [
         "capital": "City of San Marino",
         "lat": 43.76666666,
         "lng": 12.41666666,
-        "cca3": "SMR"
+        "cca3": "SMR",
     },
     {
         "name": "Gibraltar",
@@ -438,7 +438,7 @@ countries = [
         "capital": "Gibraltar",
         "lat": 36.13333333,
         "lng": -5.35,
-        "cca3": "GIB"
+        "cca3": "GIB",
     },
     {
         "name": "Djibouti",
@@ -448,7 +448,7 @@ countries = [
         "capital": "Djibouti",
         "lat": 11.5,
         "lng": 43,
-        "cca3": "DJI"
+        "cca3": "DJI",
     },
     {
         "name": "Guinea",
@@ -458,7 +458,7 @@ countries = [
         "capital": "Conakry",
         "lat": 11,
         "lng": -10,
-        "cca3": "GIN"
+        "cca3": "GIN",
     },
     {
         "name": "Finland",
@@ -468,7 +468,7 @@ countries = [
         "capital": "Helsinki",
         "lat": 64,
         "lng": 26,
-        "cca3": "FIN"
+        "cca3": "FIN",
     },
     {
         "name": "Uruguay",
@@ -478,7 +478,7 @@ countries = [
         "capital": "Montevideo",
         "lat": -33,
         "lng": -56,
-        "cca3": "URY"
+        "cca3": "URY",
     },
     {
         "name": "Thailand",
@@ -488,7 +488,7 @@ countries = [
         "capital": "Bangkok",
         "lat": 15,
         "lng": 100,
-        "cca3": "THA"
+        "cca3": "THA",
     },
     {
         "name": "Sao Tome and Principe",
@@ -498,7 +498,7 @@ countries = [
         "capital": "Sao Tome",
         "lat": 1,
         "lng": 7,
-        "cca3": "STP"
+        "cca3": "STP",
     },
     {
         "name": "Seychelles",
@@ -508,7 +508,7 @@ countries = [
         "capital": "Victoria",
         "lat": -4.58333333,
         "lng": 55.66666666,
-        "cca3": "SYC"
+        "cca3": "SYC",
     },
     {
         "name": "Nepal",
@@ -518,7 +518,7 @@ countries = [
         "capital": "Kathmandu",
         "lat": 28,
         "lng": 84,
-        "cca3": "NPL"
+        "cca3": "NPL",
     },
     {
         "name": "Christmas Island",
@@ -528,7 +528,7 @@ countries = [
         "capital": "Flying Fish Cove",
         "lat": -10.5,
         "lng": 105.66666666,
-        "cca3": "CXR"
+        "cca3": "CXR",
     },
     {
         "name": "Laos",
@@ -538,7 +538,7 @@ countries = [
         "capital": "Vientiane",
         "lat": 18,
         "lng": 105,
-        "cca3": "LAO"
+        "cca3": "LAO",
     },
     {
         "name": "Yemen",
@@ -548,7 +548,7 @@ countries = [
         "capital": "Sana'a",
         "lat": 15,
         "lng": 48,
-        "cca3": "YEM"
+        "cca3": "YEM",
     },
     {
         "name": "Bouvet Island",
@@ -558,7 +558,7 @@ countries = [
         "capital": "",
         "lat": -54.43333333,
         "lng": 3.4,
-        "cca3": "BVT"
+        "cca3": "BVT",
     },
     {
         "name": "South Africa",
@@ -568,7 +568,7 @@ countries = [
         "capital": "Pretoria",
         "lat": -29,
         "lng": 24,
-        "cca3": "ZAF"
+        "cca3": "ZAF",
     },
     {
         "name": "Kiribati",
@@ -578,7 +578,7 @@ countries = [
         "capital": "South Tarawa",
         "lat": 1.41666666,
         "lng": 173,
-        "cca3": "KIR"
+        "cca3": "KIR",
     },
     {
         "name": "Philippines",
@@ -588,7 +588,7 @@ countries = [
         "capital": "Manila",
         "lat": 13,
         "lng": 122,
-        "cca3": "PHL"
+        "cca3": "PHL",
     },
     {
         "name": "Sint Maarten",
@@ -598,7 +598,7 @@ countries = [
         "capital": "Philipsburg",
         "lat": 18.033333,
         "lng": -63.05,
-        "cca3": "SXM"
+        "cca3": "SXM",
     },
     {
         "name": "Romania",
@@ -608,7 +608,7 @@ countries = [
         "capital": "Bucharest",
         "lat": 46,
         "lng": 25,
-        "cca3": "ROU"
+        "cca3": "ROU",
     },
     {
         "name": "United States Virgin Islands",
@@ -618,7 +618,7 @@ countries = [
         "capital": "Charlotte Amalie",
         "lat": 18.35,
         "lng": -64.933333,
-        "cca3": "VIR"
+        "cca3": "VIR",
     },
     {
         "name": "Syria",
@@ -628,7 +628,7 @@ countries = [
         "capital": "Damascus",
         "lat": 35,
         "lng": 38,
-        "cca3": "SYR"
+        "cca3": "SYR",
     },
     {
         "name": "Macau",
@@ -638,7 +638,7 @@ countries = [
         "capital": "",
         "lat": 22.16666666,
         "lng": 113.55,
-        "cca3": "MAC"
+        "cca3": "MAC",
     },
     {
         "name": "Saint Martin",
@@ -648,7 +648,7 @@ countries = [
         "capital": "Marigot",
         "lat": 18.08333333,
         "lng": -63.95,
-        "cca3": "MAF"
+        "cca3": "MAF",
     },
     {
         "name": "Malta",
@@ -658,7 +658,7 @@ countries = [
         "capital": "Valletta",
         "lat": 35.83333333,
         "lng": 14.58333333,
-        "cca3": "MLT"
+        "cca3": "MLT",
     },
     {
         "name": "Kazakhstan",
@@ -668,7 +668,7 @@ countries = [
         "capital": "Astana",
         "lat": 48,
         "lng": 68,
-        "cca3": "KAZ"
+        "cca3": "KAZ",
     },
     {
         "name": "Turks and Caicos Islands",
@@ -678,7 +678,7 @@ countries = [
         "capital": "Cockburn Town",
         "lat": 21.75,
         "lng": -71.58333333,
-        "cca3": "TCA"
+        "cca3": "TCA",
     },
     {
         "name": "French Polynesia",
@@ -688,7 +688,7 @@ countries = [
         "capital": "Papeete",
         "lat": -15,
         "lng": -140,
-        "cca3": "PYF"
+        "cca3": "PYF",
     },
     {
         "name": "Niue",
@@ -698,7 +698,7 @@ countries = [
         "capital": "Alofi",
         "lat": -19.03333333,
         "lng": -169.86666666,
-        "cca3": "NIU"
+        "cca3": "NIU",
     },
     {
         "name": "Dominica",
@@ -708,7 +708,7 @@ countries = [
         "capital": "Roseau",
         "lat": 15.41666666,
         "lng": -61.33333333,
-        "cca3": "DMA"
+        "cca3": "DMA",
     },
     {
         "name": "Benin",
@@ -718,7 +718,7 @@ countries = [
         "capital": "Porto-Novo",
         "lat": 9.5,
         "lng": 2.25,
-        "cca3": "BEN"
+        "cca3": "BEN",
     },
     {
         "name": "French Guiana",
@@ -728,7 +728,7 @@ countries = [
         "capital": "Cayenne",
         "lat": 4,
         "lng": -53,
-        "cca3": "GUF"
+        "cca3": "GUF",
     },
     {
         "name": "Belgium",
@@ -738,7 +738,7 @@ countries = [
         "capital": "Brussels",
         "lat": 50.83333333,
         "lng": 4,
-        "cca3": "BEL"
+        "cca3": "BEL",
     },
     {
         "name": "Montserrat",
@@ -748,7 +748,7 @@ countries = [
         "capital": "Plymouth",
         "lat": 16.75,
         "lng": -62.2,
-        "cca3": "MSR"
+        "cca3": "MSR",
     },
     {
         "name": "Togo",
@@ -758,7 +758,7 @@ countries = [
         "capital": "Lome",
         "lat": 8,
         "lng": 1.16666666,
-        "cca3": "TGO"
+        "cca3": "TGO",
     },
     {
         "name": "Germany",
@@ -768,7 +768,7 @@ countries = [
         "capital": "Berlin",
         "lat": 51,
         "lng": 9,
-        "cca3": "DEU"
+        "cca3": "DEU",
     },
     {
         "name": "Guam",
@@ -778,7 +778,7 @@ countries = [
         "capital": "Hagatna",
         "lat": 13.46666666,
         "lng": 144.78333333,
-        "cca3": "GUM"
+        "cca3": "GUM",
     },
     {
         "name": "Sri Lanka",
@@ -788,7 +788,7 @@ countries = [
         "capital": "Colombo",
         "lat": 7,
         "lng": 81,
-        "cca3": "LKA"
+        "cca3": "LKA",
     },
     {
         "name": "South Sudan",
@@ -798,7 +798,7 @@ countries = [
         "capital": "Juba",
         "lat": 7,
         "lng": 30,
-        "cca3": "SSD"
+        "cca3": "SSD",
     },
     {
         "name": "Falkland Islands",
@@ -808,7 +808,7 @@ countries = [
         "capital": "Stanley",
         "lat": -51.75,
         "lng": -59,
-        "cca3": "FLK"
+        "cca3": "FLK",
     },
     {
         "name": "United Kingdom",
@@ -818,7 +818,7 @@ countries = [
         "capital": "London",
         "lat": 54,
         "lng": -2,
-        "cca3": "GBR"
+        "cca3": "GBR",
     },
     {
         "name": "Guyana",
@@ -828,7 +828,7 @@ countries = [
         "capital": "Georgetown",
         "lat": 5,
         "lng": -59,
-        "cca3": "GUY"
+        "cca3": "GUY",
     },
     {
         "name": "Costa Rica",
@@ -838,7 +838,7 @@ countries = [
         "capital": "San Jose",
         "lat": 10,
         "lng": -84,
-        "cca3": "CRI"
+        "cca3": "CRI",
     },
     {
         "name": "Cameroon",
@@ -848,7 +848,7 @@ countries = [
         "capital": "Yaounde",
         "lat": 6,
         "lng": 12,
-        "cca3": "CMR"
+        "cca3": "CMR",
     },
     {
         "name": "Morocco",
@@ -858,7 +858,7 @@ countries = [
         "capital": "Rabat",
         "lat": 32,
         "lng": -5,
-        "cca3": "MAR"
+        "cca3": "MAR",
     },
     {
         "name": "Northern Mariana Islands",
@@ -868,7 +868,7 @@ countries = [
         "capital": "Saipan",
         "lat": 15.2,
         "lng": 145.75,
-        "cca3": "MNP"
+        "cca3": "MNP",
     },
     {
         "name": "Lesotho",
@@ -878,7 +878,7 @@ countries = [
         "capital": "Maseru",
         "lat": -29.5,
         "lng": 28.5,
-        "cca3": "LSO"
+        "cca3": "LSO",
     },
     {
         "name": "Hungary",
@@ -888,7 +888,7 @@ countries = [
         "capital": "Budapest",
         "lat": 47,
         "lng": 20,
-        "cca3": "HUN"
+        "cca3": "HUN",
     },
     {
         "name": "Turkmenistan",
@@ -898,7 +898,7 @@ countries = [
         "capital": "Ashgabat",
         "lat": 40,
         "lng": 60,
-        "cca3": "TKM"
+        "cca3": "TKM",
     },
     {
         "name": "Suriname",
@@ -908,7 +908,7 @@ countries = [
         "capital": "Paramaribo",
         "lat": 4,
         "lng": -56,
-        "cca3": "SUR"
+        "cca3": "SUR",
     },
     {
         "name": "Netherlands",
@@ -918,7 +918,7 @@ countries = [
         "capital": "Amsterdam",
         "lat": 52.5,
         "lng": 5.75,
-        "cca3": "NLD"
+        "cca3": "NLD",
     },
     {
         "name": "Bermuda",
@@ -928,7 +928,7 @@ countries = [
         "capital": "Hamilton",
         "lat": 32.33333333,
         "lng": -64.75,
-        "cca3": "BMU"
+        "cca3": "BMU",
     },
     {
         "name": "Heard Island and McDonald Islands",
@@ -938,7 +938,7 @@ countries = [
         "capital": "",
         "lat": -53.1,
         "lng": 72.51666666,
-        "cca3": "HMD"
+        "cca3": "HMD",
     },
     {
         "name": "Chad",
@@ -948,7 +948,7 @@ countries = [
         "capital": "N'Djamena",
         "lat": 15,
         "lng": 19,
-        "cca3": "TCD"
+        "cca3": "TCD",
     },
     {
         "name": "Georgia",
@@ -958,7 +958,7 @@ countries = [
         "capital": "Tbilisi",
         "lat": 42,
         "lng": 43.5,
-        "cca3": "GEO"
+        "cca3": "GEO",
     },
     {
         "name": "Montenegro",
@@ -968,7 +968,7 @@ countries = [
         "capital": "Podgorica",
         "lat": 42.5,
         "lng": 19.3,
-        "cca3": "MNE"
+        "cca3": "MNE",
     },
     {
         "name": "Mongolia",
@@ -978,7 +978,7 @@ countries = [
         "capital": "Ulan Bator",
         "lat": 46,
         "lng": 105,
-        "cca3": "MNG"
+        "cca3": "MNG",
     },
     {
         "name": "Marshall Islands",
@@ -988,7 +988,7 @@ countries = [
         "capital": "Majuro",
         "lat": 9,
         "lng": 168,
-        "cca3": "MHL"
+        "cca3": "MHL",
     },
     {
         "name": "Martinique",
@@ -998,7 +998,7 @@ countries = [
         "capital": "Fort-de-France",
         "lat": 14.666667,
         "lng": -61,
-        "cca3": "MTQ"
+        "cca3": "MTQ",
     },
     {
         "name": "Belize",
@@ -1008,7 +1008,7 @@ countries = [
         "capital": "Belmopan",
         "lat": 17.25,
         "lng": -88.75,
-        "cca3": "BLZ"
+        "cca3": "BLZ",
     },
     {
         "name": "Norfolk Island",
@@ -1018,7 +1018,7 @@ countries = [
         "capital": "Kingston",
         "lat": -29.03333333,
         "lng": 167.95,
-        "cca3": "NFK"
+        "cca3": "NFK",
     },
     {
         "name": "Myanmar",
@@ -1028,7 +1028,7 @@ countries = [
         "capital": "Naypyidaw",
         "lat": 22,
         "lng": 98,
-        "cca3": "MMR"
+        "cca3": "MMR",
     },
     {
         "name": "Afghanistan",
@@ -1038,7 +1038,7 @@ countries = [
         "capital": "Kabul",
         "lat": 33,
         "lng": 65,
-        "cca3": "AFG"
+        "cca3": "AFG",
     },
     {
         "name": "Burundi",
@@ -1048,7 +1048,7 @@ countries = [
         "capital": "Bujumbura",
         "lat": -3.5,
         "lng": 30,
-        "cca3": "BDI"
+        "cca3": "BDI",
     },
     {
         "name": "British Virgin Islands",
@@ -1058,7 +1058,7 @@ countries = [
         "capital": "Road Town",
         "lat": 18.431383,
         "lng": -64.62305,
-        "cca3": "VGB"
+        "cca3": "VGB",
     },
     {
         "name": "Belarus",
@@ -1068,7 +1068,7 @@ countries = [
         "capital": "Minsk",
         "lat": 53,
         "lng": 28,
-        "cca3": "BLR"
+        "cca3": "BLR",
     },
     {
         "name": "Saint Barthelemy",
@@ -1078,7 +1078,7 @@ countries = [
         "capital": "Gustavia",
         "lat": 18.5,
         "lng": -63.41666666,
-        "cca3": "BLM"
+        "cca3": "BLM",
     },
     {
         "name": "Grenada",
@@ -1088,7 +1088,7 @@ countries = [
         "capital": "St. George's",
         "lat": 12.11666666,
         "lng": -61.66666666,
-        "cca3": "GRD"
+        "cca3": "GRD",
     },
     {
         "name": "Tokelau",
@@ -1098,7 +1098,7 @@ countries = [
         "capital": "Fakaofo",
         "lat": -9,
         "lng": -172,
-        "cca3": "TKL"
+        "cca3": "TKL",
     },
     {
         "name": "Greece",
@@ -1108,7 +1108,7 @@ countries = [
         "capital": "Athens",
         "lat": 39,
         "lng": 22,
-        "cca3": "GRC"
+        "cca3": "GRC",
     },
     {
         "name": "Russia",
@@ -1118,7 +1118,7 @@ countries = [
         "capital": "Moscow",
         "lat": 60,
         "lng": 100,
-        "cca3": "RUS"
+        "cca3": "RUS",
     },
     {
         "name": "Greenland",
@@ -1128,7 +1128,7 @@ countries = [
         "capital": "Nuuk",
         "lat": 72,
         "lng": -40,
-        "cca3": "GRL"
+        "cca3": "GRL",
     },
     {
         "name": "Andorra",
@@ -1138,7 +1138,7 @@ countries = [
         "capital": "Andorra la Vella",
         "lat": 42.5,
         "lng": 1.5,
-        "cca3": "AND"
+        "cca3": "AND",
     },
     {
         "name": "Mozambique",
@@ -1148,7 +1148,7 @@ countries = [
         "capital": "Maputo",
         "lat": -18.25,
         "lng": 35,
-        "cca3": "MOZ"
+        "cca3": "MOZ",
     },
     {
         "name": "Tajikistan",
@@ -1158,7 +1158,7 @@ countries = [
         "capital": "Dushanbe",
         "lat": 39,
         "lng": 71,
-        "cca3": "TJK"
+        "cca3": "TJK",
     },
     {
         "name": "Haiti",
@@ -1168,7 +1168,7 @@ countries = [
         "capital": "Port-au-Prince",
         "lat": 19,
         "lng": -72.41666666,
-        "cca3": "HTI"
+        "cca3": "HTI",
     },
     {
         "name": "Mexico",
@@ -1178,7 +1178,7 @@ countries = [
         "capital": "Mexico City",
         "lat": 23,
         "lng": -102,
-        "cca3": "MEX"
+        "cca3": "MEX",
     },
     {
         "name": "Zimbabwe",
@@ -1188,7 +1188,7 @@ countries = [
         "capital": "Harare",
         "lat": -20,
         "lng": 30,
-        "cca3": "ZWE"
+        "cca3": "ZWE",
     },
     {
         "name": "Saint Lucia",
@@ -1198,7 +1198,7 @@ countries = [
         "capital": "Castries",
         "lat": 13.88333333,
         "lng": -60.96666666,
-        "cca3": "LCA"
+        "cca3": "LCA",
     },
     {
         "name": "India",
@@ -1208,7 +1208,7 @@ countries = [
         "capital": "New Delhi",
         "lat": 20,
         "lng": 77,
-        "cca3": "IND"
+        "cca3": "IND",
     },
     {
         "name": "Latvia",
@@ -1218,7 +1218,7 @@ countries = [
         "capital": "Riga",
         "lat": 57,
         "lng": 25,
-        "cca3": "LVA"
+        "cca3": "LVA",
     },
     {
         "name": "Bhutan",
@@ -1228,7 +1228,7 @@ countries = [
         "capital": "Thimphu",
         "lat": 27.5,
         "lng": 90.5,
-        "cca3": "BTN"
+        "cca3": "BTN",
     },
     {
         "name": "Saint Vincent and the Grenadines",
@@ -1238,7 +1238,7 @@ countries = [
         "capital": "Kingstown",
         "lat": 13.25,
         "lng": -61.2,
-        "cca3": "VCT"
+        "cca3": "VCT",
     },
     {
         "name": "Vietnam",
@@ -1248,7 +1248,7 @@ countries = [
         "capital": "Hanoi",
         "lat": 16.16666666,
         "lng": 107.83333333,
-        "cca3": "VNM"
+        "cca3": "VNM",
     },
     {
         "name": "Norway",
@@ -1258,7 +1258,7 @@ countries = [
         "capital": "Oslo",
         "lat": 62,
         "lng": 10,
-        "cca3": "NOR"
+        "cca3": "NOR",
     },
     {
         "name": "Czech Republic",
@@ -1268,7 +1268,7 @@ countries = [
         "capital": "Prague",
         "lat": 49.75,
         "lng": 15.5,
-        "cca3": "CZE"
+        "cca3": "CZE",
     },
     {
         "name": "French Southern and Antarctic Lands",
@@ -1278,7 +1278,7 @@ countries = [
         "capital": "Port-aux-Francais",
         "lat": -49.25,
         "lng": 69.167,
-        "cca3": "ATF"
+        "cca3": "ATF",
     },
     {
         "name": "Antigua and Barbuda",
@@ -1288,7 +1288,7 @@ countries = [
         "capital": "Saint John's",
         "lat": 17.05,
         "lng": -61.8,
-        "cca3": "ATG"
+        "cca3": "ATG",
     },
     {
         "name": "Fiji",
@@ -1298,7 +1298,7 @@ countries = [
         "capital": "Suva",
         "lat": -18,
         "lng": 175,
-        "cca3": "FJI"
+        "cca3": "FJI",
     },
     {
         "name": "British Indian Ocean Territory",
@@ -1308,7 +1308,7 @@ countries = [
         "capital": "Diego Garcia",
         "lat": -6,
         "lng": 71.5,
-        "cca3": "IOT"
+        "cca3": "IOT",
     },
     {
         "name": "Honduras",
@@ -1318,7 +1318,7 @@ countries = [
         "capital": "Tegucigalpa",
         "lat": 15,
         "lng": -86.5,
-        "cca3": "HND"
+        "cca3": "HND",
     },
     {
         "name": "Mauritius",
@@ -1328,7 +1328,7 @@ countries = [
         "capital": "Port Louis",
         "lat": -20.28333333,
         "lng": 57.55,
-        "cca3": "MUS"
+        "cca3": "MUS",
     },
     {
         "name": "Antarctica",
@@ -1338,7 +1338,7 @@ countries = [
         "capital": "",
         "lat": -90,
         "lng": 0,
-        "cca3": "ATA"
+        "cca3": "ATA",
     },
     {
         "name": "Luxembourg",
@@ -1348,7 +1348,7 @@ countries = [
         "capital": "Luxembourg",
         "lat": 49.75,
         "lng": 6.16666666,
-        "cca3": "LUX"
+        "cca3": "LUX",
     },
     {
         "name": "Israel",
@@ -1358,7 +1358,7 @@ countries = [
         "capital": "Jerusalem",
         "lat": 31.47,
         "lng": 35.13,
-        "cca3": "ISR"
+        "cca3": "ISR",
     },
     {
         "name": "Micronesia",
@@ -1368,7 +1368,7 @@ countries = [
         "capital": "Palikir",
         "lat": 6.91666666,
         "lng": 158.25,
-        "cca3": "FSM"
+        "cca3": "FSM",
     },
     {
         "name": "Peru",
@@ -1378,7 +1378,7 @@ countries = [
         "capital": "Lima",
         "lat": -10,
         "lng": -76,
-        "cca3": "PER"
+        "cca3": "PER",
     },
     {
         "name": "Reunion",
@@ -1388,7 +1388,7 @@ countries = [
         "capital": "Saint-Denis",
         "lat": -21.15,
         "lng": 55.5,
-        "cca3": "REU"
+        "cca3": "REU",
     },
     {
         "name": "Indonesia",
@@ -1398,7 +1398,7 @@ countries = [
         "capital": "Jakarta",
         "lat": -5,
         "lng": 120,
-        "cca3": "IDN"
+        "cca3": "IDN",
     },
     {
         "name": "Vanuatu",
@@ -1408,7 +1408,7 @@ countries = [
         "capital": "Port Vila",
         "lat": -16,
         "lng": 167,
-        "cca3": "VUT"
+        "cca3": "VUT",
     },
     {
         "name": "Macedonia",
@@ -1418,7 +1418,7 @@ countries = [
         "capital": "Skopje",
         "lat": 41.83333333,
         "lng": 22,
-        "cca3": "MKD"
+        "cca3": "MKD",
     },
     {
         "name": "DR Congo",
@@ -1428,7 +1428,7 @@ countries = [
         "capital": "Kinshasa",
         "lat": 0,
         "lng": 25,
-        "cca3": "COD"
+        "cca3": "COD",
     },
     {
         "name": "Republic of the Congo",
@@ -1438,7 +1438,7 @@ countries = [
         "capital": "Brazzaville",
         "lat": -1,
         "lng": 15,
-        "cca3": "COG"
+        "cca3": "COG",
     },
     {
         "name": "Iceland",
@@ -1448,7 +1448,7 @@ countries = [
         "capital": "Reykjavik",
         "lat": 65,
         "lng": -18,
-        "cca3": "ISL"
+        "cca3": "ISL",
     },
     {
         "name": "Guadeloupe",
@@ -1458,7 +1458,7 @@ countries = [
         "capital": "Basse-Terre",
         "lat": 16.25,
         "lng": -61.583333,
-        "cca3": "GLP"
+        "cca3": "GLP",
     },
     {
         "name": "Cook Islands",
@@ -1468,7 +1468,7 @@ countries = [
         "capital": "Avarua",
         "lat": -21.23333333,
         "lng": -159.76666666,
-        "cca3": "COK"
+        "cca3": "COK",
     },
     {
         "name": "Comoros",
@@ -1478,7 +1478,7 @@ countries = [
         "capital": "Moroni",
         "lat": -12.16666666,
         "lng": 44.25,
-        "cca3": "COM"
+        "cca3": "COM",
     },
     {
         "name": "Colombia",
@@ -1488,7 +1488,7 @@ countries = [
         "capital": "Bogota",
         "lat": 4,
         "lng": -72,
-        "cca3": "COL"
+        "cca3": "COL",
     },
     {
         "name": "Nigeria",
@@ -1498,7 +1498,7 @@ countries = [
         "capital": "Abuja",
         "lat": 10,
         "lng": 8,
-        "cca3": "NGA"
+        "cca3": "NGA",
     },
     {
         "name": "Timor-Leste",
@@ -1508,7 +1508,7 @@ countries = [
         "capital": "Dili",
         "lat": -8.83333333,
         "lng": 125.91666666,
-        "cca3": "TLS"
+        "cca3": "TLS",
     },
     {
         "name": "Taiwan",
@@ -1518,7 +1518,7 @@ countries = [
         "capital": "Taipei",
         "lat": 23.5,
         "lng": 121,
-        "cca3": "TWN"
+        "cca3": "TWN",
     },
     {
         "name": "Portugal",
@@ -1528,7 +1528,7 @@ countries = [
         "capital": "Lisbon",
         "lat": 39.5,
         "lng": -8,
-        "cca3": "PRT"
+        "cca3": "PRT",
     },
     {
         "name": "Moldova",
@@ -1538,7 +1538,7 @@ countries = [
         "capital": "Chisinau",
         "lat": 47,
         "lng": 29,
-        "cca3": "MDA"
+        "cca3": "MDA",
     },
     {
         "name": "Guernsey",
@@ -1548,7 +1548,7 @@ countries = [
         "capital": "St. Peter Port",
         "lat": 49.46666666,
         "lng": -2.58333333,
-        "cca3": "GGY"
+        "cca3": "GGY",
     },
     {
         "name": "Madagascar",
@@ -1558,7 +1558,7 @@ countries = [
         "capital": "Antananarivo",
         "lat": -20,
         "lng": 47,
-        "cca3": "MDG"
+        "cca3": "MDG",
     },
     {
         "name": "Ecuador",
@@ -1568,7 +1568,7 @@ countries = [
         "capital": "Quito",
         "lat": -2,
         "lng": -77.5,
-        "cca3": "ECU"
+        "cca3": "ECU",
     },
     {
         "name": "Senegal",
@@ -1578,7 +1578,7 @@ countries = [
         "capital": "Dakar",
         "lat": 14,
         "lng": -14,
-        "cca3": "SEN"
+        "cca3": "SEN",
     },
     {
         "name": "New Zealand",
@@ -1588,7 +1588,7 @@ countries = [
         "capital": "Wellington",
         "lat": -41,
         "lng": 174,
-        "cca3": "NZL"
+        "cca3": "NZL",
     },
     {
         "name": "Maldives",
@@ -1598,7 +1598,7 @@ countries = [
         "capital": "Male",
         "lat": 3.25,
         "lng": 73,
-        "cca3": "MDV"
+        "cca3": "MDV",
     },
     {
         "name": "American Samoa",
@@ -1608,7 +1608,7 @@ countries = [
         "capital": "Pago Pago",
         "lat": -14.33333333,
         "lng": -170,
-        "cca3": "ASM"
+        "cca3": "ASM",
     },
     {
         "name": "Saint Pierre and Miquelon",
@@ -1618,7 +1618,7 @@ countries = [
         "capital": "Saint-Pierre",
         "lat": 46.83333333,
         "lng": -56.33333333,
-        "cca3": "SPM"
+        "cca3": "SPM",
     },
     {
         "name": "Curacao",
@@ -1628,7 +1628,7 @@ countries = [
         "capital": "Willemstad",
         "lat": 12.116667,
         "lng": -68.933333,
-        "cca3": "CUW"
+        "cca3": "CUW",
     },
     {
         "name": "France",
@@ -1638,7 +1638,7 @@ countries = [
         "capital": "Paris",
         "lat": 46,
         "lng": 2,
-        "cca3": "FRA"
+        "cca3": "FRA",
     },
     {
         "name": "Lithuania",
@@ -1648,7 +1648,7 @@ countries = [
         "capital": "Vilnius",
         "lat": 56,
         "lng": 24,
-        "cca3": "LTU"
+        "cca3": "LTU",
     },
     {
         "name": "Rwanda",
@@ -1658,7 +1658,7 @@ countries = [
         "capital": "Kigali",
         "lat": -2,
         "lng": 30,
-        "cca3": "RWA"
+        "cca3": "RWA",
     },
     {
         "name": "Zambia",
@@ -1668,7 +1668,7 @@ countries = [
         "capital": "Lusaka",
         "lat": -15,
         "lng": 30,
-        "cca3": "ZMB"
+        "cca3": "ZMB",
     },
     {
         "name": "Gambia",
@@ -1678,7 +1678,7 @@ countries = [
         "capital": "Banjul",
         "lat": 13.46666666,
         "lng": -16.56666666,
-        "cca3": "GMB"
+        "cca3": "GMB",
     },
     {
         "name": "Wallis and Futuna",
@@ -1688,7 +1688,7 @@ countries = [
         "capital": "Mata-Utu",
         "lat": -13.3,
         "lng": -176.2,
-        "cca3": "WLF"
+        "cca3": "WLF",
     },
     {
         "name": "Jersey",
@@ -1698,7 +1698,7 @@ countries = [
         "capital": "Saint Helier",
         "lat": 49.25,
         "lng": -2.16666666,
-        "cca3": "JEY"
+        "cca3": "JEY",
     },
     {
         "name": "Faroe Islands",
@@ -1708,7 +1708,7 @@ countries = [
         "capital": "Torshavn",
         "lat": 62,
         "lng": -7,
-        "cca3": "FRO"
+        "cca3": "FRO",
     },
     {
         "name": "Guatemala",
@@ -1718,7 +1718,7 @@ countries = [
         "capital": "Guatemala City",
         "lat": 15.5,
         "lng": -90.25,
-        "cca3": "GTM"
+        "cca3": "GTM",
     },
     {
         "name": "Denmark",
@@ -1728,7 +1728,7 @@ countries = [
         "capital": "Copenhagen",
         "lat": 56,
         "lng": 10,
-        "cca3": "DNK"
+        "cca3": "DNK",
     },
     {
         "name": "Isle of Man",
@@ -1738,7 +1738,7 @@ countries = [
         "capital": "Douglas",
         "lat": 54.25,
         "lng": -4.5,
-        "cca3": "IMN"
+        "cca3": "IMN",
     },
     {
         "name": "Australia",
@@ -1748,7 +1748,7 @@ countries = [
         "capital": "Canberra",
         "lat": -27,
         "lng": 133,
-        "cca3": "AUS"
+        "cca3": "AUS",
     },
     {
         "name": "Austria",
@@ -1758,7 +1758,7 @@ countries = [
         "capital": "Vienna",
         "lat": 47.33333333,
         "lng": 13.33333333,
-        "cca3": "AUT"
+        "cca3": "AUT",
     },
     {
         "name": "Svalbard and Jan Mayen",
@@ -1768,7 +1768,7 @@ countries = [
         "capital": "Longyearbyen",
         "lat": 78,
         "lng": 20,
-        "cca3": "SJM"
+        "cca3": "SJM",
     },
     {
         "name": "Venezuela",
@@ -1778,7 +1778,7 @@ countries = [
         "capital": "Caracas",
         "lat": 8,
         "lng": -66,
-        "cca3": "VEN"
+        "cca3": "VEN",
     },
     {
         "name": "Kosovo",
@@ -1788,7 +1788,7 @@ countries = [
         "capital": "Pristina",
         "lat": 42.666667,
         "lng": 21.166667,
-        "cca3": "UNK"
+        "cca3": "UNK",
     },
     {
         "name": "Palau",
@@ -1798,7 +1798,7 @@ countries = [
         "capital": "Ngerulmud",
         "lat": 7.5,
         "lng": 134.5,
-        "cca3": "PLW"
+        "cca3": "PLW",
     },
     {
         "name": "Kenya",
@@ -1808,7 +1808,7 @@ countries = [
         "capital": "Nairobi",
         "lat": 1,
         "lng": 38,
-        "cca3": "KEN"
+        "cca3": "KEN",
     },
     {
         "name": "Samoa",
@@ -1818,7 +1818,7 @@ countries = [
         "capital": "Apia",
         "lat": -13.58333333,
         "lng": -172.33333333,
-        "cca3": "WSM"
+        "cca3": "WSM",
     },
     {
         "name": "Turkey",
@@ -1828,7 +1828,7 @@ countries = [
         "capital": "Ankara",
         "lat": 39,
         "lng": 35,
-        "cca3": "TUR"
+        "cca3": "TUR",
     },
     {
         "name": "Albania",
@@ -1838,7 +1838,7 @@ countries = [
         "capital": "Tirana",
         "lat": 41,
         "lng": 20,
-        "cca3": "ALB"
+        "cca3": "ALB",
     },
     {
         "name": "Oman",
@@ -1848,7 +1848,7 @@ countries = [
         "capital": "Muscat",
         "lat": 21,
         "lng": 57,
-        "cca3": "OMN"
+        "cca3": "OMN",
     },
     {
         "name": "Tuvalu",
@@ -1858,7 +1858,7 @@ countries = [
         "capital": "Funafuti",
         "lat": -8,
         "lng": 178,
-        "cca3": "TUV"
+        "cca3": "TUV",
     },
     {
         "name": "Aland Islands",
@@ -1868,7 +1868,7 @@ countries = [
         "capital": "Mariehamn",
         "lat": 60.116667,
         "lng": 19.9,
-        "cca3": "ALA"
+        "cca3": "ALA",
     },
     {
         "name": "Brunei",
@@ -1878,7 +1878,7 @@ countries = [
         "capital": "Bandar Seri Begawan",
         "lat": 4.5,
         "lng": 114.66666666,
-        "cca3": "BRN"
+        "cca3": "BRN",
     },
     {
         "name": "Tunisia",
@@ -1888,7 +1888,7 @@ countries = [
         "capital": "Tunis",
         "lat": 34,
         "lng": 9,
-        "cca3": "TUN"
+        "cca3": "TUN",
     },
     {
         "name": "Pitcairn Islands",
@@ -1898,7 +1898,7 @@ countries = [
         "capital": "Adamstown",
         "lat": -25.06666666,
         "lng": -130.1,
-        "cca3": "PCN"
+        "cca3": "PCN",
     },
     {
         "name": "Barbados",
@@ -1908,7 +1908,7 @@ countries = [
         "capital": "Bridgetown",
         "lat": 13.16666666,
         "lng": -59.53333333,
-        "cca3": "BRB"
+        "cca3": "BRB",
     },
     {
         "name": "Brazil",
@@ -1918,7 +1918,7 @@ countries = [
         "capital": "Brasilia",
         "lat": -10,
         "lng": -55,
-        "cca3": "BRA"
+        "cca3": "BRA",
     },
     {
         "name": "Ivory Coast",
@@ -1928,7 +1928,7 @@ countries = [
         "capital": "Yamoussoukro",
         "lat": 8,
         "lng": -5,
-        "cca3": "CIV"
+        "cca3": "CIV",
     },
     {
         "name": "Serbia",
@@ -1938,7 +1938,7 @@ countries = [
         "capital": "Belgrade",
         "lat": 44,
         "lng": 21,
-        "cca3": "SRB"
+        "cca3": "SRB",
     },
     {
         "name": "Equatorial Guinea",
@@ -1948,7 +1948,7 @@ countries = [
         "capital": "Malabo",
         "lat": 2,
         "lng": 10,
-        "cca3": "GNQ"
+        "cca3": "GNQ",
     },
     {
         "name": "United States",
@@ -1958,7 +1958,7 @@ countries = [
         "capital": "Washington D.C.",
         "lat": 38,
         "lng": -97,
-        "cca3": "USA"
+        "cca3": "USA",
     },
     {
         "name": "Qatar",
@@ -1968,7 +1968,7 @@ countries = [
         "capital": "Doha",
         "lat": 25.5,
         "lng": 51.25,
-        "cca3": "QAT"
+        "cca3": "QAT",
     },
     {
         "name": "Sweden",
@@ -1978,7 +1978,7 @@ countries = [
         "capital": "Stockholm",
         "lat": 62,
         "lng": 15,
-        "cca3": "SWE"
+        "cca3": "SWE",
     },
     {
         "name": "Azerbaijan",
@@ -1988,7 +1988,7 @@ countries = [
         "capital": "Baku",
         "lat": 40.5,
         "lng": 47.5,
-        "cca3": "AZE"
+        "cca3": "AZE",
     },
     {
         "name": "Guinea-Bissau",
@@ -1998,7 +1998,7 @@ countries = [
         "capital": "Bissau",
         "lat": 12,
         "lng": -15,
-        "cca3": "GNB"
+        "cca3": "GNB",
     },
     {
         "name": "Swaziland",
@@ -2008,7 +2008,7 @@ countries = [
         "capital": "Lobamba",
         "lat": -26.5,
         "lng": 31.5,
-        "cca3": "SWZ"
+        "cca3": "SWZ",
     },
     {
         "name": "Tonga",
@@ -2018,7 +2018,7 @@ countries = [
         "capital": "Nuku'alofa",
         "lat": -20,
         "lng": -175,
-        "cca3": "TON"
+        "cca3": "TON",
     },
     {
         "name": "Canada",
@@ -2028,7 +2028,7 @@ countries = [
         "capital": "Ottawa",
         "lat": 60,
         "lng": -95,
-        "cca3": "CAN"
+        "cca3": "CAN",
     },
     {
         "name": "Ukraine",
@@ -2038,7 +2038,7 @@ countries = [
         "capital": "Kiev",
         "lat": 49,
         "lng": 32,
-        "cca3": "UKR"
+        "cca3": "UKR",
     },
     {
         "name": "South Korea",
@@ -2048,7 +2048,7 @@ countries = [
         "capital": "Seoul",
         "lat": 37,
         "lng": 127.5,
-        "cca3": "KOR"
+        "cca3": "KOR",
     },
     {
         "name": "Anguilla",
@@ -2058,7 +2058,7 @@ countries = [
         "capital": "The Valley",
         "lat": 18.25,
         "lng": -63.16666666,
-        "cca3": "AIA"
+        "cca3": "AIA",
     },
     {
         "name": "Central African Republic",
@@ -2068,7 +2068,7 @@ countries = [
         "capital": "Bangui",
         "lat": 7,
         "lng": 21,
-        "cca3": "CAF"
+        "cca3": "CAF",
     },
     {
         "name": "Slovakia",
@@ -2078,7 +2078,7 @@ countries = [
         "capital": "Bratislava",
         "lat": 48.66666666,
         "lng": 19.5,
-        "cca3": "SVK"
+        "cca3": "SVK",
     },
     {
         "name": "Cyprus",
@@ -2088,7 +2088,7 @@ countries = [
         "capital": "Nicosia",
         "lat": 35,
         "lng": 33,
-        "cca3": "CYP"
+        "cca3": "CYP",
     },
     {
         "name": "Bosnia and Herzegovina",
@@ -2098,7 +2098,7 @@ countries = [
         "capital": "Sarajevo",
         "lat": 44,
         "lng": 18,
-        "cca3": "BIH"
+        "cca3": "BIH",
     },
     {
         "name": "Singapore",
@@ -2108,7 +2108,7 @@ countries = [
         "capital": "Singapore",
         "lat": 1.36666666,
         "lng": 103.8,
-        "cca3": "SGP"
+        "cca3": "SGP",
     },
     {
         "name": "South Georgia",
@@ -2118,7 +2118,7 @@ countries = [
         "capital": "King Edward Point",
         "lat": -54.5,
         "lng": -37,
-        "cca3": "SGS"
+        "cca3": "SGS",
     },
     {
         "name": "Somalia",
@@ -2128,7 +2128,7 @@ countries = [
         "capital": "Mogadishu",
         "lat": 10,
         "lng": 49,
-        "cca3": "SOM"
+        "cca3": "SOM",
     },
     {
         "name": "Uzbekistan",
@@ -2138,7 +2138,7 @@ countries = [
         "capital": "Tashkent",
         "lat": 41,
         "lng": 64,
-        "cca3": "UZB"
+        "cca3": "UZB",
     },
     {
         "name": "Eritrea",
@@ -2148,7 +2148,7 @@ countries = [
         "capital": "Asmara",
         "lat": 15,
         "lng": 39,
-        "cca3": "ERI"
+        "cca3": "ERI",
     },
     {
         "name": "Poland",
@@ -2158,7 +2158,7 @@ countries = [
         "capital": "Warsaw",
         "lat": 52,
         "lng": 20,
-        "cca3": "POL"
+        "cca3": "POL",
     },
     {
         "name": "Kuwait",
@@ -2168,7 +2168,7 @@ countries = [
         "capital": "Kuwait City",
         "lat": 29.5,
         "lng": 45.75,
-        "cca3": "KWT"
+        "cca3": "KWT",
     },
     {
         "name": "Gabon",
@@ -2178,7 +2178,7 @@ countries = [
         "capital": "Libreville",
         "lat": -1,
         "lng": 11.75,
-        "cca3": "GAB"
+        "cca3": "GAB",
     },
     {
         "name": "Cayman Islands",
@@ -2188,7 +2188,7 @@ countries = [
         "capital": "George Town",
         "lat": 19.5,
         "lng": -80.5,
-        "cca3": "CYM"
+        "cca3": "CYM",
     },
     {
         "name": "Vatican City",
@@ -2198,7 +2198,7 @@ countries = [
         "capital": "Vatican City",
         "lat": 41.9,
         "lng": 12.45,
-        "cca3": "VAT"
+        "cca3": "VAT",
     },
     {
         "name": "Estonia",
@@ -2208,7 +2208,7 @@ countries = [
         "capital": "Tallinn",
         "lat": 59,
         "lng": 26,
-        "cca3": "EST"
+        "cca3": "EST",
     },
     {
         "name": "Malawi",
@@ -2218,7 +2218,7 @@ countries = [
         "capital": "Lilongwe",
         "lat": -13.5,
         "lng": 34,
-        "cca3": "MWI"
+        "cca3": "MWI",
     },
     {
         "name": "Spain",
@@ -2228,7 +2228,7 @@ countries = [
         "capital": "Madrid",
         "lat": 40,
         "lng": -4,
-        "cca3": "ESP"
+        "cca3": "ESP",
     },
     {
         "name": "Iraq",
@@ -2238,7 +2238,7 @@ countries = [
         "capital": "Baghdad",
         "lat": 33,
         "lng": 44,
-        "cca3": "IRQ"
+        "cca3": "IRQ",
     },
     {
         "name": "El Salvador",
@@ -2248,7 +2248,7 @@ countries = [
         "capital": "San Salvador",
         "lat": 13.83333333,
         "lng": -88.91666666,
-        "cca3": "SLV"
+        "cca3": "SLV",
     },
     {
         "name": "Mali",
@@ -2258,7 +2258,7 @@ countries = [
         "capital": "Bamako",
         "lat": 17,
         "lng": -4,
-        "cca3": "MLI"
+        "cca3": "MLI",
     },
     {
         "name": "Ireland",
@@ -2268,7 +2268,7 @@ countries = [
         "capital": "Dublin",
         "lat": 53,
         "lng": -8,
-        "cca3": "IRL"
+        "cca3": "IRL",
     },
     {
         "name": "Iran",
@@ -2278,7 +2278,7 @@ countries = [
         "capital": "Tehran",
         "lat": 32,
         "lng": 53,
-        "cca3": "IRN"
+        "cca3": "IRN",
     },
     {
         "name": "Aruba",
@@ -2288,7 +2288,7 @@ countries = [
         "capital": "Oranjestad",
         "lat": 12.5,
         "lng": -69.96666666,
-        "cca3": "ABW"
+        "cca3": "ABW",
     },
     {
         "name": "Papua New Guinea",
@@ -2298,7 +2298,7 @@ countries = [
         "capital": "Port Moresby",
         "lat": -6,
         "lng": 147,
-        "cca3": "PNG"
+        "cca3": "PNG",
     },
     {
         "name": "Panama",
@@ -2308,7 +2308,7 @@ countries = [
         "capital": "Panama City",
         "lat": 9,
         "lng": -80,
-        "cca3": "PAN"
+        "cca3": "PAN",
     },
     {
         "name": "Sudan",
@@ -2318,7 +2318,7 @@ countries = [
         "capital": "Khartoum",
         "lat": 15,
         "lng": 30,
-        "cca3": "SDN"
+        "cca3": "SDN",
     },
     {
         "name": "Solomon Islands",
@@ -2328,7 +2328,7 @@ countries = [
         "capital": "Honiara",
         "lat": -8,
         "lng": 159,
-        "cca3": "SLB"
+        "cca3": "SLB",
     },
     {
         "name": "Western Sahara",
@@ -2338,7 +2338,7 @@ countries = [
         "capital": "El Aaiun",
         "lat": 24.5,
         "lng": -13,
-        "cca3": "ESH"
+        "cca3": "ESH",
     },
     {
         "name": "Monaco",
@@ -2348,7 +2348,7 @@ countries = [
         "capital": "Monaco",
         "lat": 43.73333333,
         "lng": 7.4,
-        "cca3": "MCO"
+        "cca3": "MCO",
     },
     {
         "name": "Italy",
@@ -2358,7 +2358,7 @@ countries = [
         "capital": "Rome",
         "lat": 42.83333333,
         "lng": 12.83333333,
-        "cca3": "ITA"
+        "cca3": "ITA",
     },
     {
         "name": "Japan",
@@ -2368,7 +2368,7 @@ countries = [
         "capital": "Tokyo",
         "lat": 36,
         "lng": 138,
-        "cca3": "JPN"
+        "cca3": "JPN",
     },
     {
         "name": "Kyrgyzstan",
@@ -2378,7 +2378,7 @@ countries = [
         "capital": "Bishkek",
         "lat": 41,
         "lng": 75,
-        "cca3": "KGZ"
+        "cca3": "KGZ",
     },
     {
         "name": "Uganda",
@@ -2388,7 +2388,7 @@ countries = [
         "capital": "Kampala",
         "lat": 1,
         "lng": 32,
-        "cca3": "UGA"
+        "cca3": "UGA",
     },
     {
         "name": "New Caledonia",
@@ -2398,7 +2398,7 @@ countries = [
         "capital": "Noumea",
         "lat": -21.5,
         "lng": 165.5,
-        "cca3": "NCL"
+        "cca3": "NCL",
     },
     {
         "name": "United Arab Emirates",
@@ -2408,7 +2408,7 @@ countries = [
         "capital": "Abu Dhabi",
         "lat": 24,
         "lng": 54,
-        "cca3": "ARE"
+        "cca3": "ARE",
     },
     {
         "name": "Argentina",
@@ -2418,7 +2418,7 @@ countries = [
         "capital": "Buenos Aires",
         "lat": -34,
         "lng": -64,
-        "cca3": "ARG"
+        "cca3": "ARG",
     },
     {
         "name": "Bahamas",
@@ -2428,7 +2428,7 @@ countries = [
         "capital": "Nassau",
         "lat": 24.25,
         "lng": -76,
-        "cca3": "BHS"
+        "cca3": "BHS",
     },
     {
         "name": "Bahrain",
@@ -2438,7 +2438,7 @@ countries = [
         "capital": "Manama",
         "lat": 26,
         "lng": 50.55,
-        "cca3": "BHR"
+        "cca3": "BHR",
     },
     {
         "name": "Armenia",
@@ -2448,7 +2448,7 @@ countries = [
         "capital": "Yerevan",
         "lat": 40,
         "lng": 45,
-        "cca3": "ARM"
+        "cca3": "ARM",
     },
     {
         "name": "Nauru",
@@ -2458,7 +2458,7 @@ countries = [
         "capital": "Yaren",
         "lat": -0.53333333,
         "lng": 166.91666666,
-        "cca3": "NRU"
+        "cca3": "NRU",
     },
     {
         "name": "Cuba",
@@ -2468,8 +2468,8 @@ countries = [
         "capital": "Havana",
         "lat": 21.5,
         "lng": -80,
-        "cca3": "CUB"
-    }
+        "cca3": "CUB",
+    },
 ]
 
 all_lookups = {}

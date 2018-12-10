@@ -18,8 +18,13 @@ class AnnotationModelView(SupersetModelView, DeleteMixin):  # noqa
 
     list_columns = ['layer', 'short_descr', 'start_dttm', 'end_dttm']
     edit_columns = [
-        'layer', 'short_descr', 'long_descr', 'start_dttm', 'end_dttm',
-        'json_metadata']
+        'layer',
+        'short_descr',
+        'long_descr',
+        'start_dttm',
+        'end_dttm',
+        'json_metadata',
+    ]
 
     add_columns = edit_columns
 
@@ -34,7 +39,7 @@ class AnnotationModelView(SupersetModelView, DeleteMixin):  # noqa
 
     description_columns = {
         'json_metadata': 'This JSON represents any additional metadata this \
-         annotation needs to add more context.',
+         annotation needs to add more context.'
     }
 
     def pre_add(self, obj):
@@ -65,10 +70,7 @@ class AnnotationLayerModelView(SupersetModelView, DeleteMixin):
     edit_columns = ['name', 'descr']
     add_columns = edit_columns
 
-    label_columns = {
-        'name': _('Name'),
-        'descr': _('Description'),
-    }
+    label_columns = {'name': _('Name'), 'descr': _('Description')}
 
 
 appbuilder.add_view(
@@ -78,7 +80,8 @@ appbuilder.add_view(
     icon='fa-comment',
     category='Manage',
     category_label=__('Manage'),
-    category_icon='')
+    category_icon='',
+)
 appbuilder.add_view(
     AnnotationModelView,
     'Annotations',
@@ -86,4 +89,5 @@ appbuilder.add_view(
     icon='fa-comments',
     category='Manage',
     category_label=__('Manage'),
-    category_icon='')
+    category_icon='',
+)

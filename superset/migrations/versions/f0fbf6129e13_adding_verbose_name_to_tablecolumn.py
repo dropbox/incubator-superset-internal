@@ -17,8 +17,8 @@ import sqlalchemy as sa
 def upgrade():
     op.add_column(
         'table_columns',
-        sa.Column('verbose_name', sa.String(length=1024),
-        nullable=True))
+        sa.Column('verbose_name', sa.String(length=1024), nullable=True),
+    )
 
 
 def downgrade():

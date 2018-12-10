@@ -14,20 +14,22 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.create_table('dashboard_user',
+    op.create_table(
+        'dashboard_user',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('user_id', sa.Integer(), nullable=True),
         sa.Column('dashboard_id', sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(['dashboard_id'], ['dashboards.id'], ),
-        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id'], ),
+        sa.ForeignKeyConstraint(['dashboard_id'], ['dashboards.id']),
+        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id']),
         sa.PrimaryKeyConstraint('id'),
     )
-    op.create_table('slice_user',
+    op.create_table(
+        'slice_user',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('user_id', sa.Integer(), nullable=True),
         sa.Column('slice_id', sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(['slice_id'], ['slices.id'], ),
-        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id'], ),
+        sa.ForeignKeyConstraint(['slice_id'], ['slices.id']),
+        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id']),
         sa.PrimaryKeyConstraint('id'),
     )
 

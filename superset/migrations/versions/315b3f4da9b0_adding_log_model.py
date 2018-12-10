@@ -15,14 +15,15 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.create_table('logs',
+    op.create_table(
+        'logs',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('action', sa.String(length=512), nullable=True),
         sa.Column('user_id', sa.Integer(), nullable=True),
         sa.Column('json', sa.Text(), nullable=True),
         sa.Column('dttm', sa.DateTime(), nullable=True),
-        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id'], ),
-        sa.PrimaryKeyConstraint('id')
+        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id']),
+        sa.PrimaryKeyConstraint('id'),
     )
 
 

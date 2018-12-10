@@ -15,7 +15,9 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('query', sa.Column('results_key', sa.String(length=64), nullable=True))
+    op.add_column(
+        'query', sa.Column('results_key', sa.String(length=64), nullable=True)
+    )
 
 
 def downgrade():

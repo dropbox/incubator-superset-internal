@@ -22,10 +22,11 @@ def upgrade():
 
 def downgrade():
     op.add_column(
-        'clusters',
-        sa.Column('coordinator_host', sa.String(length=256), nullable=True),
+        'clusters', sa.Column('coordinator_host', sa.String(length=256), nullable=True)
     )
-    op.add_column('clusters', sa.Column('coordinator_port', sa.Integer(), nullable=True))
+    op.add_column(
+        'clusters', sa.Column('coordinator_port', sa.Integer(), nullable=True)
+    )
     op.add_column(
         'clusters',
         sa.Column('coordinator_endpoint', sa.String(length=256), nullable=True),

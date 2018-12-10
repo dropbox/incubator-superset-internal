@@ -16,8 +16,12 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('clusters', sa.Column('verbose_name', sa.String(length=250), nullable=True))
-    op.add_column('dbs', sa.Column('verbose_name', sa.String(length=250), nullable=True))
+    op.add_column(
+        'clusters', sa.Column('verbose_name', sa.String(length=250), nullable=True)
+    )
+    op.add_column(
+        'dbs', sa.Column('verbose_name', sa.String(length=250), nullable=True)
+    )
 
     try:
         op.create_unique_constraint(None, 'dbs', ['verbose_name'])
@@ -32,4 +36,3 @@ def downgrade():
         op.drop_column('clusters', 'verbose_name')
     except Exception as e:
         logging.exception(e)
-

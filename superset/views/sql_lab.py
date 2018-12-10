@@ -34,7 +34,8 @@ appbuilder.add_view(
     label=__('Queries'),
     category='Manage',
     category_label=__('Manage'),
-    icon='fa-search')
+    icon='fa-search',
+)
 
 
 class SavedQueryView(SupersetModelView, DeleteMixin):
@@ -46,11 +47,23 @@ class SavedQueryView(SupersetModelView, DeleteMixin):
     edit_title = _('Edit Saved Query')
 
     list_columns = [
-        'label', 'user', 'database', 'schema', 'description',
-        'modified', 'pop_tab_link']
+        'label',
+        'user',
+        'database',
+        'schema',
+        'description',
+        'modified',
+        'pop_tab_link',
+    ]
     show_columns = [
-        'id', 'label', 'user', 'database',
-        'description', 'sql', 'pop_tab_link']
+        'id',
+        'label',
+        'user',
+        'database',
+        'description',
+        'sql',
+        'pop_tab_link',
+    ]
     search_columns = ('label', 'user', 'database', 'schema', 'changed_on')
     add_columns = ['label', 'database', 'description', 'sql']
     edit_columns = add_columns
@@ -83,19 +96,17 @@ appbuilder.add_view_no_menu(SavedQueryViewApi)
 appbuilder.add_view_no_menu(SavedQueryView)
 
 appbuilder.add_link(
-    __('Saved Queries'),
-    href='/sqllab/my_queries/',
-    icon='fa-save',
-    category='SQL Lab')
+    __('Saved Queries'), href='/sqllab/my_queries/', icon='fa-save', category='SQL Lab'
+)
 
 
 class SqlLab(BaseSupersetView):
     """The base views for Superset!"""
+
     @expose('/my_queries/')
     def my_queries(self):
         """Assigns a list of found users to the given role."""
-        return redirect(
-            '/savedqueryview/list/?_flt_0_user={}'.format(g.user.id))
+        return redirect('/savedqueryview/list/?_flt_0_user={}'.format(g.user.id))
 
 
 appbuilder.add_view_no_menu(SqlLab)

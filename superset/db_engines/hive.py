@@ -5,8 +5,7 @@ from thrift import Thrift
 
 
 # TODO: contribute back to pyhive.
-def fetch_logs(self, max_rows=1024,
-               orientation=ttypes.TFetchOrientation.FETCH_NEXT):
+def fetch_logs(self, max_rows=1024, orientation=ttypes.TFetchOrientation.FETCH_NEXT):
     """Mocked. Retrieve the logs produced by the execution of the query.
     Can be called multiple times to fetch the logs produced after
     the previous call.
@@ -20,8 +19,7 @@ def fetch_logs(self, max_rows=1024,
         logs = self._connection.client.GetLog(req).log
         return logs
     # raised if Hive is used
-    except (ttypes.TApplicationException,
-            Thrift.TApplicationException):
+    except (ttypes.TApplicationException, Thrift.TApplicationException):
         if self._state == self._STATE_NONE:
             raise hive.ProgrammingError('No query yet')
         logs = []
@@ -34,8 +32,7 @@ def fetch_logs(self, max_rows=1024,
             )
             response = self._connection.client.FetchResults(req)
             hive._check_status(response)
-            assert not response.results.rows, \
-                'expected data in columnar format'
+            assert not response.results.rows, 'expected data in columnar format'
             assert len(response.results.columns) == 1, response.results.columns
             new_logs = hive._unwrap_column(response.results.columns[0])
             logs += new_logs

@@ -66,8 +66,8 @@ def replace(source, target):
                 if 'adhoc_filters' in params:
                     for filt in params['adhoc_filters']:
                         if 'sqlExpression' in filt:
-                            filt['sqlExpression'] = (
-                                filt['sqlExpression'].replace(source, target)
+                            filt['sqlExpression'] = filt['sqlExpression'].replace(
+                                source, target
                             )
 
                     slc.params = json.dumps(params, sort_keys=True)

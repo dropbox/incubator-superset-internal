@@ -13,11 +13,7 @@ def bootstrap_user_data(username=None, include_perms=False):
     else:
         username = g.user.username
 
-    user = (
-        db.session.query(ab_models.User)
-        .filter_by(username=username)
-        .one()
-    )
+    user = db.session.query(ab_models.User).filter_by(username=username).one()
 
     payload = {
         'username': user.username,
@@ -47,11 +43,8 @@ def get_permissions(user):
         perms = set()
         for perm in role.permissions:
             if perm.permission and perm.view_menu:
-                perms.add(
-                    (perm.permission.name, perm.view_menu.name),
-                )
-                if perm.permission.name in ('datasource_access',
-                                            'database_access'):
+                perms.add((perm.permission.name, perm.view_menu.name))
+                if perm.permission.name in ('datasource_access', 'database_access'):
                     permissions[perm.permission.name].add(perm.view_menu.name)
         roles[role.name] = [
             [perm.permission.name, perm.view_menu.name]

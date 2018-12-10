@@ -15,8 +15,7 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('tables',
-                  sa.Column('template_params', sa.Text(), nullable=True))
+    op.add_column('tables', sa.Column('template_params', sa.Text(), nullable=True))
 
 
 def downgrade():

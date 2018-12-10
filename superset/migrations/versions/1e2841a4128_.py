@@ -13,6 +13,7 @@ down_revision = '5a7bad26f2a7'
 from alembic import op
 import sqlalchemy as sa
 
+
 def upgrade():
     op.add_column('table_columns', sa.Column('expression', sa.Text(), nullable=True))
 

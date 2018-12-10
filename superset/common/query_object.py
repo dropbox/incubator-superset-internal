@@ -14,20 +14,21 @@ class QueryObject:
     The query object's schema matches the interfaces of DB connectors like sqla
     and druid. The query objects are constructed on the client.
     """
+
     def __init__(
-            self,
-            granularity: str,
-            groupby: List[str] = None,
-            metrics: List[Metric] = None,
-            filters: List[str] = None,
-            time_range: Optional[str] = None,
-            time_shift: Optional[str] = None,
-            is_timeseries: bool = False,
-            row_limit: int = app.config.get('ROW_LIMIT'),
-            limit: int = 0,
-            timeseries_limit_metric: Optional[Metric] = None,
-            order_desc: bool = True,
-            extras: Optional[Dict] = None,
+        self,
+        granularity: str,
+        groupby: List[str] = None,
+        metrics: List[Metric] = None,
+        filters: List[str] = None,
+        time_range: Optional[str] = None,
+        time_shift: Optional[str] = None,
+        is_timeseries: bool = False,
+        row_limit: int = app.config.get('ROW_LIMIT'),
+        limit: int = 0,
+        timeseries_limit_metric: Optional[Metric] = None,
+        order_desc: bool = True,
+        extras: Optional[Dict] = None,
     ):
         self.granularity = granularity
         self.from_dttm, self.to_dttm = utils.get_since_until(time_range, time_shift)

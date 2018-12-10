@@ -42,8 +42,7 @@ def get_query(query_id, session, retry_count=5):
             query = session.query(Query).filter_by(id=query_id).one()
         except Exception:
             attempt += 1
-            logging.error(
-                'Query with id `{}` could not be retrieved'.format(query_id))
+            logging.error('Query with id `{}` could not be retrieved'.format(query_id))
             stats_logger.incr('error_attempting_orm_query_' + str(attempt))
             logging.error('Sleeping for a sec before retrying...')
             sleep(1)
@@ -58,7 +57,8 @@ def session_scope(nullpool):
     """Provide a transactional scope around a series of operations."""
     if nullpool:
         engine = sqlalchemy.create_engine(
-            app.config.get('SQLALCHEMY_DATABASE_URI'), poolclass=NullPool)
+            app.config.get('SQLALCHEMY_DATABASE_URI'), poolclass=NullPool
+        )
         session_class = sessionmaker()
         session_class.configure(bind=engine)
         session = session_class()
@@ -79,15 +79,28 @@ def session_scope(nullpool):
 
 @celery_app.task(bind=True, soft_time_limit=SQLLAB_TIMEOUT)
 def get_sql_results(
-    ctask, query_id, rendered_query, return_results=True, store_results=False,
-        user_name=None, start_time=None):
+    ctask,
+    query_id,
+    rendered_query,
+    return_results=True,
+    store_results=False,
+    user_name=None,
+    start_time=None,
+):
     """Executes the sql query returns the results."""
     with session_scope(not ctask.request.called_directly) as session:
 
         try:
             return execute_sql(
-                ctask, query_id, rendered_query, return_results, store_results, user_name,
-                session=session, start_time=start_time)
+                ctask,
+                query_id,
+                rendered_query,
+                return_results,
+                store_results,
+                user_name,
+                session=session,
+                start_time=start_time,
+            )
         except Exception as e:
             logging.exception(e)
             stats_logger.incr('error_sqllab_unhandled')
@@ -100,14 +113,19 @@ def get_sql_results(
 
 
 def execute_sql(
-    ctask, query_id, rendered_query, return_results=True, store_results=False,
-    user_name=None, session=None, start_time=None,
+    ctask,
+    query_id,
+    rendered_query,
+    return_results=True,
+    store_results=False,
+    user_name=None,
+    session=None,
+    start_time=None,
 ):
     """Executes the sql query returns the results."""
     if store_results and start_time:
         # only asynchronous queries
-        stats_logger.timing(
-            'sqllab.query.time_pending', now_as_float() - start_time)
+        stats_logger.timing('sqllab.query.time_pending', now_as_float() - start_time)
     query = get_query(query_id, session)
     payload = dict(query_id=query_id)
 
@@ -122,10 +140,7 @@ def execute_sql(
         query.status = QueryStatus.FAILED
         query.tmp_table_name = None
         session.commit()
-        payload.update({
-            'status': query.status,
-            'error': msg,
-        })
+        payload.update({'status': query.status, 'error': msg})
         if troubleshooting_link:
             payload['link'] = troubleshooting_link
         return payload
@@ -139,16 +154,18 @@ def execute_sql(
     SQL_MAX_ROWS = app.config.get('SQL_MAX_ROW')
     if not superset_query.is_readonly() and not database.allow_dml:
         return handle_error(
-            'Only `SELECT` statements are allowed against this database')
+            'Only `SELECT` statements are allowed against this database'
+        )
     if query.select_as_cta:
         if not superset_query.is_select():
             return handle_error(
-                'Only `SELECT` statements can be used with the CREATE TABLE '
-                'feature.')
+                'Only `SELECT` statements can be used with the CREATE TABLE ' 'feature.'
+            )
         if not query.tmp_table_name:
             start_dttm = datetime.fromtimestamp(query.start_time)
             query.tmp_table_name = 'tmp_{}_table_{}'.format(
-                query.user_id, start_dttm.strftime('%Y_%m_%d_%H_%M_%S'))
+                query.user_id, start_dttm.strftime('%Y_%m_%d_%H_%M_%S')
+            )
         executed_sql = superset_query.as_create_table(query.tmp_table_name)
         query.select_as_cta_used = True
     if superset_query.is_select():
@@ -161,7 +178,8 @@ def execute_sql(
     SQL_QUERY_MUTATOR = config.get('SQL_QUERY_MUTATOR')
     if SQL_QUERY_MUTATOR:
         executed_sql = SQL_QUERY_MUTATOR(
-            executed_sql, user_name, security_manager, database)
+            executed_sql, user_name, security_manager, database
+        )
 
     query.executed_sql = executed_sql
     query.status = QueryStatus.RUNNING
@@ -172,9 +190,7 @@ def execute_sql(
     conn = None
     try:
         engine = database.get_sqla_engine(
-            schema=query.schema,
-            nullpool=True,
-            user_name=user_name,
+            schema=query.schema, nullpool=True, user_name=user_name
         )
         conn = engine.raw_connection()
         cursor = conn.cursor()
@@ -194,20 +210,21 @@ def execute_sql(
         db_engine_spec.handle_cursor(cursor, query, session)
         logging.info('Fetching data: {}'.format(query.to_dict()))
         stats_logger.timing(
-            'sqllab.query.time_executing_query',
-            now_as_float() - query_start_time)
+            'sqllab.query.time_executing_query', now_as_float() - query_start_time
+        )
         fetching_start_time = now_as_float()
         data = db_engine_spec.fetch_data(cursor, query.limit)
         stats_logger.timing(
-            'sqllab.query.time_fetching_results',
-            now_as_float() - fetching_start_time)
+            'sqllab.query.time_fetching_results', now_as_float() - fetching_start_time
+        )
     except SoftTimeLimitExceeded as e:
         logging.exception(e)
         if conn is not None:
             conn.close()
         return handle_error(
             "SQL Lab timeout. This environment's policy is to kill queries "
-            'after {} seconds.'.format(SQLLAB_TIMEOUT))
+            'after {} seconds.'.format(SQLLAB_TIMEOUT)
+        )
     except Exception as e:
         logging.exception(e)
         if conn is not None:
@@ -235,23 +252,26 @@ def execute_sql(
                 limit=query.limit,
                 schema=database.force_ctas_schema,
                 show_cols=False,
-                latest_partition=False))
+                latest_partition=False,
+            )
+        )
     query.end_time = now_as_float()
     session.merge(query)
     session.flush()
 
-    payload.update({
-        'status': query.status,
-        'data': cdf.data if cdf.data else [],
-        'columns': cdf.columns if cdf.columns else [],
-        'query': query.to_dict(),
-    })
+    payload.update(
+        {
+            'status': query.status,
+            'data': cdf.data if cdf.data else [],
+            'columns': cdf.columns if cdf.columns else [],
+            'query': query.to_dict(),
+        }
+    )
     if store_results:
         key = '{}'.format(uuid.uuid4())
         logging.info('Storing results in results backend, key: {}'.format(key))
         write_to_results_backend_start = now_as_float()
-        json_payload = json.dumps(
-            payload, default=json_iso_dttm_ser, ignore_nan=True)
+        json_payload = json.dumps(payload, default=json_iso_dttm_ser, ignore_nan=True)
         cache_timeout = database.cache_timeout
         if cache_timeout is None:
             cache_timeout = config.get('CACHE_DEFAULT_TIMEOUT', 0)
@@ -259,7 +279,8 @@ def execute_sql(
         query.results_key = key
         stats_logger.timing(
             'sqllab.query.results_backend_write',
-            now_as_float() - write_to_results_backend_start)
+            now_as_float() - write_to_results_backend_start,
+        )
     session.merge(query)
     session.commit()
 

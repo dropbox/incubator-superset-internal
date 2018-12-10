@@ -3,12 +3,7 @@ import textwrap
 
 
 from superset import db
-from .helpers import (
-    Dash,
-    misc_dash_slices,
-    Slice,
-    update_slice_ids,
-)
+from .helpers import Dash, misc_dash_slices, Slice, update_slice_ids
 
 DASH_SLUG = 'misc_charts'
 
@@ -22,7 +17,8 @@ def load_misc_dashboard():
 
     if not dash:
         dash = Dash()
-    js = textwrap.dedent("""\
+    js = textwrap.dedent(
+        """\
 {
     "CHART-BkeVbh8ANQ": {
         "children": [],
@@ -194,13 +190,11 @@ def load_misc_dashboard():
     },
     "DASHBOARD_VERSION_KEY": "v2"
 }
-    """)
+    """
+    )
     pos = json.loads(js)
     slices = (
-        db.session
-        .query(Slice)
-        .filter(Slice.slice_name.in_(misc_dash_slices))
-        .all()
+        db.session.query(Slice).filter(Slice.slice_name.in_(misc_dash_slices)).all()
     )
     slices = sorted(slices, key=lambda x: x.id)
     update_slice_ids(pos, slices)

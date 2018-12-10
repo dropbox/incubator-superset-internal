@@ -14,7 +14,9 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('datasources', sa.Column('cache_timeout', sa.Integer(), nullable=True))
+    op.add_column(
+        'datasources', sa.Column('cache_timeout', sa.Integer(), nullable=True)
+    )
     op.add_column('dbs', sa.Column('cache_timeout', sa.Integer(), nullable=True))
     op.add_column('slices', sa.Column('cache_timeout', sa.Integer(), nullable=True))
     op.add_column('tables', sa.Column('cache_timeout', sa.Integer(), nullable=True))

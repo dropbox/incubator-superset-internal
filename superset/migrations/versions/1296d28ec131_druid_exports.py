@@ -15,7 +15,9 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('datasources', sa.Column('params', sa.String(length=1000), nullable=True))
+    op.add_column(
+        'datasources', sa.Column('params', sa.String(length=1000), nullable=True)
+    )
 
 
 def downgrade():

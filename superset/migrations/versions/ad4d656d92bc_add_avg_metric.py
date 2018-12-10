@@ -18,8 +18,9 @@ def upgrade():
     op.add_column('columns', sa.Column('avg', sa.Boolean(), nullable=True))
     op.add_column('table_columns', sa.Column('avg', sa.Boolean(), nullable=True))
 
+
 def downgrade():
-  with op.batch_alter_table('columns') as batch_op:
-    batch_op.drop_column('avg')
-  with op.batch_alter_table('table_columns') as batch_op:
-    batch_op.drop_column('avg')
+    with op.batch_alter_table('columns') as batch_op:
+        batch_op.drop_column('avg')
+    with op.batch_alter_table('table_columns') as batch_op:
+        batch_op.drop_column('avg')

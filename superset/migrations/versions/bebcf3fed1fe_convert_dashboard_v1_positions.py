@@ -14,14 +14,7 @@ import sys
 import uuid
 
 from alembic import op
-from sqlalchemy import (
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-    Text,
-)
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -59,6 +52,7 @@ MAX_VALUE = sys.maxsize
 
 class Slice(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'slices'
     id = Column(Integer, primary_key=True)
     slice_name = Column(String(250))
@@ -67,7 +61,8 @@ class Slice(Base):
 
 
 dashboard_slices = Table(
-    'dashboard_slices', Base.metadata,
+    'dashboard_slices',
+    Base.metadata,
     Column('id', Integer, primary_key=True),
     Column('dashboard_id', Integer, ForeignKey('dashboards.id')),
     Column('slice_id', Integer, ForeignKey('slices.id')),
@@ -76,18 +71,17 @@ dashboard_slices = Table(
 
 class Dashboard(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'dashboards'
     id = Column(Integer, primary_key=True)
     dashboard_title = Column(String(500))
     position_json = Column(Text)
-    slices = relationship(
-        'Slice', secondary=dashboard_slices, backref='dashboards')
+    slices = relationship('Slice', secondary=dashboard_slices, backref='dashboards')
 
 
 def is_v2_dash(positions):
     return (
-        isinstance(positions, dict) and
-        positions.get('DASHBOARD_VERSION_KEY') == 'v2'
+        isinstance(positions, dict) and positions.get('DASHBOARD_VERSION_KEY') == 'v2'
     )
 
 
@@ -103,12 +97,7 @@ def get_boundary(positions):
         bottom = max(position['row'] + position['size_y'], bottom)
         right = max(position['col'] + position['size_x'], right)
 
-    return {
-        'top': top,
-        'bottom': bottom,
-        'left': left,
-        'right': right,
-    }
+    return {'top': top, 'bottom': bottom, 'left': left, 'right': right}
 
 
 def generate_id():
@@ -116,19 +105,25 @@ def generate_id():
 
 
 def has_overlap(positions, xAxis=True):
-    sorted_positions = \
-        sorted(positions[:], key=lambda pos: pos['col']) \
-        if xAxis else sorted(positions[:], key=lambda pos: pos['row'])
+    sorted_positions = (
+        sorted(positions[:], key=lambda pos: pos['col'])
+        if xAxis
+        else sorted(positions[:], key=lambda pos: pos['row'])
+    )
 
     result = False
     for idx, position in enumerate(sorted_positions):
         if idx < len(sorted_positions) - 1:
             if xAxis:
-                result = position['col'] + position['size_x'] > \
-                    sorted_positions[idx + 1]['col']
+                result = (
+                    position['col'] + position['size_x']
+                    > sorted_positions[idx + 1]['col']
+                )
             else:
-                result = position['row'] + position['size_y'] > \
-                    sorted_positions[idx + 1]['row']
+                result = (
+                    position['row'] + position['size_y']
+                    > sorted_positions[idx + 1]['row']
+                )
         if result:
             break
 
@@ -155,9 +150,7 @@ def get_header_component(title):
     return {
         'id': DASHBOARD_HEADER_ID,
         'type': DASHBOARD_HEADER_TYPE,
-        'meta': {
-            'text': title,
-        },
+        'meta': {'text': title},
     }
 
 
@@ -166,9 +159,7 @@ def get_row_container():
         'type': ROW_TYPE,
         'id': 'DASHBOARD_ROW_TYPE-{}'.format(generate_id()),
         'children': [],
-        'meta': {
-            'background': BACKGROUND_TRANSPARENT,
-        },
+        'meta': {'background': BACKGROUND_TRANSPARENT},
     }
 
 
@@ -177,9 +168,7 @@ def get_col_container():
         'type': COLUMN_TYPE,
         'id': 'DASHBOARD_COLUMN_TYPE-{}'.format(generate_id()),
         'children': [],
-        'meta': {
-            'background': BACKGROUND_TRANSPARENT,
-        },
+        'meta': {'background': BACKGROUND_TRANSPARENT},
     }
 
 
@@ -190,13 +179,9 @@ def get_chart_holder(position):
     slice_name = position.get('slice_name')
     code = position.get('code')
 
-    width = max(
-        GRID_MIN_COLUMN_COUNT,
-        int(round(size_x / GRID_RATIO)),
-    )
+    width = max(GRID_MIN_COLUMN_COUNT, int(round(size_x / GRID_RATIO)))
     height = max(
-        GRID_MIN_ROW_UNITS,
-        int(round(((size_y / GRID_RATIO) * 100) / ROW_HEIGHT)),
+        GRID_MIN_ROW_UNITS, int(round(((size_y / GRID_RATIO) * 100) / ROW_HEIGHT))
     )
     if code is not None:
         markdown_content = ' '  # white-space markdown
@@ -209,22 +194,14 @@ def get_chart_holder(position):
             'type': MARKDOWN_TYPE,
             'id': 'DASHBOARD_MARKDOWN_TYPE-{}'.format(generate_id()),
             'children': [],
-            'meta': {
-                'width': width,
-                'height': height,
-                'code': markdown_content,
-            },
+            'meta': {'width': width, 'height': height, 'code': markdown_content},
         }
 
     return {
         'type': CHART_TYPE,
         'id': 'DASHBOARD_CHART_TYPE-{}'.format(generate_id()),
         'children': [],
-        'meta': {
-            'width': width,
-            'height': height,
-            'chartId': int(slice_id),
-        },
+        'meta': {'width': width, 'height': height, 'chartId': int(slice_id)},
     }
 
 
@@ -233,43 +210,43 @@ def get_children_max(children, attr, root):
 
 
 def get_children_sum(children, attr, root):
-    return reduce(
-        (lambda sum, childId: sum + root[childId]['meta'][attr]),
-        children,
-        0,
-    )
+    return reduce((lambda sum, childId: sum + root[childId]['meta'][attr]), children, 0)
 
 
 # find column that: width > 2 and
 # each row has at least 1 chart can reduce width
 def get_wide_column_ids(children, root):
     return list(
-        filter(
-            lambda childId: can_reduce_column_width(root[childId], root),
-            children,
-        ),
+        filter(lambda childId: can_reduce_column_width(root[childId], root), children)
     )
 
 
 def is_wide_leaf_component(component):
     return (
-        component['type'] in [CHART_TYPE, MARKDOWN_TYPE] and
-        component['meta']['width'] > GRID_MIN_COLUMN_COUNT
+        component['type'] in [CHART_TYPE, MARKDOWN_TYPE]
+        and component['meta']['width'] > GRID_MIN_COLUMN_COUNT
     )
 
 
 def can_reduce_column_width(column_component, root):
     return (
-        column_component['type'] == COLUMN_TYPE and
-        column_component['meta']['width'] > GRID_MIN_COLUMN_COUNT and
-        all([
-            is_wide_leaf_component(root[childId]) or (
-                root[childId]['type'] == ROW_TYPE and
-                all([
-                    is_wide_leaf_component(root[id]) for id in root[childId]['children']
-                ])
-            ) for childId in column_component['children']
-        ])
+        column_component['type'] == COLUMN_TYPE
+        and column_component['meta']['width'] > GRID_MIN_COLUMN_COUNT
+        and all(
+            [
+                is_wide_leaf_component(root[childId])
+                or (
+                    root[childId]['type'] == ROW_TYPE
+                    and all(
+                        [
+                            is_wide_leaf_component(root[id])
+                            for id in root[childId]['children']
+                        ]
+                    )
+                )
+                for childId in column_component['children']
+            ]
+        )
     )
 
 
@@ -278,7 +255,7 @@ def reduce_row_width(row_component, root):
         filter(
             lambda childId: is_wide_leaf_component(root[childId]),
             row_component['children'],
-        ),
+        )
     )
 
     widest_chart_id = None
@@ -370,10 +347,7 @@ def convert(positions, level, parent, root):
         current_positions = layer[:]
         if not has_overlap(current_positions):
             # this is a list of charts in the same row
-            sorted_by_col = sorted(
-                current_positions,
-                key=lambda pos: pos['col'],
-            )
+            sorted_by_col = sorted(current_positions, key=lambda pos: pos['col'])
             for position in sorted_by_col:
                 chart_holder = get_chart_holder(position)
                 root[chart_holder['id']] = chart_holder
@@ -411,10 +385,7 @@ def convert(positions, level, parent, root):
                         root[col_container['id']] = col_container
 
                         if not has_overlap(lower, False):
-                            sorted_by_row = sorted(
-                                lower,
-                                key=lambda pos: pos['row'],
-                            )
+                            sorted_by_row = sorted(lower, key=lambda pos: pos['row'])
                             for position in sorted_by_row:
                                 chart_holder = get_chart_holder(position)
                                 root[chart_holder['id']] = chart_holder
@@ -426,9 +397,7 @@ def convert(positions, level, parent, root):
                         if len(col_container['children']):
                             row_container['children'].append(col_container['id'])
                             col_container['meta']['width'] = get_children_max(
-                                col_container['children'],
-                                'width',
-                                root,
+                                col_container['children'], 'width', root
                             )
 
                     current_positions = upper[:]
@@ -436,9 +405,7 @@ def convert(positions, level, parent, root):
 
         # add row meta
         row_container['meta']['width'] = get_children_sum(
-            row_container['children'],
-            'width',
-            root,
+            row_container['children'], 'width', root
         )
 
 
@@ -459,12 +426,13 @@ def convert_to_layout(positions):
             meta = item['meta']
             if meta.get('width', 0) > GRID_COLUMN_COUNT:
                 current_width = meta['width']
-                while (
-                    current_width > GRID_COLUMN_COUNT and
-                    len(list(filter(
-                        lambda childId: is_wide_leaf_component(root[childId]),
-                        item['children'],
-                    )))
+                while current_width > GRID_COLUMN_COUNT and len(
+                    list(
+                        filter(
+                            lambda childId: is_wide_leaf_component(root[childId]),
+                            item['children'],
+                        )
+                    )
                 ):
                     current_width = reduce_row_width(item, root)
 
@@ -483,27 +451,24 @@ def convert_to_layout(positions):
                             for childId in root[current_column]['children']:
                                 if root[childId]['type'] == ROW_TYPE:
                                     root[childId]['meta']['width'] = reduce_row_width(
-                                        root[childId], root,
+                                        root[childId], root
                                     )
                                 else:
-                                    root[childId]['meta']['width'] = \
-                                        reduce_component_width(root[childId])
+                                    root[childId]['meta'][
+                                        'width'
+                                    ] = reduce_component_width(root[childId])
 
                             root[current_column]['meta']['width'] = get_children_max(
-                                root[current_column]['children'],
-                                'width',
-                                root,
+                                root[current_column]['children'], 'width', root
                             )
                             current_width = get_children_sum(
-                                item['children'],
-                                'width',
-                                root,
+                                item['children'], 'width', root
                             )
                             idx += 1
 
                         has_wide_columns = (
-                            len(get_wide_column_ids(item['children'], root)) and
-                            current_width > GRID_COLUMN_COUNT
+                            len(get_wide_column_ids(item['children'], root))
+                            and current_width > GRID_COLUMN_COUNT
                         )
 
             meta.pop('width', None)
@@ -515,18 +480,19 @@ def merge_position(position, bottom_line, last_column_start):
     col = position['col']
     size_x = position['size_x']
     size_y = position['size_y']
-    end_column = len(bottom_line) \
-        if col + size_x > last_column_start \
-        else col + size_x
+    end_column = len(bottom_line) if col + size_x > last_column_start else col + size_x
 
     # finding index where index >= col and bottom_line value > bottom_line[col]
-    taller_indexes = [i for i, value in enumerate(bottom_line)
-                      if (i >= col and value > bottom_line[col])]
+    taller_indexes = [
+        i
+        for i, value in enumerate(bottom_line)
+        if (i >= col and value > bottom_line[col])
+    ]
 
     current_row_value = bottom_line[col]
     # if no enough space to fit current position, will start from taller row value
     if len(taller_indexes) > 0 and (taller_indexes[0] - col + 1) < size_x:
-        current_row_value = max(bottom_line[col:col + size_x])
+        current_row_value = max(bottom_line[col : col + size_x])
 
     # add current row value with size_y of this position
     for i in range(col, end_column):
@@ -568,8 +534,12 @@ def scan_dashboard_positions_data(positions):
         while len(next_row):
             # special treatment for same (row, col) assigned to more than 1 chart:
             # add one additional row and display wider chart first
-            available_columns_index = [i for i, e in enumerate(
-                list(filter(lambda x: x['col'] == next_col, next_row)))]
+            available_columns_index = [
+                i
+                for i, e in enumerate(
+                    list(filter(lambda x: x['col'] == next_col, next_row))
+                )
+            ]
 
             if len(available_columns_index):
                 idx = available_columns_index[0]
@@ -582,8 +552,9 @@ def scan_dashboard_positions_data(positions):
 
                 next_position = next_row.pop(idx)
                 merge_position(next_position, bottom_line, last_column_start + 1)
-                next_position['row'] = \
+                next_position['row'] = (
                     bottom_line[next_position['col']] - next_position['size_y']
+                )
                 updated_positions.append(next_position)
                 next_col += next_position['size_x']
             else:
@@ -609,11 +580,15 @@ def upgrade():
             if position_json:
                 # scan and fix positions data: extra spaces, dup rows, .etc
                 position_json = scan_dashboard_positions_data(position_json)
-                position_dict = \
-                    {str(position['slice_id']): position for position in position_json}
+                position_dict = {
+                    str(position['slice_id']): position for position in position_json
+                }
 
-            last_row_id = max([pos['row'] + pos['size_y'] for pos in position_json]) \
-                if position_json else 0
+            last_row_id = (
+                max([pos['row'] + pos['size_y'] for pos in position_json])
+                if position_json
+                else 0
+            )
             new_slice_counter = 0
             for slice in slices:
                 position = position_dict.get(str(slice.id))
@@ -623,13 +598,15 @@ def upgrade():
                 if not position:
                     position = {
                         'col': (
-                            new_slice_counter % NUMBER_OF_CHARTS_PER_ROW *
-                            DEFAULT_CHART_WIDTH + 1
+                            new_slice_counter
+                            % NUMBER_OF_CHARTS_PER_ROW
+                            * DEFAULT_CHART_WIDTH
+                            + 1
                         ),
                         'row': (
-                            last_row_id +
-                            int(new_slice_counter / NUMBER_OF_CHARTS_PER_ROW) *
-                            DEFAULT_CHART_WIDTH
+                            last_row_id
+                            + int(new_slice_counter / NUMBER_OF_CHARTS_PER_ROW)
+                            * DEFAULT_CHART_WIDTH
                         ),
                         'size_x': DEFAULT_CHART_WIDTH,
                         'size_y': DEFAULT_CHART_WIDTH,
@@ -650,7 +627,8 @@ def upgrade():
 
             v2_layout = convert_to_layout(positions)
             v2_layout[DASHBOARD_HEADER_ID] = get_header_component(
-                dashboard.dashboard_title)
+                dashboard.dashboard_title
+            )
 
             sorted_by_key = collections.OrderedDict(sorted(v2_layout.items()))
             dashboard.position_json = json.dumps(sorted_by_key, indent=2)

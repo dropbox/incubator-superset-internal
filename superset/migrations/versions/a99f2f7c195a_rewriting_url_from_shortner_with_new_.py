@@ -20,6 +20,7 @@ from urllib import parse
 
 Base = declarative_base()
 
+
 def parse_querystring(qs):
     d = {}
     for k, v in parse.parse_qsl(qs):
@@ -31,6 +32,7 @@ def parse_querystring(qs):
             else:
                 d[k] = [d[k], v]
     return d
+
 
 class Url(Base):
 
@@ -49,15 +51,18 @@ def upgrade():
     urls_len = len(urls)
     for i, url in enumerate(urls):
         if (
-                '?form_data' not in url.url and
-                '?' in url.url and
-                'dbid' not in url.url and
-                url.url.startswith('//superset/explore')):
+            '?form_data' not in url.url
+            and '?' in url.url
+            and 'dbid' not in url.url
+            and url.url.startswith('//superset/explore')
+        ):
             d = parse_querystring(url.url.split('?')[1])
             split = url.url.split('/')
             d['datasource'] = split[5] + '__' + split[4]
             d = cast_form_data(d)
-            newurl = '/'.join(split[:-1]) + '/?form_data=' + parse.quote_plus(json.dumps(d))
+            newurl = (
+                '/'.join(split[:-1]) + '/?form_data=' + parse.quote_plus(json.dumps(d))
+            )
             url.url = newurl
             session.merge(url)
             session.commit()

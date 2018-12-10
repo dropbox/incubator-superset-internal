@@ -23,4 +23,4 @@ def upgrade():
 
 def downgrade():
     with op.batch_alter_table('logs') as batch_op:
-        batch_op.add_column(sa.Column('dt', sa.Date,  default=date.today()))
+        batch_op.add_column(sa.Column('dt', sa.Date, default=date.today()))

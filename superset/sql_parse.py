@@ -56,8 +56,9 @@ class SupersetQuery(object):
     @staticmethod
     def __get_full_name(identifier):
         if len(identifier.tokens) > 1 and identifier.tokens[1].value == '.':
-            return '{}.{}'.format(identifier.tokens[0].value,
-                                  identifier.tokens[2].value)
+            return '{}.{}'.format(
+                identifier.tokens[0].value, identifier.tokens[2].value
+            )
         return identifier.get_real_name()
 
     @staticmethod
@@ -123,8 +124,10 @@ class SupersetQuery(object):
                 continue
 
             if item.ttype in Keyword or item.value == ',':
-                if (self.__is_result_operation(item.value) or
-                        item.value.upper() == ON_KEYWORD):
+                if (
+                    self.__is_result_operation(item.value)
+                    or item.value.upper() == ON_KEYWORD
+                ):
                     table_name_preceding_token = False
                     continue
                 # FROM clause is over
@@ -167,8 +170,8 @@ class SupersetQuery(object):
         if limit.ttype == sqlparse.tokens.Literal.Number.Integer:
             tokens[limit_pos + 2].value = new_limit
         elif limit.is_group:
-            tokens[limit_pos + 2].value = (
-                '{}, {}'.format(next(limit.get_identifiers()), new_limit)
+            tokens[limit_pos + 2].value = '{}, {}'.format(
+                next(limit.get_identifiers()), new_limit
             )
 
         str_res = ''

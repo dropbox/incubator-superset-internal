@@ -29,7 +29,8 @@ def load_bart_lines():
             'polyline': Text,
             'path_json': Text,
         },
-        index=False)
+        index=False,
+    )
     print('Creating table {} reference'.format(tbl_name))
     tbl = db.session.query(TBL).filter_by(table_name=tbl_name).first()
     if not tbl:

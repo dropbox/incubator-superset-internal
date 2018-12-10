@@ -13,7 +13,9 @@ down_revision = '1296d28ec131'
 
 
 def upgrade():
-    op.create_index(op.f('ix_query_results_key'), 'query', ['results_key'], unique=False)
+    op.create_index(
+        op.f('ix_query_results_key'), 'query', ['results_key'], unique=False
+    )
 
 
 def downgrade():

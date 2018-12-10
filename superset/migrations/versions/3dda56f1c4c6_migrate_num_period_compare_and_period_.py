@@ -34,11 +34,7 @@ class Slice(Base):
     params = Column(Text)
 
 
-comparison_type_map = {
-    'factor': 'ratio',
-    'growth': 'percentage',
-    'value': 'absolute',
-}
+comparison_type_map = {'factor': 'ratio', 'growth': 'percentage', 'value': 'absolute'}
 
 db_engine_specs_map = {
     'second': 'PT1S',
@@ -86,12 +82,7 @@ def timedelta_to_string(obj):
 
 
 def format_seconds(value):
-    periods = [
-        ('minute', 60),
-        ('hour', 3600),
-        ('day', 86400),
-        ('week', 604800),
-    ]
+    periods = [('minute', 60), ('hour', 3600), ('day', 86400), ('week', 604800)]
     for period, multiple in periods:
         if value % multiple == 0:
             value //= multiple
@@ -136,8 +127,11 @@ def upgrade():
             continue
 
         num_period_compare = int(params.get('num_period_compare'))
-        granularity = (params.get('granularity') if chart.datasource_type == 'druid'
-            else params.get('time_grain_sqla'))
+        granularity = (
+            params.get('granularity')
+            if chart.datasource_type == 'druid'
+            else params.get('time_grain_sqla')
+        )
         time_compare = compute_time_compare(granularity, num_period_compare)
 
         period_ratio_type = params.get('period_ratio_type') or 'growth'

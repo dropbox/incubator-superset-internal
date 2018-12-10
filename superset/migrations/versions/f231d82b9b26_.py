@@ -14,14 +14,9 @@ from superset.utils.core import generic_find_uq_constraint_name
 revision = 'f231d82b9b26'
 down_revision = 'e68c4473c581'
 
-conv = {
-    'uq': 'uq_%(table_name)s_%(column_0_name)s',
-}
+conv = {'uq': 'uq_%(table_name)s_%(column_0_name)s'}
 
-names = {
-    'columns': 'column_name',
-    'metrics': 'metric_name',
-}
+names = {'columns': 'column_name', 'metrics': 'metric_name'}
 
 
 def upgrade():
@@ -39,8 +34,7 @@ def upgrade():
     for table, column in names.items():
         with op.batch_alter_table(table, naming_convention=conv) as batch_op:
             batch_op.create_unique_constraint(
-                'uq_{}_{}'.format(table, column),
-                [column, 'datasource_id'],
+                'uq_{}_{}'.format(table, column), [column, 'datasource_id']
             )
 
 
@@ -62,10 +56,7 @@ def downgrade():
     for table, column in names.items():
         with op.batch_alter_table(table, naming_convention=conv) as batch_op:
             batch_op.drop_constraint(
-                generic_find_uq_constraint_name(
-                    table,
-                    {column, 'datasource_id'},
-                    insp,
-                ) or 'uq_{}_{}'.format(table, column),
+                generic_find_uq_constraint_name(table, {column, 'datasource_id'}, insp)
+                or 'uq_{}_{}'.format(table, column),
                 type_='unique',
             )

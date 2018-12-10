@@ -15,17 +15,18 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.create_table('css_templates',
-    sa.Column('created_on', sa.DateTime(), nullable=False),
-    sa.Column('changed_on', sa.DateTime(), nullable=False),
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('template_name', sa.String(length=250), nullable=True),
-    sa.Column('css', sa.Text(), nullable=True),
-    sa.Column('changed_by_fk', sa.Integer(), nullable=True),
-    sa.Column('created_by_fk', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id'], ),
-    sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    op.create_table(
+        'css_templates',
+        sa.Column('created_on', sa.DateTime(), nullable=False),
+        sa.Column('changed_on', sa.DateTime(), nullable=False),
+        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('template_name', sa.String(length=250), nullable=True),
+        sa.Column('css', sa.Text(), nullable=True),
+        sa.Column('changed_by_fk', sa.Integer(), nullable=True),
+        sa.Column('created_by_fk', sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id']),
+        sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id']),
+        sa.PrimaryKeyConstraint('id'),
     )
 
 

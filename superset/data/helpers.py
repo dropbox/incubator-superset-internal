@@ -23,7 +23,8 @@ misc_dash_slices = set()  # slices assembled in a 'Misc Chart' dashboard
 
 def update_slice_ids(layout_dict, slices):
     charts = [
-        component for component in layout_dict.values()
+        component
+        for component in layout_dict.values()
         if isinstance(component, dict) and component['type'] == 'CHART'
     ]
     sorted_charts = sorted(charts, key=lambda k: k['meta']['chartId'])

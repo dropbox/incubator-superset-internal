@@ -42,7 +42,8 @@ def load_country_map_data():
             '2014': BigInteger,
             'dttm': Date(),
         },
-        index=False)
+        index=False,
+    )
     print('Done loading table!')
     print('-' * 80)
     print('Creating table reference')

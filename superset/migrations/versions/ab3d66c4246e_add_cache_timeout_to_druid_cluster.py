@@ -15,8 +15,7 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column(
-        'clusters', sa.Column('cache_timeout', sa.Integer(), nullable=True))
+    op.add_column('clusters', sa.Column('cache_timeout', sa.Integer(), nullable=True))
 
 
 def downgrade():

@@ -33,10 +33,9 @@ def load_flights():
         db.engine,
         if_exists='replace',
         chunksize=500,
-        dtype={
-            'ds': DateTime,
-        },
-        index=False)
+        dtype={'ds': DateTime},
+        index=False,
+    )
     tbl = db.session.query(TBL).filter_by(table_name=tbl_name).first()
     if not tbl:
         tbl = TBL(table_name=tbl_name)

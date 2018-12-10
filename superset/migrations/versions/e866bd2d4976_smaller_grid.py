@@ -18,8 +18,10 @@ down_revision = '21e88bc06c02'
 Base = declarative_base()
 RATIO = 4
 
+
 class Dashboard(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'dashboards'
     id = sa.Column(sa.Integer, primary_key=True)
     position_json = sa.Column(sa.Text)
@@ -32,8 +34,7 @@ def upgrade():
 
     dashboards = session.query(Dashboard).all()
     for i, dashboard in enumerate(dashboards):
-        print('Upgrading ({}/{}): {}'.format(
-            i, len(dashboards), dashboard.id))
+        print('Upgrading ({}/{}): {}'.format(i, len(dashboards), dashboard.id))
         positions = json.loads(dashboard.position_json or '{}')
         for pos in positions:
             if pos.get('v', 0) == 0:
@@ -56,8 +57,7 @@ def downgrade():
 
     dashboards = session.query(Dashboard).all()
     for i, dashboard in enumerate(dashboards):
-        print('Downgrading ({}/{}): {}'.format(
-            i, len(dashboards), dashboard.id))
+        print('Downgrading ({}/{}): {}'.format(i, len(dashboards), dashboard.id))
         positions = json.loads(dashboard.position_json or '{}')
         for pos in positions:
             if pos.get('v', 0) == 1:

@@ -24,6 +24,7 @@ def downgrade():
         sa.Column(
             'allow_run_sync',
             sa.Integer(display_width=1),
-            autoincrement=False, nullable=True,
+            autoincrement=False,
+            nullable=True,
         ),
     )

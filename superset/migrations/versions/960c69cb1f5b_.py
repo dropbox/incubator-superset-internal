@@ -15,8 +15,14 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.add_column('table_columns', sa.Column('python_date_format', sa.String(length=255), nullable=True))
-    op.add_column('table_columns', sa.Column('database_expression', sa.String(length=255), nullable=True))
+    op.add_column(
+        'table_columns',
+        sa.Column('python_date_format', sa.String(length=255), nullable=True),
+    )
+    op.add_column(
+        'table_columns',
+        sa.Column('database_expression', sa.String(length=255), nullable=True),
+    )
 
 
 def downgrade():

@@ -18,8 +18,12 @@ def cast_filter_data(form_data):
             col_str = '{}_col_{}'.format(prefix, i)
             op_str = '{}_op_{}'.format(prefix, i)
             val_str = '{}_eq_{}'.format(prefix, i)
-            if col_str in fd and op_str in fd and val_str in fd \
-               and len(fd[val_str]) > 0:
+            if (
+                col_str in fd
+                and op_str in fd
+                and val_str in fd
+                and len(fd[val_str]) > 0
+            ):
                 f = {}
                 f['col'] = fd[col_str]
                 f['op'] = fd[op_str]
@@ -82,6 +86,5 @@ def update_time_range(form_data):
     """Move since and until to time_range."""
     if 'since' in form_data or 'until' in form_data:
         form_data['time_range'] = '{} : {}'.format(
-            form_data.pop('since', '') or '',
-            form_data.pop('until', '') or '',
+            form_data.pop('since', '') or '', form_data.pop('until', '') or ''
         )

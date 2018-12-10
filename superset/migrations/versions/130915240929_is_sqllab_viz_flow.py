@@ -20,6 +20,7 @@ Base = declarative_base()
 
 class Table(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'tables'
     id = sa.Column(sa.Integer, primary_key=True)
     sql = sa.Column(sa.Text)

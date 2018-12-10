@@ -15,12 +15,13 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.create_table('query',
+    op.create_table(
+        'query',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('client_id',  sa.String(length=11), nullable=False),
+        sa.Column('client_id', sa.String(length=11), nullable=False),
         sa.Column('database_id', sa.Integer(), nullable=False),
         sa.Column('tmp_table_name', sa.String(length=256), nullable=True),
-        sa.Column('tab_name', sa.String(length=256),nullable=True),
+        sa.Column('tab_name', sa.String(length=256), nullable=True),
         sa.Column('sql_editor_id', sa.String(length=256), nullable=True),
         sa.Column('user_id', sa.Integer(), nullable=True),
         sa.Column('status', sa.String(length=16), nullable=True),
@@ -39,18 +40,18 @@ def upgrade():
         sa.Column('start_time', sa.Numeric(precision=20, scale=6), nullable=True),
         sa.Column('changed_on', sa.DateTime(), nullable=True),
         sa.Column('end_time', sa.Numeric(precision=20, scale=6), nullable=True),
-        sa.ForeignKeyConstraint(['database_id'], ['dbs.id'], ),
-        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id'], ),
-        sa.PrimaryKeyConstraint('id')
+        sa.ForeignKeyConstraint(['database_id'], ['dbs.id']),
+        sa.ForeignKeyConstraint(['user_id'], ['ab_user.id']),
+        sa.PrimaryKeyConstraint('id'),
     )
-    op.add_column('dbs', sa.Column('select_as_create_table_as', sa.Boolean(),
-                                   nullable=True))
+    op.add_column(
+        'dbs', sa.Column('select_as_create_table_as', sa.Boolean(), nullable=True)
+    )
     op.create_index(
-        op.f('ti_user_id_changed_on'),
-        'query', ['user_id', 'changed_on'], unique=False)
+        op.f('ti_user_id_changed_on'), 'query', ['user_id', 'changed_on'], unique=False
+    )
 
 
 def downgrade():
     op.drop_table('query')
     op.drop_column('dbs', 'select_as_create_table_as')
-

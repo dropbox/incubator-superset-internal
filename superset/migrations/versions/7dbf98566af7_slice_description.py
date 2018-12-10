@@ -13,8 +13,10 @@ down_revision = '8e80a26a31db'
 from alembic import op
 import sqlalchemy as sa
 
+
 def upgrade():
     op.add_column('slices', sa.Column('description', sa.Text(), nullable=True))
+
 
 def downgrade():
     op.drop_column('slices', 'description')

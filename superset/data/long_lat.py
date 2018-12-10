@@ -23,16 +23,14 @@ def load_long_lat_data():
     """Loading lat/long data from a csv file in the repo"""
     with gzip.open(os.path.join(DATA_FOLDER, 'san_francisco.csv.gz')) as f:
         pdf = pd.read_csv(f, encoding='utf-8')
-    start = datetime.datetime.now().replace(
-        hour=0, minute=0, second=0, microsecond=0)
+    start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     pdf['datetime'] = [
         start + datetime.timedelta(hours=i * 24 / (len(pdf) - 1))
         for i in range(len(pdf))
     ]
     pdf['occupancy'] = [random.randint(1, 6) for _ in range(len(pdf))]
     pdf['radius_miles'] = [random.uniform(1, 3) for _ in range(len(pdf))]
-    pdf['geohash'] = pdf[['LAT', 'LON']].apply(
-        lambda x: geohash.encode(*x), axis=1)
+    pdf['geohash'] = pdf[['LAT', 'LON']].apply(lambda x: geohash.encode(*x), axis=1)
     pdf['delimited'] = pdf['LAT'].map(str).str.cat(pdf['LON'].map(str), sep=',')
     pdf.to_sql(  # pylint: disable=no-member
         'long_lat',
@@ -56,7 +54,8 @@ def load_long_lat_data():
             'geohash': String(12),
             'delimited': String(60),
         },
-        index=False)
+        index=False,
+    )
     print('Done loading table!')
     print('-' * 80)
 

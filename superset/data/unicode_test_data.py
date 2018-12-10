@@ -22,8 +22,9 @@ from .helpers import (
 
 def load_unicode_test_data():
     """Loading unicode test dataset from a csv file in the repo"""
-    df = pd.read_csv(os.path.join(DATA_FOLDER, 'unicode_utf8_unixnl_test.csv'),
-                     encoding='utf-8')
+    df = pd.read_csv(
+        os.path.join(DATA_FOLDER, 'unicode_utf8_unixnl_test.csv'), encoding='utf-8'
+    )
     # generate date/numeric data
     df['dttm'] = datetime.datetime.now().date()
     df['value'] = [random.randint(1, 100) for _ in range(len(df))]
@@ -39,7 +40,8 @@ def load_unicode_test_data():
             'dttm': Date(),
             'value': Float(),
         },
-        index=False)
+        index=False,
+    )
     print('Done loading table!')
     print('-' * 80)
 
@@ -81,11 +83,7 @@ def load_unicode_test_data():
     merge_slice(slc)
 
     print('Creating a dashboard')
-    dash = (
-        db.session.query(Dash)
-        .filter_by(dashboard_title='Unicode Test')
-        .first()
-    )
+    dash = db.session.query(Dash).filter_by(dashboard_title='Unicode Test').first()
 
     if not dash:
         dash = Dash()

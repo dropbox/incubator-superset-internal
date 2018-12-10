@@ -2,21 +2,9 @@
 import json
 
 from superset import db
-from .helpers import (
-    Dash,
-    get_slice_json,
-    merge_slice,
-    Slice,
-    TBL,
-    update_slice_ids,
-)
+from .helpers import Dash, get_slice_json, merge_slice, Slice, TBL, update_slice_ids
 
-COLOR_RED = {
-    'r': 205,
-    'g': 0,
-    'b': 3,
-    'a': 0.82,
-}
+COLOR_RED = {'r': 205, 'g': 0, 'b': 3, 'a': 0.82}
 POSITION_JSON = """\
 {
     "CHART-3afd9d70": {
@@ -165,11 +153,7 @@ def load_deck_dash():
     slices = []
     tbl = db.session.query(TBL).filter_by(table_name='long_lat').first()
     slice_data = {
-        'spatial': {
-            'type': 'latlong',
-            'lonCol': 'LON',
-            'latCol': 'LAT',
-        },
+        'spatial': {'type': 'latlong', 'lonCol': 'LON', 'latCol': 'LAT'},
         'color_picker': COLOR_RED,
         'datasource': '5__table',
         'filters': [],
@@ -211,23 +195,14 @@ def load_deck_dash():
         'point_unit': 'square_m',
         'filters': [],
         'row_limit': 5000,
-        'spatial': {
-            'type': 'latlong',
-            'lonCol': 'LON',
-            'latCol': 'LAT',
-        },
+        'spatial': {'type': 'latlong', 'lonCol': 'LON', 'latCol': 'LAT'},
         'mapbox_style': 'mapbox://styles/mapbox/dark-v9',
         'granularity_sqla': None,
         'size': 'count',
         'viz_type': 'deck_screengrid',
         'time_range': 'No filter',
         'point_radius': 'Auto',
-        'color_picker': {
-            'a': 1,
-            'r': 14,
-            'b': 0,
-            'g': 255,
-        },
+        'color_picker': {'a': 1, 'r': 14, 'b': 0, 'g': 255},
         'grid_size': 20,
         'where': '',
         'having': '',
@@ -255,11 +230,7 @@ def load_deck_dash():
     slices.append(slc)
 
     slice_data = {
-        'spatial': {
-            'type': 'latlong',
-            'lonCol': 'LON',
-            'latCol': 'LAT',
-        },
+        'spatial': {'type': 'latlong', 'lonCol': 'LON', 'latCol': 'LAT'},
         'filters': [],
         'row_limit': 5000,
         'mapbox_style': 'mapbox://styles/mapbox/streets-v9',
@@ -269,12 +240,7 @@ def load_deck_dash():
         'time_range': 'No filter',
         'point_radius_unit': 'Pixels',
         'point_radius': 'Auto',
-        'color_picker': {
-            'a': 1,
-            'r': 14,
-            'b': 0,
-            'g': 255,
-        },
+        'color_picker': {'a': 1, 'r': 14, 'b': 0, 'g': 255},
         'grid_size': 40,
         'extruded': True,
         'having': '',
@@ -303,11 +269,7 @@ def load_deck_dash():
     slices.append(slc)
 
     slice_data = {
-        'spatial': {
-            'type': 'latlong',
-            'lonCol': 'LON',
-            'latCol': 'LAT',
-        },
+        'spatial': {'type': 'latlong', 'lonCol': 'LON', 'latCol': 'LAT'},
         'filters': [],
         'row_limit': 5000,
         'mapbox_style': 'mapbox://styles/mapbox/satellite-streets-v9',
@@ -317,12 +279,7 @@ def load_deck_dash():
         'point_radius_unit': 'Pixels',
         'point_radius': 'Auto',
         'time_range': 'No filter',
-        'color_picker': {
-            'a': 1,
-            'r': 14,
-            'b': 0,
-            'g': 255,
-        },
+        'color_picker': {'a': 1, 'r': 14, 'b': 0, 'g': 255},
         'grid_size': 120,
         'extruded': True,
         'having': '',
@@ -350,8 +307,9 @@ def load_deck_dash():
     merge_slice(slc)
     slices.append(slc)
 
-    polygon_tbl = db.session.query(TBL) \
-                    .filter_by(table_name='sf_population_polygons').first()
+    polygon_tbl = (
+        db.session.query(TBL).filter_by(table_name='sf_population_polygons').first()
+    )
     slice_data = {
         'datasource': '11__table',
         'viz_type': 'deck_polygon',
@@ -380,28 +338,14 @@ def load_deck_dash():
             'minLatitude': -85.05113,
         },
         'reverse_long_lat': False,
-        'fill_color_picker': {
-            'r': 3,
-            'g': 65,
-            'b': 73,
-            'a': 1,
-        },
-        'stroke_color_picker': {
-            'r': 0,
-            'g': 122,
-            'b': 135,
-            'a': 1,
-        },
+        'fill_color_picker': {'r': 3, 'g': 65, 'b': 73, 'a': 1},
+        'stroke_color_picker': {'r': 0, 'g': 122, 'b': 135, 'a': 1},
         'filled': True,
         'stroked': False,
         'extruded': True,
         'point_radius_scale': 100,
-        'js_columns': [
-            'population',
-            'area',
-        ],
-        'js_datapoint_mutator':
-            '(d) => {\n    d.elevation = d.extraProps.population/d.extraProps.area/10\n \
+        'js_columns': ['population', 'area'],
+        'js_datapoint_mutator': '(d) => {\n    d.elevation = d.extraProps.population/d.extraProps.area/10\n \
          d.fillColor = [d.extraProps.population/d.extraProps.area/60,140,0]\n \
          return d;\n}',
         'js_tooltip': '',
@@ -457,12 +401,7 @@ def load_deck_dash():
             'width': 997,
             'zoom': 2.929837070560775,
         },
-        'color_picker': {
-            'r': 0,
-            'g': 122,
-            'b': 135,
-            'a': 1,
-        },
+        'color_picker': {'r': 0, 'g': 122, 'b': 135, 'a': 1},
         'stroke_width': 1,
         'where': '',
         'having': '',
@@ -506,17 +445,10 @@ def load_deck_dash():
             'maxLatitude': 85.05113,
             'minLatitude': -85.05113,
         },
-        'color_picker': {
-            'r': 0,
-            'g': 122,
-            'b': 135,
-            'a': 1,
-        },
+        'color_picker': {'r': 0, 'g': 122, 'b': 135, 'a': 1},
         'line_width': 150,
         'reverse_long_lat': False,
-        'js_columns': [
-            'color',
-        ],
+        'js_columns': ['color'],
         'js_datapoint_mutator': 'd => {\n    return {\n        ...d,\n        color: \
             colors.hexToRGB(d.extraProps.color),\n    }\n}',
         'js_tooltip': '',
@@ -531,7 +463,10 @@ def load_deck_dash():
         slice_name='Path',
         viz_type='deck_path',
         datasource_type='table',
-        datasource_id=db.session.query(TBL).filter_by(table_name='bart_lines').first().id,
+        datasource_id=db.session.query(TBL)
+        .filter_by(table_name='bart_lines')
+        .first()
+        .id,
         params=get_slice_json(slice_data),
     )
     merge_slice(slc)

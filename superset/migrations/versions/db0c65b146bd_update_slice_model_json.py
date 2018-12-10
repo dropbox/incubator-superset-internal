@@ -23,6 +23,7 @@ Base = declarative_base()
 
 class Slice(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'slices'
     id = Column(Integer, primary_key=True)
     datasource_type = Column(String(200))

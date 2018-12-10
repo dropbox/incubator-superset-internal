@@ -59,7 +59,7 @@ class SupersetDataFrame(object):
         'O': 'OBJECT',  # (Python) objects
         'S': 'BYTE',  # (byte-)string
         'U': 'STRING',  # Unicode
-        'V': None,   # raw data (void)
+        'V': None,  # raw data (void)
     }
 
     def __init__(self, data, cursor_description, db_engine_spec):
@@ -70,8 +70,7 @@ class SupersetDataFrame(object):
         self.column_names = dedup(column_names)
 
         data = data or []
-        self.df = (
-            pd.DataFrame(list(data), columns=self.column_names).infer_objects())
+        self.df = pd.DataFrame(list(data), columns=self.column_names).infer_objects()
 
         self._type_dict = {}
         try:
@@ -91,9 +90,13 @@ class SupersetDataFrame(object):
     @property
     def data(self):
         # work around for https://github.com/pandas-dev/pandas/issues/18372
-        data = [dict((k, _maybe_box_datetimelike(v))
-                for k, v in zip(self.df.columns, np.atleast_1d(row)))
-                for row in self.df.values]
+        data = [
+            dict(
+                (k, _maybe_box_datetimelike(v))
+                for k, v in zip(self.df.columns, np.atleast_1d(row))
+            )
+            for row in self.df.values
+        ]
         for d in data:
             for k, v in list(d.items()):
                 # if an int is too big for Java Script to handle
@@ -126,7 +129,6 @@ class SupersetDataFrame(object):
 
     @staticmethod
     def is_date(np_dtype, db_type_str):
-
         def looks_daty(s):
             if isinstance(s, basestring):
                 return any([s.lower().startswith(ss) for ss in ('time', 'date')])
@@ -153,8 +155,11 @@ class SupersetDataFrame(object):
         # consider checking for key substring too.
         if cls.is_id(column_name):
             return 'count_distinct'
-        if (hasattr(dtype, 'type') and issubclass(dtype.type, np.generic) and
-                np.issubdtype(dtype, np.number)):
+        if (
+            hasattr(dtype, 'type')
+            and issubclass(dtype.type, np.generic)
+            and np.issubdtype(dtype, np.number)
+        ):
             return 'sum'
         return None
 
@@ -173,10 +178,7 @@ class SupersetDataFrame(object):
         if sample_size:
             sample = self.df.sample(sample_size)
         for col in self.df.dtypes.keys():
-            db_type_str = (
-                self._type_dict.get(col) or
-                self.db_type(self.df.dtypes[col])
-            )
+            db_type_str = self._type_dict.get(col) or self.db_type(self.df.dtypes[col])
             column = {
                 'name': col,
                 'agg': self.agg_func(self.df.dtypes[col], col),
@@ -199,14 +201,11 @@ class SupersetDataFrame(object):
                     column['is_dim'] = False
                 # check if encoded datetime
                 if (
-                        column['type'] == 'STRING' and
-                        self.datetime_conversion_rate(sample[col]) >
-                        INFER_COL_TYPES_THRESHOLD):
-                    column.update({
-                        'is_date': True,
-                        'is_dim': False,
-                        'agg': None,
-                    })
+                    column['type'] == 'STRING'
+                    and self.datetime_conversion_rate(sample[col])
+                    > INFER_COL_TYPES_THRESHOLD
+                ):
+                    column.update({'is_date': True, 'is_dim': False, 'agg': None})
             # 'agg' is optional attribute
             if not column['agg']:
                 column.pop('agg', None)

@@ -1,9 +1,7 @@
 # pylint: disable=C,R,W
 """a collection of Annotation-related models"""
 from flask_appbuilder import Model
-from sqlalchemy import (
-    Column, DateTime, ForeignKey, Index, Integer, String, Text,
-)
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from superset.models.helpers import AuditMixinNullable
@@ -33,14 +31,10 @@ class Annotation(Model, AuditMixinNullable):
     layer_id = Column(Integer, ForeignKey('annotation_layer.id'))
     short_descr = Column(String(500))
     long_descr = Column(Text)
-    layer = relationship(
-        AnnotationLayer,
-        backref='annotation')
+    layer = relationship(AnnotationLayer, backref='annotation')
     json_metadata = Column(Text)
 
-    __table_args__ = (
-        Index('ti_dag_state', layer_id, start_dttm, end_dttm),
-    )
+    __table_args__ = (Index('ti_dag_state', layer_id, start_dttm, end_dttm),)
 
     @property
     def data(self):

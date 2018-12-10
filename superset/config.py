@@ -207,9 +207,7 @@ ALLOWED_EXTENSIONS = set(['csv'])
 
 # CSV Options: key/value pairs that will be passed as argument to DataFrame.to_csv method
 # note: index option should not be overridden
-CSV_EXPORT = {
-    'encoding': 'utf-8',
-}
+CSV_EXPORT = {'encoding': 'utf-8'}
 
 # ---------------------------------------------------
 # Time grain configurations
@@ -252,10 +250,12 @@ DRUID_DATA_SOURCE_BLACKLIST = []
 # --------------------------------------------------
 # Modules, datasources and middleware to be registered
 # --------------------------------------------------
-DEFAULT_MODULE_DS_MAP = OrderedDict([
-    ('superset.connectors.sqla.models', ['SqlaTable']),
-    ('superset.connectors.druid.models', ['DruidDatasource']),
-])
+DEFAULT_MODULE_DS_MAP = OrderedDict(
+    [
+        ('superset.connectors.sqla.models', ['SqlaTable']),
+        ('superset.connectors.druid.models', ['DruidDatasource']),
+    ]
+)
 ADDITIONAL_MODULE_DS_MAP = {}
 ADDITIONAL_MIDDLEWARE = []
 
@@ -467,12 +467,15 @@ try:
     if CONFIG_PATH_ENV_VAR in os.environ:
         # Explicitly import config module that is not in pythonpath; useful
         # for case where app is being executed via pex.
-        print('Loaded your LOCAL configuration at [{}]'.format(
-            os.environ[CONFIG_PATH_ENV_VAR]))
+        print(
+            'Loaded your LOCAL configuration at [{}]'.format(
+                os.environ[CONFIG_PATH_ENV_VAR]
+            )
+        )
         module = sys.modules[__name__]
         override_conf = imp.load_source(
-            'superset_config',
-            os.environ[CONFIG_PATH_ENV_VAR])
+            'superset_config', os.environ[CONFIG_PATH_ENV_VAR]
+        )
         for key in dir(override_conf):
             if key.isupper():
                 setattr(module, key, getattr(override_conf, key))
@@ -480,7 +483,9 @@ try:
     else:
         from superset_config import *  # noqa
         import superset_config
-        print('Loaded your LOCAL configuration at [{}]'.format(
-            superset_config.__file__))
+
+        print(
+            'Loaded your LOCAL configuration at [{}]'.format(superset_config.__file__)
+        )
 except ImportError:
     pass

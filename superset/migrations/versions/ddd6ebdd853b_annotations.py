@@ -24,9 +24,9 @@ def upgrade():
         sa.Column('descr', sa.Text(), nullable=True),
         sa.Column('changed_by_fk', sa.Integer(), nullable=True),
         sa.Column('created_by_fk', sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id'], ),
-        sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id'], ),
-        sa.PrimaryKeyConstraint('id')
+        sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id']),
+        sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id']),
+        sa.PrimaryKeyConstraint('id'),
     )
     op.create_table(
         'annotation',
@@ -40,14 +40,17 @@ def upgrade():
         sa.Column('long_descr', sa.Text(), nullable=True),
         sa.Column('changed_by_fk', sa.Integer(), nullable=True),
         sa.Column('created_by_fk', sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id'], ),
-        sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id'], ),
-        sa.ForeignKeyConstraint(['layer_id'], ['annotation_layer.id'], ),
-        sa.PrimaryKeyConstraint('id')
+        sa.ForeignKeyConstraint(['changed_by_fk'], ['ab_user.id']),
+        sa.ForeignKeyConstraint(['created_by_fk'], ['ab_user.id']),
+        sa.ForeignKeyConstraint(['layer_id'], ['annotation_layer.id']),
+        sa.PrimaryKeyConstraint('id'),
     )
     op.create_index(
         'ti_dag_state',
-        'annotation', ['layer_id', 'start_dttm', 'end_dttm'], unique=False)
+        'annotation',
+        ['layer_id', 'start_dttm', 'end_dttm'],
+        unique=False,
+    )
 
 
 def downgrade():

@@ -22,12 +22,9 @@ def load_energy():
         db.engine,
         if_exists='replace',
         chunksize=500,
-        dtype={
-            'source': String(255),
-            'target': String(255),
-            'value': Float(),
-        },
-        index=False)
+        dtype={'source': String(255), 'target': String(255), 'value': Float()},
+        index=False,
+    )
 
     print('Creating table [wb_health_population] reference')
     tbl = db.session.query(TBL).filter_by(table_name=tbl_name).first()
@@ -44,7 +41,8 @@ def load_energy():
         viz_type='sankey',
         datasource_type='table',
         datasource_id=tbl.id,
-        params=textwrap.dedent("""\
+        params=textwrap.dedent(
+            """\
         {
             "collapsed_fieldsets": "",
             "groupby": [
@@ -58,7 +56,8 @@ def load_energy():
             "viz_type": "sankey",
             "where": ""
         }
-        """),
+        """
+        ),
     )
     misc_dash_slices.add(slc.slice_name)
     merge_slice(slc)
@@ -68,7 +67,8 @@ def load_energy():
         viz_type='directed_force',
         datasource_type='table',
         datasource_id=tbl.id,
-        params=textwrap.dedent("""\
+        params=textwrap.dedent(
+            """\
         {
             "charge": "-500",
             "collapsed_fieldsets": "",
@@ -84,7 +84,8 @@ def load_energy():
             "viz_type": "directed_force",
             "where": ""
         }
-        """),
+        """
+        ),
     )
     misc_dash_slices.add(slc.slice_name)
     merge_slice(slc)
@@ -94,7 +95,8 @@ def load_energy():
         viz_type='heatmap',
         datasource_type='table',
         datasource_id=tbl.id,
-        params=textwrap.dedent("""\
+        params=textwrap.dedent(
+            """\
         {
             "all_columns_x": "source",
             "all_columns_y": "target",
@@ -110,7 +112,8 @@ def load_energy():
             "xscale_interval": "1",
             "yscale_interval": "1"
         }
-        """),
+        """
+        ),
     )
     misc_dash_slices.add(slc.slice_name)
     merge_slice(slc)

@@ -2,8 +2,7 @@ from alembic import op
 import sqlalchemy as sa
 from superset import db
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import (
-    Column, Integer, String)
+from sqlalchemy import Column, Integer, String
 
 """update slice model
 
@@ -22,6 +21,7 @@ Base = declarative_base()
 
 class Slice(Base):
     """Declarative class to do query in upgrade"""
+
     __tablename__ = 'slices'
     id = Column(Integer, primary_key=True)
     datasource_id = Column(Integer)

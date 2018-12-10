@@ -7,7 +7,14 @@ from flask import Markup
 from flask_appbuilder import Model
 import sqlalchemy as sqla
 from sqlalchemy import (
-    Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String, Text,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+    Text,
 )
 from sqlalchemy.orm import backref, relationship
 
@@ -59,20 +66,17 @@ class Query(Model):
     tracking_url = Column(Text)
 
     changed_on = Column(
-        DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        nullable=True)
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=True
+    )
 
     database = relationship(
         'Database',
         foreign_keys=[database_id],
-        backref=backref('queries', cascade='all, delete-orphan'))
+        backref=backref('queries', cascade='all, delete-orphan'),
+    )
     user = relationship(security_manager.user_model, foreign_keys=[user_id])
 
-    __table_args__ = (
-        sqla.Index('ti_user_id_changed_on', user_id, changed_on),
-    )
+    __table_args__ = (sqla.Index('ti_user_id_changed_on', user_id, changed_on),)
 
     @property
     def limit_reached(self):
@@ -112,8 +116,7 @@ class Query(Model):
         """Name property"""
         ts = datetime.now().isoformat()
         ts = ts.replace('-', '').replace(':', '').split('.')[0]
-        tab = (self.tab_name.replace(' ', '_').lower()
-               if self.tab_name else 'notab')
+        tab = self.tab_name.replace(' ', '_').lower() if self.tab_name else 'notab'
         tab = re.sub(r'\W+', '', tab)
         return f'sqllab_{tab}_{ts}'
 
@@ -132,16 +135,20 @@ class SavedQuery(Model, AuditMixinNullable):
     user = relationship(
         security_manager.user_model,
         backref=backref('saved_queries', cascade='all, delete-orphan'),
-        foreign_keys=[user_id])
+        foreign_keys=[user_id],
+    )
     database = relationship(
         'Database',
         foreign_keys=[db_id],
-        backref=backref('saved_queries', cascade='all, delete-orphan'))
+        backref=backref('saved_queries', cascade='all, delete-orphan'),
+    )
 
     @property
     def pop_tab_link(self):
-        return Markup(f"""
+        return Markup(
+            f"""
             <a href="/superset/sqllab?savedQueryId={self.id}">
                 <i class="fa fa-link"></i>
             </a>
-        """)
+        """
+        )
