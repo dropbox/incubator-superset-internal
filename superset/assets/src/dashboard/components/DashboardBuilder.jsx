@@ -117,9 +117,6 @@ class DashboardBuilder extends React.Component {
       <StickyContainer
         className={cx('dashboard', editMode && 'dashboard--editing')}
       >
-      <div style={{paddingBottom: 500}}>
-      <OmniContianer/>
-      </div>
         <Sticky>
           {({ style }) => (
             <DragDroppable

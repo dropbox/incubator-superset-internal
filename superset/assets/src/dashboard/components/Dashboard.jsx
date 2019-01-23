@@ -40,6 +40,8 @@ import {
   LOG_ACTIONS_FIRST_DASHBOARD_LOAD,
 } from '../../logger';
 
+import OmniContianer from '../../components/OmniContainer';
+
 import '../stylesheets/index.less';
 
 const propTypes = {
@@ -232,7 +234,14 @@ class Dashboard extends React.PureComponent {
   }
 
   render() {
-    return <DashboardBuilder />;
+    return <div style={{display: "flex"}}>
+      <div>
+      <DashboardBuilder />
+      </div>
+      <div style={{ paddingBottom: 500, zValue: -1, backgroundColor: 'black' }}>
+        <OmniContianer />
+      </div>
+    </div>;
   }
 }
 
