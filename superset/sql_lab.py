@@ -22,8 +22,6 @@ from sys import getsizeof
 from typing import Optional, Tuple, Union
 
 import backoff
-import msgpack
-import pyarrow as pa
 import simplejson as json
 import sqlalchemy
 from celery.exceptions import SoftTimeLimitExceeded
@@ -47,6 +45,10 @@ from superset.sql_parse import ParsedQuery
 from superset.utils.core import json_iso_dttm_ser, QueryStatus, sources, zlib_compress
 from superset.utils.dates import now_as_float
 from superset.utils.decorators import stats_timing
+
+if results_backend_use_msgpack:
+    import msgpack
+    import pyarrow as pa
 
 config = app.config
 stats_logger = config["STATS_LOGGER"]
