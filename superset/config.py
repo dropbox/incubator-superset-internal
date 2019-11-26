@@ -359,6 +359,18 @@ TIME_GRAIN_ADDONS: Dict[str, str] = {}
 # }
 TIME_GRAIN_ADDON_FUNCTIONS: Dict[str, Dict[str, str]] = {}
 
+# Default python_date_format and expression for the sql tables dttm columns.
+# It is useful for the use cases when there is a company wide convention.
+# Example:
+# DTTM_CONFIG = {
+#     'ts': {'python_date_format': 'epoch_s'},
+#     'hour_ts': {
+#         'python_date_format': 'epoch_s',
+#         'expression': 'CAST(hour_ts as INTEGER)'
+#     },
+# }
+DTTM_CONFIG: Optional[Dict[str, Dict[str, str]]] = None
+
 # ---------------------------------------------------
 # List of viz_types not allowed in your environment
 # For example: Blacklist pivot table and treemap:
