@@ -55,6 +55,7 @@ stats_logger = config["STATS_LOGGER"]
 SQLLAB_TIMEOUT = config["SQLLAB_ASYNC_TIME_LIMIT_SEC"]
 SQLLAB_HARD_TIMEOUT = SQLLAB_TIMEOUT + 60
 SQL_MAX_ROW = config["SQL_MAX_ROW"]
+SQLLAB_CTA_NO_LIMIT = config["SQLLAB_CTA_NO_LIMIT"]
 SQL_QUERY_MUTATOR = config["SQL_QUERY_MUTATOR"]
 log_query = config["QUERY_LOGGER"]
 logger = logging.getLogger(__name__)
@@ -204,7 +205,11 @@ def execute_sql_statement(sql_statement, query, user_name, session, cursor, log_
             )
         sql = parsed_query.as_create_table(query.tmp_table_name)
         query.select_as_cta_used = True
-    if parsed_query.is_select():
+
+    # Do not apply limit to the CTA queries when SQLLAB_CTA_NO_LIMIT is set to true
+    if parsed_query.is_select() and not (
+        query.select_as_cta_used and SQLLAB_CTA_NO_LIMIT
+    ):
         if SQL_MAX_ROW and (not query.limit or query.limit > SQL_MAX_ROW):
             query.limit = SQL_MAX_ROW
         if query.limit:
@@ -253,6 +258,7 @@ def execute_sql_statement(sql_statement, query, user_name, session, cursor, log_
 
     logger.debug(f"Query {query.id}: Fetching cursor description")
     cursor_description = cursor.description
+
     return SupersetDataFrame(data, cursor_description, db_engine_spec)
 
 
@@ -368,6 +374,9 @@ def execute_sql_statements(
                     payload = handle_query_error(msg, query, session, payload)
                     return payload
 
+        # Commit the connection so CTA queries will create the table.
+        conn.commit()
+
     # Success, updating the query entry in database
     query.rows = cdf.size
     query.progress = 100
@@ -376,7 +385,6 @@ def execute_sql_statements(
         query.select_sql = database.select_star(
             query.tmp_table_name,
             limit=query.limit,
-            schema=database.force_ctas_schema,
             show_cols=False,
             latest_partition=False,
         )
@@ -385,7 +393,6 @@ def execute_sql_statements(
     data, selected_columns, all_columns, expanded_columns = _serialize_and_expand_data(
         cdf, db_engine_spec, store_results and results_backend_use_msgpack, expand_data
     )
-
     payload.update(
         {
             "status": QueryStatus.SUCCESS,
