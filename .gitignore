@@ -38,7 +38,6 @@ build
 app.db
 apache_superset.egg-info/
 changelog.sh
-dist
 dump.rdb
 env
 venv*
@@ -52,8 +51,6 @@ superset/bin/supersetc
 tmp
 
 # Node.js, webpack artifacts
-*.entry.js
-*.js.map
 node_modules
 npm-debug.log*
 superset/assets/coverage/*
