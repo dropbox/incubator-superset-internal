@@ -118,6 +118,8 @@ class SupersetAppInitializer:
     def init_views() -> None:
         # TODO - This should iterate over all views and register them with FAB...
         from superset import views  # noqa pylint: disable=unused-variable
+        from superset.connectors.sqla.api import TableRestApi
+        appbuilder.add_api(TableRestApi)
 
     def init_app_in_ctx(self) -> None:
         """
