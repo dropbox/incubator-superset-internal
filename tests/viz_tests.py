@@ -79,6 +79,7 @@ class BaseVizTestCase(SupersetTestCase):
         ]
         self.assertEqual(test_viz.metric_labels, expect_metric_labels)
         self.assertEqual(test_viz.all_metrics, expect_metric_labels)
+        assert False
 
     def test_get_df_returns_empty_df(self):
         form_data = {"dummy": 123}
