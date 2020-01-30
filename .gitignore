@@ -42,7 +42,6 @@ build
 app.db
 apache_superset.egg-info/
 changelog.sh
-dist
 dump.rdb
 env
 venv*
@@ -57,12 +56,8 @@ tmp
 rat-results.txt
 
 # Node.js, webpack artifacts
-*.entry.js
-*.js.map
 node_modules
 npm-debug.log*
-superset/static/assets
-superset/static/version_info.json
 yarn-error.log
 
 # IntelliJ
