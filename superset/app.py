@@ -158,6 +158,7 @@ class SupersetAppInitializer:
         )
         from superset.views.database.api import DatabaseRestApi
         from superset.views.database.views import DatabaseView, CsvToDatabaseView
+        from superset.connectors.sqla.api import TableRestApi
         from superset.views.datasource import Datasource
         from superset.views.log.api import LogRestApi
         from superset.views.log.views import LogModelView
@@ -181,6 +182,7 @@ class SupersetAppInitializer:
         appbuilder.add_api(ChartRestApi)
         appbuilder.add_api(DashboardRestApi)
         appbuilder.add_api(DatabaseRestApi)
+        appbuilder.add_api(TableRestApi)
 
         #
         # Setup regular views
