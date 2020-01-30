@@ -44,7 +44,6 @@ build
 app.db
 apache_superset.egg-info/
 changelog.sh
-dist
 dump.rdb
 env
 venv*
@@ -70,38 +69,7 @@ superset/static/version_info.json
 superset-frontend/**/esm/*
 superset-frontend/**/lib/*
 superset-frontend/**/storybook-static/*
-yarn-error.log
-*.map
-*.min.js
-test-changelog.md
-*.tsbuildinfo
-
-# Ignore package-lock in packages
-plugins/*/package-lock.json
-packages/*/package-lock.json
-
-# For country map geojson conversion script
-.ipynb_checkpoints/
-scripts/*.zip
-
-# IntelliJ
-*.iml
-venv
-@eaDir/
-
-# Test data
-celery_results.sqlite
-celerybeat-schedule
-celerydb.sqlite
-celerybeat.pid
-geckodriver.log
-ghostdriver.log
-testCSV.csv
-.terser-plugin-cache/
-apache-superset-*.tar.gz*
-release.json
-
-# Translation binaries
-messages.mo
-
-docker/requirements-local.txt
+# Node.js, webpack artifacts
+node_modules
+npm-debug.log*
+yar
