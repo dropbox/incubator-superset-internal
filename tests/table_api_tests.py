@@ -30,33 +30,22 @@ class TableApiTests(SupersetTestCase):
         super(TableApiTests, self).__init__(*args, **kwargs)
 
     def _get_table(self, user="admin"):
-        """Helper function to send GET /table​/ request with given user and verify it succeeds."""
+        """Helper function to send GET /table​/ request and return resp."""
         self.login(username=user)
         uri = f"api/v1/table/"
         rv = self.client.get(uri)
-        self.assertEqual(rv.status_code, 200)
-        data = json.loads(rv.data.decode("utf-8"))
-        self.assertEqual(data["count"], 6)
+        return rv
 
-    def _create_table(self, user="admin"):
-        """Helper function to send POST /table/ request with given user and verify it succeeds."""
-        # Create a table via POST /table/ API and verify it succeeds with 201 CREATED.
-        tbl_name = "bart_lines"
+    def _create_table(self, user, tbl_name):
+        """Helper function to send POST /table/ request and return resp."""
         self.login(username=user)
         table_data = {"database": 1, "table_name": tbl_name}
         uri = f"api/v1/table/"
         rv = self.client.post(uri, json=table_data)
-        self.assertEqual(rv.status_code, 201)
-        tbl_obj = self.get_table_by_name(tbl_name)
-        self.assertIsNotNone(tbl_obj)
-        self.assertEqual(tbl_obj.table_name, tbl_name)
+        return rv
 
-        # Clean up the temporarily created table.
-        db.session.delete(tbl_obj)
-        db.session.commit()
-
-    def _delete_table(self, user="admin"):
-        """Helper function to send DELETE /table/{pk} request with given user and verity it succeeds."""
+    def _delete_table(self, user):
+        """Helper function to create a temp table, send DELETE /table/{pk} and return resp."""
         # Create a temp table.
         from superset.utils.core import get_example_database
 
@@ -67,49 +56,43 @@ class TableApiTests(SupersetTestCase):
         db.session.merge(tbl)
         db.session.commit()
 
-        # Make sure we have `bart_line` table created.
-        tbl_obj = self.get_table_by_name(tbl_name)
-        self.assertIsNotNone(tbl_obj)
-
         # Send DELETE /table​/{pk} request.
+        tbl_obj = self.get_table_by_name(tbl_name)
         self.login(username=user)
         uri = f"api/v1/table/{tbl_obj.id}"
         rv = self.client.delete(uri)
-        self.assertEqual(rv.status_code, 200)
+        return rv
 
-        # Verify the table is deleted.
-        model = db.session.query(SqlaTable).get(tbl_obj.id)
-        self.assertEqual(model, None)
-
-    def _update_table(self, user="admin"):
-        """Helper function to send PUT /table/{pk} request with given user and verify it succeeds."""
+    def _update_table(self, user, tbl_name, tbl_data):
+        """Helper function to send PUT /table/{pk} request and return resp."""
         # Send PUT /table​/{pk} request, verify it succeeds with 200.
-        tbl_name = "birth_names"
         model = db.session.query(SqlaTable).filter_by(table_name=tbl_name).one()
         table_id = model.id
         self.login(username=user)
-        table_data = {"description": ""}
         uri = f"api/v1/table/{table_id}"
-        rv = self.client.put(uri, json=table_data)
-        self.assertEqual(rv.status_code, 200)
-
-        # Verify the table is updated.
-        model = self.get_table_by_name(tbl_name)
-        self.assertEqual(model.description, "")
+        rv = self.client.put(uri, json=tbl_data)
+        return rv
 
     def test_get_table_admin(self):
         """Table API: Test get table with admin."""
-        self._get_table(user="admin")
+        rv = self._get_table(user="admin")
+        self.assertEqual(rv.status_code, 200)
+        data = json.loads(rv.data.decode("utf-8"))
+        self.assertEqual(data["count"], 6)
 
     def test_get_table_alpha(self):
         """Table API: Test get table with alpha."""
-        # Verify Alpha role has read permission.
-        self._get_table(user="alpha")
+        rv = self._get_table(user="alpha")
+        self.assertEqual(rv.status_code, 200)
+        data = json.loads(rv.data.decode("utf-8"))
+        self.assertEqual(data["count"], 6)
 
     def test_get_table_gamma(self):
         """Table API: Test get table with gamma."""
-        # Verify Gamma role has read permission.
-        self._get_table(user="gamma")
+        rv = self._get_table(user="gamma")
+        self.assertEqual(rv.status_code, 200)
+        data = json.loads(rv.data.decode("utf-8"))
+        self.assertEqual(data["count"], 6)
 
     def test_get_table_pk(self):
         """Table API: Test get table on pk."""
@@ -133,11 +116,38 @@ class TableApiTests(SupersetTestCase):
 
     def test_create_table_admin(self):
         """Table API: Test create table with admin."""
-        self._create_table(user="admin")
+        tbl_name = "bart_lines"
+        rv = self._create_table(user="admin", tbl_name=tbl_name)
+        self.assertEqual(rv.status_code, 201)
+
+        # Verify the table is created.
+        tbl_obj = self.get_table_by_name(tbl_name)
+        self.assertEqual(tbl_obj.table_name, tbl_name)
+
+        # Clean up.
+        db.session.delete(tbl_obj)
+        db.session.commit()
 
     def test_create_table_alpha(self):
         """Table API: Test create table with alpha."""
-        self._create_table(user="alpha")
+        tbl_name = "bart_lines"
+        rv = self._create_table(user="alpha", tbl_name=tbl_name)
+        self.assertEqual(rv.status_code, 201)
+
+        # Verify the table is created.
+        tbl_obj = self.get_table_by_name(tbl_name)
+        self.assertEqual(tbl_obj.table_name, tbl_name)
+
+        # Clean up.
+        db.session.delete(tbl_obj)
+        db.session.commit()
+
+    def test_create_table_gamma_no_perm(self):
+        """Table API: Test create table with gamma."""
+        # Verify gamma user has no permission to create.
+        tbl_name = "bart_lines"
+        rv = self._create_table(user="gamma", tbl_name=tbl_name)
+        self.assertEqual(rv.status_code, 401)
 
     def test_create_table_existed(self):
         """Table API: Test create table already existed."""
@@ -149,26 +159,17 @@ class TableApiTests(SupersetTestCase):
         rv = self.client.post(uri, json=table_data)
         self.assertEqual(rv.status_code, 422)
         tbl_obj = self.get_table_by_name(tbl_name)
-        self.assertIsNotNone(tbl_obj)
         self.assertEqual(tbl_obj.table_name, tbl_name)
-
-    def test_create_table_gamma_no_perm(self):
-        """Table API: Test create table with gamma."""
-        # Send POST /table​/ request, verify gamma user has no permission.
-        tbl_name = "bart_lines"
-        self.login(username="gamma")
-        table_data = {"database": 1, "table_name": tbl_name}
-        uri = f"api/v1/table/"
-        rv = self.client.post(uri, json=table_data)
-        self.assertEqual(rv.status_code, 401)
 
     def test_delete_table_admin(self):
         """Table API: Test delete with admin."""
-        self._delete_table(user="admin")
+        rv = self._delete_table(user="admin")
+        self.assertEqual(rv.status_code, 200)
 
     def test_delete_table_alpha(self):
         """Table API: Test delete with alpha."""
-        self._delete_table(user="alpha")
+        rv = self._delete_table(user="alpha")
+        self.assertEqual(rv.status_code, 200)
 
     def test_delete_table_gamma_no_perm(self):
         """Table API: Test delete with gamma no permission."""
@@ -192,22 +193,32 @@ class TableApiTests(SupersetTestCase):
 
     def test_update_table_admin(self):
         """Table API: Test update table with admin."""
-        self._update_table(user="admin")
+        tbl_name = "birth_names"
+        tbl_data = {"description": ""}
+        rv = self._update_table(user="admin", tbl_name=tbl_name, tbl_data=tbl_data)
+        self.assertEqual(rv.status_code, 200)
+
+        # Verify the table is updated.
+        model = self.get_table_by_name(tbl_name)
+        self.assertEqual(model.description, "")
 
     def test_update_table_alpha(self):
         """Table API: Test update table with alpha."""
-        self._update_table(user="alpha")
+        tbl_name = "birth_names"
+        tbl_data = {"description": ""}
+        rv = self._update_table(user="alpha", tbl_name=tbl_name, tbl_data=tbl_data)
+        self.assertEqual(rv.status_code, 200)
+
+        # Verify the table is updated.
+        model = self.get_table_by_name(tbl_name)
+        self.assertEqual(model.description, "")
 
     def test_update_table_gamma_no_perm(self):
         """Table API: Test update table with gamma no permission."""
-        # Send PUT /table​/{pk} request, verify gamma user has no permission.
+        # Verify gamma user has no permission to update.
         tbl_name = "birth_names"
-        tbl_obj = db.session.query(SqlaTable).filter_by(table_name=tbl_name).one()
-        table_id = tbl_obj.id
-        self.login(username="gamma")
-        table_data = {"description": ""}
-        uri = f"api/v1/table/{table_id}"
-        rv = self.client.put(uri, json=table_data)
+        tbl_data = {"description": ""}
+        rv = self._update_table(user="gamma", tbl_name=tbl_name, tbl_data=tbl_data)
         self.assertEqual(rv.status_code, 401)
 
     def test_update_table_not_existed(self):
