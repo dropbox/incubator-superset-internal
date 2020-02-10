@@ -1253,8 +1253,6 @@ export function createDatasource(vizOptions) {
 export function createCtasDatasource(vizOptions) {
   return dispatch => {
     dispatch(createDatasourceStarted());
-    console.log('vizOptions')
-    console.log(vizOptions)
     return SupersetClient.post({
       endpoint: '/superset/sqllab_table_viz/',
       postPayload: { data: vizOptions },

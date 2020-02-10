@@ -2137,7 +2137,9 @@ class Superset(BaseSupersetView):
             with db.session.no_autoflush:
                 table = SqlaTable(table_name=table_name, owners=[g.user])
                 table.database_id = database_id
-                table.database = db.session.query(models.Database).filter_by(id=database_id).one()
+                table.database = (
+                    db.session.query(models.Database).filter_by(id=database_id).one()
+                )
                 table.schema = data.get("schema")
                 table.template_params = data.get("templateParams")
                 # needed for the table validation.

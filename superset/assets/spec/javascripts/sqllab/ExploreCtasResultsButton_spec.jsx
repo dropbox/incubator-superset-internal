@@ -54,9 +54,7 @@ describe('ExploreCtasResultsButton', () => {
   });
 
   it('renders with props', () => {
-    expect(
-      React.isValidElement(<s {...mockedProps} />),
-    ).toBe(true);
+    expect(React.isValidElement(<s {...mockedProps} />)).toBe(true);
   });
 
   it('renders a Button', () => {

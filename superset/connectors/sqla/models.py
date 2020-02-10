@@ -1084,8 +1084,8 @@ class SqlaTable(Model, BaseDatasource):
                 if not col.expression and "expression" in dttm_config[col.column_name]:
                     col.expression = dttm_config[col.column_name]["expression"]
                 if (
-                        not col.python_date_format
-                        and "python_date_format" in dttm_config[col.column_name]
+                    not col.python_date_format
+                    and "python_date_format" in dttm_config[col.column_name]
                 ):
                     col.python_date_format = dttm_config[col.column_name][
                         "python_date_format"

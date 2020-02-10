@@ -124,7 +124,6 @@ export function getExploreUrlAndPayload({
     port: location.port ? location.port : '',
     path: '/',
   });
-  console.log("hjhjkh", uri)
 
   if (curUrl) {
     uri = URI(URI(curUrl).search());

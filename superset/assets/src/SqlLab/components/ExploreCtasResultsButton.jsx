@@ -64,15 +64,13 @@ class ExploreCtasResultsButton extends React.PureComponent {
       .then(data => {
         const formData = {
           datasource: `${data.table_id}__table`,
-          metrics: ["count"],
+          metrics: ['count'],
           groupby: [],
           viz_type: 'table',
           since: '100 years ago',
           all_columns: [],
           row_limit: 1000,
         };
-        console.log('formData')
-        console.log(formData)
         this.props.actions.addInfoToast(
           t('Creating a data source and creating a new tab'),
         );

@@ -336,7 +336,9 @@ class CoreTests(SupersetTestCase):
             assert dttm_col_name == "dttm"
 
             # Make sure that dttm defaults were propagated.
-            dttm_col = [c for c in added_table.columns if c.column_name == dttm_col_name][0]
+            dttm_col = [
+                c for c in added_table.columns if c.column_name == dttm_col_name
+            ][0]
             assert dttm_col.expression == "test_expression"
             assert dttm_col.python_date_format == "test_python_date_format"
         finally:

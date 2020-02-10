@@ -105,7 +105,7 @@ class TableApiTests(SupersetTestCase):
         tbl_obj = db.session.query(SqlaTable).filter_by(table_name=tbl_name).one()
         table_id = tbl_obj.id
         self.login(username="admin")
-        uri = f"api/v1/chart/{table_id}"
+        uri = f"api/v1/table/{table_id}"
         rv = self.client.get(uri)
         self.assertEqual(rv.status_code, 200)
 
@@ -114,7 +114,7 @@ class TableApiTests(SupersetTestCase):
         # Send GET /table​/{pk} request on a non-existent pk.
         table_id = 1000
         self.login(username="admin")
-        uri = f"api/v1/chart/{table_id}"
+        uri = f"api/v1/table/{table_id}"
         rv = self.client.get(uri)
         self.assertEqual(rv.status_code, 404)
 

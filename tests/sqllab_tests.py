@@ -371,11 +371,7 @@ class SqlLabTests(SupersetTestCase):
     def test_sqllab_table_viz(self):
         self.login("admin")
         examples_dbid = get_example_database().id
-        payload = {
-            "datasourceName": "ab_role",
-            "columns": [],
-            "dbId": examples_dbid,
-        }
+        payload = {"datasourceName": "ab_role", "columns": [], "dbId": examples_dbid}
 
         data = {"data": json.dumps(payload)}
         resp = self.get_json_resp("/superset/sqllab_table_viz/", data=data)

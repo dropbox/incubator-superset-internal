@@ -211,7 +211,11 @@ export default class ResultSet extends React.PureComponent {
       let schema = query.schema;
       let tempTable = query.tempTable;
       // Sync queries only have tempTable in query.results.query
-      if (query.results && query.results.query && query.results.query.tempTable) {
+      if (
+        query.results &&
+        query.results.query &&
+        query.results.query.tempTable
+      ) {
         tempTable = query.results.query.tempTable;
       }
       if (tempTable !== undefined) {
@@ -231,7 +235,7 @@ export default class ResultSet extends React.PureComponent {
                 className="m-r-5"
                 onClick={this.popSelectStar.bind(this)}
               >
-                {t('Query in a new tab !!')}
+                {t('Query in a new tab')}
               </Button>
               <ExploreCtasResultsButton
                 table={query.tempTableName}

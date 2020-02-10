@@ -37,7 +37,14 @@ from sqlalchemy import or_
 from werkzeug.exceptions import HTTPException
 from wtforms.fields.core import Field, UnboundField
 
-from superset import app as superset_app, appbuilder, conf, db, get_feature_flags, security_manager
+from superset import (
+    app as superset_app,
+    appbuilder,
+    conf,
+    db,
+    get_feature_flags,
+    security_manager,
+)
 from superset.connectors.sqla import models
 from superset.exceptions import SupersetException, SupersetSecurityException
 from superset.translations.utils import get_language_pack
@@ -192,9 +199,7 @@ def validate_sqlatable(table: models.SqlaTable) -> None:
 def create_table_permissions(table: models.SqlaTable) -> None:
     security_manager.add_permission_view_menu("datasource_access", table.get_perm())
     if table.schema:
-        security_manager.add_permission_view_menu(
-            "schema_access", table.schema_perm
-        )
+        security_manager.add_permission_view_menu("schema_access", table.schema_perm)
 
 
 def get_user_roles():
