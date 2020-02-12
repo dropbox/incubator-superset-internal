@@ -40,10 +40,10 @@ from superset.utils.logging_configurator import DefaultLoggingConfigurator
 
 # Avoid circular import
 if TYPE_CHECKING:
-    from flask_appbuilder.security.sqla.models import (
+    from flask_appbuilder.security.sqla.models import (  # pylint: disable=unused-import
         User,
-    )  # pylint: disable=unused-impor
-    from superset.models.core import Database  # pylint: disable=unused-impor
+    )
+    from superset.models.core import Database  # pylint: disable=unused-import
 
 # Realtime stats logger, a StatsD implementation exists
 STATS_LOGGER = DummyStatsLogger()

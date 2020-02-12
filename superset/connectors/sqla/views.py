@@ -18,9 +18,8 @@
 """Views used by the SqlAlchemy connector"""
 import logging
 import re
-from collections import defaultdict
 
-from flask import app, flash, Markup, redirect
+from flask import flash, Markup, redirect
 from flask_appbuilder import CompactCRUDMixin, expose
 from flask_appbuilder.actions import action
 from flask_appbuilder.fieldwidgets import Select2Widget
@@ -30,15 +29,16 @@ from flask_babel import gettext as __, lazy_gettext as _
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import Regexp
 
-from superset import app as superset_app, appbuilder, db, security_manager
+from superset import app as superset_app, appbuilder, db
 from superset.connectors.base.views import DatasourceModelView
 from superset.utils import core as utils
 from superset.views.base import (
+    create_table_permissions,
     DatasourceFilter,
     DeleteMixin,
-    get_datasource_exist_error_msg,
     ListWidgetWithCheckboxes,
     SupersetModelView,
+    validate_sqlatable,
     YamlExportMixin,
 )
 
@@ -342,52 +342,11 @@ class TableModelView(DatasourceModelView, DeleteMixin, YamlExportMixin):
     }
 
     def pre_add(self, table):
-        with db.session.no_autoflush:
-            table_query = db.session.query(models.SqlaTable).filter(
-                models.SqlaTable.table_name == table.table_name,
-                models.SqlaTable.schema == table.schema,
-                models.SqlaTable.database_id == table.database.id,
-            )
-            if db.session.query(table_query.exists()).scalar():
-                raise Exception(get_datasource_exist_error_msg(table.full_name))
-
-        # Fail before adding if the table can't be found
-        try:
-            table.get_sqla_table_object()
-        except Exception as e:
-            logger.exception(f"Got an error in pre_add for {table.name}")
-            raise Exception(
-                _(
-                    "Table [{}] could not be found, "
-                    "please double check your "
-                    "database connection, schema, and "
-                    "table name, error: {}"
-                ).format(table.name, str(e))
-            )
+        validate_sqlatable(table)
 
     def post_add(self, table, flash_message=True):
         table.fetch_metadata()
-        dttm_config = config.get("DTTM_CONFIG", {})
-        for col in table.columns:
-            if col.column_name in dttm_config:
-                col.is_dttm = True
-                if not col.expression and "expression" in dttm_config[col.column_name]:
-                    col.expression = dttm_config[col.column_name]["expression"]
-                if (
-                    not col.python_date_format
-                    and "python_date_format" in dttm_config[col.column_name]
-                ):
-                    col.python_date_format = dttm_config[col.column_name][
-                        "python_date_format"
-                    ]
-        db.session.commit()
-
-        security_manager.add_permission_view_menu("datasource_access", table.get_perm())
-        if table.schema:
-            security_manager.add_permission_view_menu(
-                "schema_access", table.schema_perm
-            )
-
+        create_table_permissions(table)
         if flash_message:
             flash(
                 _(

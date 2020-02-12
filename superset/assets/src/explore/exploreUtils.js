@@ -188,7 +188,6 @@ export function exportChart(formData, endpointType) {
     endpointType,
     allowDomainSharding: false,
   });
-
   const exploreForm = document.createElement('form');
   exploreForm.action = url;
   exploreForm.method = 'POST';

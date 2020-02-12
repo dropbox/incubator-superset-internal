@@ -752,6 +752,7 @@ class SupersetSecurityManager(SecurityManager):
                 "can_csv",
                 "can_search_queries",
                 "can_sqllab_viz",
+                "can_sqllab_table_viz",
                 "can_sqllab",
             }
             or (

@@ -1075,6 +1075,22 @@ class SqlaTable(Model, BaseDatasource):
         if not self.main_dttm_col:
             self.main_dttm_col = any_date_col
         self.add_missing_metrics(metrics)
+
+        # specify python_date_format and expression for the dttm columns
+        dttm_config = config.get("DTTM_CONFIG") or {}
+        for col in self.columns:
+            if col.column_name in dttm_config:
+                col.is_dttm = True
+                if not col.expression and "expression" in dttm_config[col.column_name]:
+                    col.expression = dttm_config[col.column_name]["expression"]
+                if (
+                    not col.python_date_format
+                    and "python_date_format" in dttm_config[col.column_name]
+                ):
+                    col.python_date_format = dttm_config[col.column_name][
+                        "python_date_format"
+                    ]
+
         db.session.merge(self)
         db.session.commit()
 

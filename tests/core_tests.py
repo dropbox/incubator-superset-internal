@@ -306,7 +306,7 @@ class CoreTests(SupersetTestCase):
         assert table.name in resp
         assert "/superset/explore/table/{}".format(table.id) in resp
 
-    @mock.patch("superset.connectors.sqla.views.config")
+    @mock.patch("superset.connectors.sqla.models.config")
     def test_tablemodelview_add(self, mock_config):
         mock_config.get.return_value = {
             "dttm": {
@@ -321,6 +321,7 @@ class CoreTests(SupersetTestCase):
         self.login(username="admin")
         # assert that /tablemodelview/add responds with 200
         example_db = utils.get_example_database()
+
         resp = self.client.post(
             "/tablemodelview/add",
             data=dict(database=example_db.id, table_name="logs"),
@@ -329,14 +330,20 @@ class CoreTests(SupersetTestCase):
         self.assertEqual(resp.status_code, 200)
         added_table = db.session.query(SqlaTable).filter_by(table_name="logs").one()
 
-        assert len(added_table.dttm_cols) == 1
-        dttm_col_name = added_table.dttm_cols[0]
-        assert dttm_col_name == "dttm"
+        try:
+            assert len(added_table.dttm_cols) == 1
+            dttm_col_name = added_table.dttm_cols[0]
+            assert dttm_col_name == "dttm"
 
-        # Make sure that dttm defaults were propagated.
-        dttm_col = [c for c in added_table.columns if c.column_name == dttm_col_name][0]
-        assert dttm_col.expression == "test_expression"
-        assert dttm_col.python_date_format == "test_python_date_format"
+            # Make sure that dttm defaults were propagated.
+            dttm_col = [
+                c for c in added_table.columns if c.column_name == dttm_col_name
+            ][0]
+            assert dttm_col.expression == "test_expression"
+            assert dttm_col.python_date_format == "test_python_date_format"
+        finally:
+            db.session.delete(added_table)
+            db.session.commit()
 
     def test_add_slice(self):
         self.login(username="admin")
