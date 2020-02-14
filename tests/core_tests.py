@@ -34,6 +34,7 @@ import pandas as pd
 import psycopg2
 import sqlalchemy as sqla
 
+from superset.utils.core import get_example_database
 from tests.test_app import app
 from superset import dataframe, db, jinja_context, security_manager, sql_lab
 from superset.connectors.sqla.models import SqlaTable
@@ -642,6 +643,50 @@ class CoreTests(SupersetTestCase):
         assert "query" in resp
         assert "language" in resp
         self.logout()
+
+    def test_explore_new(self):
+        self.login("admin")
+        examples_dbid = get_example_database().id
+        table_schema = 'main'
+        table_name = 'ab_role'
+        resp = self.get_resp(f"/superset/explore_new/{examples_dbid}/table/{table_schema}.{table_name}")
+        assert f"{table_schema}.{table_name}" in resp
+
+        # ensure owner is set correctly
+        table = db.session.query(SqlaTable).filter_by(
+            database_id=examples_dbid,
+            table_name=table_name,
+            schema=table_schema,
+        ).one()
+        self.assertEqual([owner.username for owner in table.owners], ["admin"])
+
+        # ensure that you can call it twice, e.g. explore predefined table as well.g
+        resp = self.get_resp(f"/superset/explore_new/{examples_dbid}/table/{table_schema}.{table_name}")
+        assert f"{table_schema}.{table_name}" in resp
+
+
+        db.session.delete(table)
+        db.session.commit()
+
+    def test_explore_new_sqllab(self):
+        self.login("admin")
+        examples_dbid = get_example_database().id
+        table_schema = 'main'
+        table_name = 'ab_role'
+        resp = self.get_resp(
+            f"/superset/explore_new/{examples_dbid}/table/{table_schema}.{table_name}?is_sqllab_view=true"
+        )
+        self.assertIn(f"{table_schema}.{table_name}", resp)
+
+        # ensure is_sqllab_view is set
+        table = db.session.query(SqlaTable).filter_by(
+            database_id=examples_dbid,
+            table_name=table_name,
+            schema=table_schema,
+        ).one()
+        self.assertTrue(table.is_sqllab_view)
+        db.session.delete(table)
+        db.session.commit()
 
     def test_import_csv(self):
         self.login(username="admin")

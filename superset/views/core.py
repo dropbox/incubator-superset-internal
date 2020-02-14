@@ -263,9 +263,9 @@ def get_cta_schema_name(
     return func(database, user, schema, sql)
 
 
-def create_if_not_exists_table(database_id, schema_name, table_name, template_params=None):
+def create_if_not_exists_table(database_id, schema_name, table_name, template_params=None, is_sqllab_view=False):
     database_obj = db.session.query(Database).filter_by(id=database_id).one()
-    if not security_manager.datasource_access_by_fullname(database_obj, schema_name, table_name):
+    if not security_manager.datasource_access_by_fullname(database_obj, table_name, schema_name):
         full_table_name = (
             "{}.{}".format(schema_name, table_name) if schema_name else table_name
         )
@@ -277,7 +277,7 @@ def create_if_not_exists_table(database_id, schema_name, table_name, template_pa
     SqlaTable = ConnectorRegistry.sources["table"]
     table = (
         db.session.query(SqlaTable)
-        .filter_by(database_id=database_id, table_name=table_name)
+        .filter_by(database_id=database_id, schema=schema_name, table_name=table_name)
         .one_or_none()
     )
     if not table:
@@ -290,6 +290,7 @@ def create_if_not_exists_table(database_id, schema_name, table_name, template_pa
             )
             table.schema = schema_name
             table.template_params = template_params
+            table.is_sqllab_view = is_sqllab_view
             # needed for the table validation.
             validate_sqlatable(table)
 
@@ -297,7 +298,7 @@ def create_if_not_exists_table(database_id, schema_name, table_name, template_pa
         table.fetch_metadata()
         create_table_permissions(table)
         db.session.commit()
-        return table.id
+    return table.id
 
 
 class SliceFilter(BaseFilter):
@@ -1015,10 +1016,12 @@ class Superset(BaseSupersetView):
         :param datasource_name: full name of the datasource, should include schema name if applicable
         :return: redirects to the exploration page
         """
+        # overloading is_sqllab_view to be able to hide the temporary tables from the table list.
+        is_sqllab_view = request.args.get("is_sqllab_view") == "true"
         assert datasource_type == 'table', f'Only table datasource_type is supported, not {datasource_type}.'
-        schema_name, table_name = security_manager._get_schema_and_table(datasource_name)
-        table_id = create_if_not_exists_table(database_id, schema_name, table_name)
-        redirect(f'/explore/{datasource_type}/{table_id}')
+        schema_name, table_name = security_manager._get_schema_and_table(datasource_name, schema=None)
+        table_id = create_if_not_exists_table(database_id, schema_name, table_name, is_sqllab_view=is_sqllab_view)
+        return redirect(f'/superset/explore/{datasource_type}/{table_id}')
 
     @event_logger.log_this
     @has_access
@@ -2036,6 +2039,7 @@ class Superset(BaseSupersetView):
         ) and security_manager.can_access("can_save_dash", "Superset")
         dash_save_perm = security_manager.can_access("can_save_dash", "Superset")
         superset_can_explore = security_manager.can_access("can_explore", "Superset")
+        superset_can_explore_new = security_manager.can_access("can_explore_new", "Superset")
         superset_can_csv = security_manager.can_access("can_csv", "Superset")
         slice_can_edit = security_manager.can_access("can_edit", "SliceModelView")
 
@@ -2065,6 +2069,7 @@ class Superset(BaseSupersetView):
                 "dash_save_perm": dash_save_perm,
                 "dash_edit_perm": dash_edit_perm,
                 "superset_can_explore": superset_can_explore,
+                "superset_can_explore_new": superset_can_explore_new,
                 "superset_can_csv": superset_can_csv,
                 "slice_can_edit": slice_can_edit,
             }
@@ -2180,13 +2185,16 @@ class Superset(BaseSupersetView):
         database_id = data.get("dbId")
         table_name = data.get("datasourceName")
         schema_name = data.get("schema")
+        # overloading is_sqllab_view to be able to hide the temporary tables from the table list.
+        is_sqllab_view = request.args.get("is_sqllab_view") == "true"
         template_params = data.get("templateParams")
 
         table_id = create_if_not_exists_table(
             database_id,
             schema_name,
             table_name,
-            template_params=template_params
+            template_params=template_params,
+            is_sqllab_view=is_sqllab_view,
         )
         return json_success(json.dumps({"table_id": table_id}))
 
