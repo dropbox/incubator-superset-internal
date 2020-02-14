@@ -20,7 +20,7 @@ from typing import Dict, Text
 
 from flask import Response
 
-from superset import db
+from superset import db, security_manager
 from superset.connectors.sqla.models import SqlaTable
 from superset.utils.core import get_example_database
 
@@ -43,7 +43,8 @@ class TableApiTests(SupersetTestCase):
     def _create_table(self, user: Text, tbl_name: Text) -> Response:
         """Helper function to send POST /table/ request and return resp."""
         self.login(username=user)
-        table_data = {"database": 1, "table_name": tbl_name}
+        main_db = get_example_database()
+        table_data = {"database": main_db.id, "schema": "", "table_name": tbl_name}
         uri = f"api/v1/table/"
         rv = self.client.post(uri, json=table_data)
         return rv
@@ -120,30 +121,40 @@ class TableApiTests(SupersetTestCase):
 
     def test_create_table_admin(self) -> None:
         """Table API: Test create table with admin."""
-        tbl_name = "bart_lines"
+        tbl_name = "ab_permission"
         rv = self._create_table(user="admin", tbl_name=tbl_name)
         self.assertEqual(rv.status_code, 201)
 
         # Verify the table is created.
-        tbl_obj = self.get_table_by_name(tbl_name)
-        self.assertEqual(tbl_obj.table_name, tbl_name)
+        model = self.get_table_by_name(tbl_name)
+        self.assertEqual(model.table_name, tbl_name)
+        self.assertIsNotNone(model.get_col("id"))
+        self.assertIsNotNone(model.get_col("name"))
+        self.assertIsNotNone(
+            security_manager.find_permission_view_menu("datasource_access", model.perm)
+        )
 
         # Clean up.
-        db.session.delete(tbl_obj)
+        db.session.delete(model)
         db.session.commit()
 
     def test_create_table_alpha(self) -> None:
         """Table API: Test create table with alpha."""
-        tbl_name = "bart_lines"
+        tbl_name = "ab_permission"
         rv = self._create_table(user="alpha", tbl_name=tbl_name)
         self.assertEqual(rv.status_code, 201)
 
         # Verify the table is created.
-        tbl_obj = self.get_table_by_name(tbl_name)
-        self.assertEqual(tbl_obj.table_name, tbl_name)
+        model = self.get_table_by_name(tbl_name)
+        self.assertEqual(model.table_name, tbl_name)
+        self.assertIsNotNone(model.get_col("id"))
+        self.assertIsNotNone(model.get_col("name"))
+        self.assertIsNotNone(
+            security_manager.find_permission_view_menu("datasource_access", model.perm)
+        )
 
         # Clean up.
-        db.session.delete(tbl_obj)
+        db.session.delete(model)
         db.session.commit()
 
     def test_create_table_gamma_no_perm(self) -> None:
@@ -153,21 +164,28 @@ class TableApiTests(SupersetTestCase):
         rv = self._create_table(user="gamma", tbl_name=tbl_name)
         self.assertEqual(rv.status_code, 401)
 
-    def test_create_table_existed(self) -> None:
-        """Table API: Test create table already existed."""
+    def test_create_table_exists(self) -> None:
+        """Table API: Test create table already exists."""
+        # Try to create a table already exists, verify it fails.
         main_db = get_example_database()
-        # Only run the test when backend db is mysql.
-        # TODO(dandanhub): Fix test failure when backend db is postgres.
-        if main_db.backend == "mysql":
-            # Try to create a able already existed, verify it fails.
-            tbl_name = "birth_names"
-            self.login(username="admin")
-            table_data = {"database": 1, "table_name": tbl_name}
-            uri = f"api/v1/table/"
-            rv = self.client.post(uri, json=table_data)
-            self.assertEqual(rv.status_code, 422)
-            tbl_obj = self.get_table_by_name(tbl_name)
-            self.assertEqual(tbl_obj.table_name, tbl_name)
+        tbl_name = "birth_names"
+        self.login(username="admin")
+        table_data = {"database": main_db.id, "schema": "", "table_name": tbl_name}
+        uri = f"api/v1/table/"
+        rv = self.client.post(uri, json=table_data)
+        self.assertEqual(rv.status_code, 422)
+        tbl_obj = self.get_table_by_name(tbl_name)
+        self.assertEqual(tbl_obj.table_name, tbl_name)
+
+    def test_create_table_table_not_exists(self) -> None:
+        """Table API: Test create table that doesn't exist in database."""
+        main_db = get_example_database()
+        tbl_name = "table_does_not_exist"
+        self.login(username="admin")
+        table_data = {"database": main_db.id, "schema": "", "table_name": tbl_name}
+        uri = f"api/v1/table/"
+        rv = self.client.post(uri, json=table_data)
+        self.assertEqual(rv.status_code, 500)
 
     def test_delete_table_admin(self) -> None:
         """Table API: Test delete with admin."""
