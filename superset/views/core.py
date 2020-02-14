@@ -263,6 +263,43 @@ def get_cta_schema_name(
     return func(database, user, schema, sql)
 
 
+def create_if_not_exists_table(database_id, schema_name, table_name, template_params=None):
+    database_obj = db.session.query(Database).filter_by(id=database_id).one()
+    if not security_manager.datasource_access_by_fullname(database_obj, schema_name, table_name):
+        full_table_name = (
+            "{}.{}".format(schema_name, table_name) if schema_name else table_name
+        )
+        flash(
+            __(security_manager.get_datasource_access_error_msg(full_table_name)),
+            "danger",
+        )
+
+    SqlaTable = ConnectorRegistry.sources["table"]
+    table = (
+        db.session.query(SqlaTable)
+        .filter_by(database_id=database_id, table_name=table_name)
+        .one_or_none()
+    )
+    if not table:
+        # Create table if doesn't exist.
+        with db.session.no_autoflush:
+            table = SqlaTable(table_name=table_name, owners=[g.user])
+            table.database_id = database_id
+            table.database = (
+                db.session.query(models.Database).filter_by(id=database_id).one()
+            )
+            table.schema = schema_name
+            table.template_params = template_params
+            # needed for the table validation.
+            validate_sqlatable(table)
+
+        db.session.add(table)
+        table.fetch_metadata()
+        create_table_permissions(table)
+        db.session.commit()
+        return table.id
+
+
 class SliceFilter(BaseFilter):
     def apply(self, query, func):  # noqa
         if security_manager.all_datasource_access():
@@ -969,6 +1006,22 @@ class Superset(BaseSupersetView):
 
     @event_logger.log_this
     @has_access
+    @expose("/explore_new/<database_id>/<datasource_type>/<datasource_name>/", methods=["GET", "POST"])
+    def explore_new(self, database_id=None, datasource_type=None, datasource_name=None):
+        """Integration endpoint. Allows to visualize tables that were not precreated in superset.
+
+        :param database_id: database id
+        :param datasource_type: table or druid
+        :param datasource_name: full name of the datasource, should include schema name if applicable
+        :return: redirects to the exploration page
+        """
+        assert datasource_type == 'table', f'Only table datasource_type is supported, not {datasource_type}.'
+        schema_name, table_name = security_manager._get_schema_and_table(datasource_name)
+        table_id = create_if_not_exists_table(database_id, schema_name, table_name)
+        redirect(f'/explore/{datasource_type}/{table_id}')
+
+    @event_logger.log_this
+    @has_access
     @expose("/explore/<datasource_type>/<datasource_id>/", methods=["GET", "POST"])
     @expose("/explore/", methods=["GET", "POST"])
     def explore(self, datasource_type=None, datasource_id=None):
@@ -1025,7 +1078,7 @@ class Superset(BaseSupersetView):
             not security_manager.datasource_access(datasource)
         ):
             flash(
-                __(security_manager.get_datasource_access_error_msg(datasource)),
+                __(security_manager.get_datasource_access_error_msg(datasource.name)),
                 "danger",
             )
             return redirect(
@@ -1970,7 +2023,7 @@ class Superset(BaseSupersetView):
                 if datasource and not security_manager.datasource_access(datasource):
                     flash(
                         __(
-                            security_manager.get_datasource_access_error_msg(datasource)
+                            security_manager.get_datasource_access_error_msg(datasource.name)
                         ),
                         "danger",
                     )
@@ -2123,34 +2176,19 @@ class Superset(BaseSupersetView):
         * templateParams - params for the Jinja templating syntax, optional
         :return: Response
         """
-        SqlaTable = ConnectorRegistry.sources["table"]
         data = json.loads(request.form.get("data"))
-        table_name = data.get("datasourceName")
         database_id = data.get("dbId")
-        table = (
-            db.session.query(SqlaTable)
-            .filter_by(database_id=database_id, table_name=table_name)
-            .one_or_none()
+        table_name = data.get("datasourceName")
+        schema_name = data.get("schema")
+        template_params = data.get("templateParams")
+
+        table_id = create_if_not_exists_table(
+            database_id,
+            schema_name,
+            table_name,
+            template_params=template_params
         )
-        if not table:
-            # Create table if doesn't exist.
-            with db.session.no_autoflush:
-                table = SqlaTable(table_name=table_name, owners=[g.user])
-                table.database_id = database_id
-                table.database = (
-                    db.session.query(models.Database).filter_by(id=database_id).one()
-                )
-                table.schema = data.get("schema")
-                table.template_params = data.get("templateParams")
-                # needed for the table validation.
-                validate_sqlatable(table)
-
-            db.session.add(table)
-            table.fetch_metadata()
-            create_table_permissions(table)
-            db.session.commit()
-
-        return json_success(json.dumps({"table_id": table.id}))
+        return json_success(json.dumps({"table_id": table_id}))
 
     @has_access
     @expose("/sqllab_viz/", methods=["POST"])
