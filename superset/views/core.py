@@ -263,9 +263,13 @@ def get_cta_schema_name(
     return func(database, user, schema, sql)
 
 
-def create_if_not_exists_table(database_id, schema_name, table_name, template_params=None, is_sqllab_view=False):
+def create_if_not_exists_table(
+    database_id, schema_name, table_name, template_params=None, is_sqllab_view=False
+):
     database_obj = db.session.query(Database).filter_by(id=database_id).one()
-    if not security_manager.datasource_access_by_fullname(database_obj, table_name, schema_name):
+    if not security_manager.datasource_access_by_fullname(
+        database_obj, table_name, schema_name
+    ):
         full_table_name = (
             "{}.{}".format(schema_name, table_name) if schema_name else table_name
         )
@@ -1007,7 +1011,10 @@ class Superset(BaseSupersetView):
 
     @event_logger.log_this
     @has_access
-    @expose("/explore_new/<database_id>/<datasource_type>/<datasource_name>/", methods=["GET", "POST"])
+    @expose(
+        "/explore_new/<database_id>/<datasource_type>/<datasource_name>/",
+        methods=["GET", "POST"],
+    )
     def explore_new(self, database_id=None, datasource_type=None, datasource_name=None):
         """Integration endpoint. Allows to visualize tables that were not precreated in superset.
 
@@ -1018,10 +1025,16 @@ class Superset(BaseSupersetView):
         """
         # overloading is_sqllab_view to be able to hide the temporary tables from the table list.
         is_sqllab_view = request.args.get("is_sqllab_view") == "true"
-        assert datasource_type == 'table', f'Only table datasource_type is supported, not {datasource_type}.'
-        schema_name, table_name = security_manager._get_schema_and_table(datasource_name, schema=None)
-        table_id = create_if_not_exists_table(database_id, schema_name, table_name, is_sqllab_view=is_sqllab_view)
-        return redirect(f'/superset/explore/{datasource_type}/{table_id}')
+        assert (
+            datasource_type == "table"
+        ), f"Only table datasource_type is supported, not {datasource_type}."
+        schema_name, table_name = security_manager._get_schema_and_table(
+            datasource_name, schema=None
+        )
+        table_id = create_if_not_exists_table(
+            database_id, schema_name, table_name, is_sqllab_view=is_sqllab_view
+        )
+        return redirect(f"/superset/explore/{datasource_type}/{table_id}")
 
     @event_logger.log_this
     @has_access
@@ -2026,7 +2039,9 @@ class Superset(BaseSupersetView):
                 if datasource and not security_manager.datasource_access(datasource):
                     flash(
                         __(
-                            security_manager.get_datasource_access_error_msg(datasource.name)
+                            security_manager.get_datasource_access_error_msg(
+                                datasource.name
+                            )
                         ),
                         "danger",
                     )
@@ -2039,7 +2054,9 @@ class Superset(BaseSupersetView):
         ) and security_manager.can_access("can_save_dash", "Superset")
         dash_save_perm = security_manager.can_access("can_save_dash", "Superset")
         superset_can_explore = security_manager.can_access("can_explore", "Superset")
-        superset_can_explore_new = security_manager.can_access("can_explore_new", "Superset")
+        superset_can_explore_new = security_manager.can_access(
+            "can_explore_new", "Superset"
+        )
         superset_can_csv = security_manager.can_access("can_csv", "Superset")
         slice_can_edit = security_manager.can_access("can_edit", "SliceModelView")
 

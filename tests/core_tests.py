@@ -646,44 +646,57 @@ class CoreTests(SupersetTestCase):
 
     def test_explore_new(self):
         self.login("admin")
-        examples_dbid = get_example_database().id
-        table_schema = 'main'
-        table_name = 'ab_role'
-        resp = self.get_resp(f"/superset/explore_new/{examples_dbid}/table/{table_schema}.{table_name}")
-        assert f"{table_schema}.{table_name}" in resp
+        examples_db = get_example_database()
+        examples_dbid = examples_db.id
+        table_schema = None
+        if examples_db.backend == "mysql":
+            table_schema = "superset"
+        elif examples_db.backend == "sqlite":
+            table_schema = "main"
+        elif examples_db.backend == "postgres":
+            # no schema is created for this test in postgres
+            table_schema = ""
+
+        table_name = "ab_role"
+        full_table_name = f"{table_schema}.{table_name}" if table_schema else table_name
+        resp = self.get_resp(
+            f"/superset/explore_new/{examples_dbid}/table/{full_table_name}"
+        )
+        self.assertIn(full_table_name, resp)
 
         # ensure owner is set correctly
-        table = db.session.query(SqlaTable).filter_by(
-            database_id=examples_dbid,
-            table_name=table_name,
-            schema=table_schema,
-        ).one()
+        table = (
+            db.session.query(SqlaTable)
+            .filter_by(
+                database_id=examples_dbid, table_name=table_name, schema=table_schema
+            )
+            .one()
+        )
         self.assertEqual([owner.username for owner in table.owners], ["admin"])
 
         # ensure that you can call it twice, e.g. explore predefined table as well.g
-        resp = self.get_resp(f"/superset/explore_new/{examples_dbid}/table/{table_schema}.{table_name}")
-        assert f"{table_schema}.{table_name}" in resp
-
+        resp = self.get_resp(
+            f"/superset/explore_new/{examples_dbid}/table/{full_table_name}"
+        )
+        self.assertIn(full_table_name, resp)
 
         db.session.delete(table)
         db.session.commit()
 
-    def test_explore_new_sqllab(self):
-        self.login("admin")
-        examples_dbid = get_example_database().id
-        table_schema = 'main'
-        table_name = 'ab_role'
-        resp = self.get_resp(
-            f"/superset/explore_new/{examples_dbid}/table/{table_schema}.{table_name}?is_sqllab_view=true"
+        # test is_sqllab_view flag
+        sqllab_resp = self.get_resp(
+            f"/superset/explore_new/{examples_dbid}/table/{full_table_name}?is_sqllab_view=true"
         )
-        self.assertIn(f"{table_schema}.{table_name}", resp)
+        self.assertIn(full_table_name, sqllab_resp)
 
         # ensure is_sqllab_view is set
-        table = db.session.query(SqlaTable).filter_by(
-            database_id=examples_dbid,
-            table_name=table_name,
-            schema=table_schema,
-        ).one()
+        table = (
+            db.session.query(SqlaTable)
+            .filter_by(
+                database_id=examples_dbid, table_name=table_name, schema=table_schema
+            )
+            .one()
+        )
         self.assertTrue(table.is_sqllab_view)
         db.session.delete(table)
         db.session.commit()
@@ -966,7 +979,12 @@ class CoreTests(SupersetTestCase):
             "sql": "SELECT * FROM birth_names LIMIT 100",
             "status": utils.QueryStatus.PENDING,
         }
-        serialized_data, selected_columns, all_columns, expanded_columns = sql_lab._serialize_and_expand_data(
+        (
+            serialized_data,
+            selected_columns,
+            all_columns,
+            expanded_columns,
+        ) = sql_lab._serialize_and_expand_data(
             cdf, db_engine_spec, use_new_deserialization
         )
         payload = {
@@ -1009,7 +1027,12 @@ class CoreTests(SupersetTestCase):
             "sql": "SELECT * FROM birth_names LIMIT 100",
             "status": utils.QueryStatus.PENDING,
         }
-        serialized_data, selected_columns, all_columns, expanded_columns = sql_lab._serialize_and_expand_data(
+        (
+            serialized_data,
+            selected_columns,
+            all_columns,
+            expanded_columns,
+        ) = sql_lab._serialize_and_expand_data(
             cdf, db_engine_spec, use_new_deserialization
         )
         payload = {
