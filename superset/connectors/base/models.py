@@ -72,7 +72,7 @@ class BaseDatasource(
     # Used to do code highlighting when displaying the query in the UI
     query_language: Optional[str] = None
 
-    name = None  # can be a Column or a property pointing to one
+    name: Optional[str] = None  # can be a Column or a property pointing to one
 
     # ---------------------------------------------------------------
 

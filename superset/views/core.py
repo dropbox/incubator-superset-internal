@@ -92,7 +92,7 @@ from superset.utils.dashboard_filter_scopes_converter import copy_filter_scopes
 from superset.utils.dates import now_as_float
 from superset.utils.decorators import etag_cache, stats_timing
 from superset.views.database.filters import DatabaseFilter
-from superset.views.utils import get_dashboard_extra_filters
+from superset.views.utils import get_dashboard_extra_filters, parse_table_full_name
 
 from .base import (
     api,
@@ -287,6 +287,48 @@ class AccessRequestsModelView(SupersetModelView, DeleteMixin):
         "roles_with_datasource": _("Roles to grant"),
         "created_on": _("Created On"),
     }
+
+
+def create_if_not_exists_table(
+    database_id, schema_name, table_name, template_params=None, is_sqllab_view=False
+):
+    database_obj = db.session.query(Database).filter_by(id=database_id).one()
+    if not security_manager.can_access_datasource(
+        database_obj, Table(table_name, schema_name)
+    ):
+        full_table_name = (
+            "{}.{}".format(schema_name, table_name) if schema_name else table_name
+        )
+        flash(
+            __(security_manager.get_datasource_access_error_msg(full_table_name)),
+            "danger",
+        )
+
+    SqlaTable = ConnectorRegistry.sources["table"]
+    table = (
+        db.session.query(SqlaTable)
+        .filter_by(database_id=database_id, schema=schema_name, table_name=table_name)
+        .one_or_none()
+    )
+    if not table:
+        # Create table if doesn't exist.
+        with db.session.no_autoflush:
+            table = SqlaTable(table_name=table_name, owners=[g.user])
+            table.database_id = database_id
+            table.database = (
+                db.session.query(models.Database).filter_by(id=database_id).one()
+            )
+            table.schema = schema_name
+            table.template_params = template_params
+            table.is_sqllab_view = is_sqllab_view
+            # needed for the table validation.
+            validate_sqlatable(table)
+
+        db.session.add(table)
+        table.fetch_metadata()
+        create_table_permissions(table)
+        db.session.commit()
+    return table.id
 
 
 @talisman(force_https=False)
@@ -760,6 +802,31 @@ class Superset(BaseSupersetView):
 
     @event_logger.log_this
     @has_access
+    @expose(
+        "/explore_new/<database_id>/<datasource_type>/<datasource_name>/",
+        methods=["GET", "POST"],
+    )
+    def explore_new(self, database_id=None, datasource_type=None, datasource_name=None):
+        """Integration endpoint. Allows to visualize tables that were not precreated in superset.
+
+        :param database_id: database id
+        :param datasource_type: table or druid
+        :param datasource_name: full name of the datasource, should include schema name if applicable
+        :return: redirects to the exploration page
+        """
+        # overloading is_sqllab_view to be able to hide the temporary tables from the table list.
+        is_sqllab_view = request.args.get("is_sqllab_view") == "true"
+        assert (
+            datasource_type == "table"
+        ), f"Only table datasource_type is supported, not {datasource_type}."
+        schema_name, table_name = parse_table_full_name(datasource_name)
+        table_id = create_if_not_exists_table(
+            database_id, schema_name, table_name, is_sqllab_view=is_sqllab_view
+        )
+        return redirect(f"/superset/explore/{datasource_type}/{table_id}")
+
+    @event_logger.log_this
+    @has_access
     @expose("/explore/<datasource_type>/<datasource_id>/", methods=["GET", "POST"])
     @expose("/explore/", methods=["GET", "POST"])
     def explore(self, datasource_type=None, datasource_id=None):
@@ -816,7 +883,7 @@ class Superset(BaseSupersetView):
             not security_manager.datasource_access(datasource)
         ):
             flash(
-                __(security_manager.get_datasource_access_error_msg(datasource)),
+                __(security_manager.get_datasource_access_error_msg(datasource.name)),
                 "danger",
             )
             return redirect(
@@ -1823,7 +1890,9 @@ class Superset(BaseSupersetView):
                 if datasource and not security_manager.datasource_access(datasource):
                     flash(
                         __(
-                            security_manager.get_datasource_access_error_msg(datasource)
+                            security_manager.get_datasource_access_error_msg(
+                                datasource.name
+                            )
                         ),
                         "danger",
                     )
@@ -1844,6 +1913,9 @@ class Superset(BaseSupersetView):
         ) and security_manager.can_access("can_save_dash", "Superset")
         dash_save_perm = security_manager.can_access("can_save_dash", "Superset")
         superset_can_explore = security_manager.can_access("can_explore", "Superset")
+        superset_can_explore_new = security_manager.can_access(
+            "can_explore_new", "Superset"
+        )
         superset_can_csv = security_manager.can_access("can_csv", "Superset")
         slice_can_edit = security_manager.can_access("can_edit", "SliceModelView")
 
@@ -1873,6 +1945,7 @@ class Superset(BaseSupersetView):
                 "dash_save_perm": dash_save_perm,
                 "dash_edit_perm": dash_edit_perm,
                 "superset_can_explore": superset_can_explore,
+                "superset_can_explore_new": superset_can_explore_new,
                 "superset_can_csv": superset_can_csv,
                 "slice_can_edit": slice_can_edit,
             }
@@ -1984,34 +2057,22 @@ class Superset(BaseSupersetView):
         * templateParams - params for the Jinja templating syntax, optional
         :return: Response
         """
-        SqlaTable = ConnectorRegistry.sources["table"]
         data = json.loads(request.form.get("data"))
-        table_name = data.get("datasourceName")
         database_id = data.get("dbId")
-        table = (
-            db.session.query(SqlaTable)
-            .filter_by(database_id=database_id, table_name=table_name)
-            .one_or_none()
+        table_name = data.get("datasourceName")
+        schema_name = data.get("schema")
+        # overloading is_sqllab_view to be able to hide the temporary tables from the table list.
+        is_sqllab_view = request.args.get("is_sqllab_view") == "true"
+        template_params = data.get("templateParams")
+
+        table_id = create_if_not_exists_table(
+            database_id,
+            schema_name,
+            table_name,
+            template_params=template_params,
+            is_sqllab_view=is_sqllab_view,
         )
-        if not table:
-            # Create table if doesn't exist.
-            with db.session.no_autoflush:
-                table = SqlaTable(table_name=table_name, owners=[g.user])
-                table.database_id = database_id
-                table.database = (
-                    db.session.query(models.Database).filter_by(id=database_id).one()
-                )
-                table.schema = data.get("schema")
-                table.template_params = data.get("templateParams")
-                # needed for the table validation.
-                validate_sqlatable(table)
-
-            db.session.add(table)
-            table.fetch_metadata()
-            create_table_permissions(table)
-            db.session.commit()
-
-        return json_success(json.dumps({"table_id": table.id}))
+        return json_success(json.dumps({"table_id": table_id}))
 
     @has_access
     @expose("/sqllab_viz/", methods=["POST"])

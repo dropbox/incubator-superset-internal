@@ -361,3 +361,16 @@ def is_slice_in_container(layout: Dict, container_id: str, slice_id: int) -> boo
         )
 
     return False
+
+
+def parse_table_full_name(full_table_name: str) -> Tuple[Optional[str], str]:
+    """Parses full table name into components like table name, schema name.
+
+    Note the table name conforms to the [[cluster.]schema.]table construct.
+    """
+    table_name_pieces = full_table_name.split(".")
+    if len(table_name_pieces) == 3:
+        return table_name_pieces[1], table_name_pieces[1]
+    elif len(table_name_pieces) == 2:
+        return table_name_pieces[0], table_name_pieces[1]
+    return None, table_name_pieces[0]
