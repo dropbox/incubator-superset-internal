@@ -248,7 +248,7 @@ class SupersetSecurityManager(SecurityManager):
             "datasource_access", datasource.perm
         )
 
-    def get_datasource_access_error_msg(self, datasource: "BaseDatasource") -> str:
+    def get_datasource_access_error_msg(self, datasource_name: str) -> str:
         """
         Return the error message for the denied Superset datasource.
 
@@ -256,7 +256,7 @@ class SupersetSecurityManager(SecurityManager):
         :returns: The error message
         """
 
-        return f"""This endpoint requires the datasource {datasource.name}, database or
+        return f"""This endpoint requires the datasource {datasource_name}, database or
             `all_datasource_access` permission"""
 
     def get_datasource_access_link(self, datasource: "BaseDatasource") -> Optional[str]:
@@ -348,7 +348,7 @@ class SupersetSecurityManager(SecurityManager):
             return tuple(table_name_pieces)  # type: ignore
         return (schema, table_name_pieces[0])
 
-    def _datasource_access_by_fullname(
+    def datasource_access_by_fullname(
         self, database: "Database", table_in_query: str, schema: str
     ) -> bool:
         """
@@ -385,7 +385,7 @@ class SupersetSecurityManager(SecurityManager):
         return [
             t
             for t in superset_query.tables
-            if not self._datasource_access_by_fullname(database, t, schema)
+            if not self.datasource_access_by_fullname(database, t, schema)
         ]
 
     def get_public_role(self) -> Optional[Any]:  # Optional[self.role_model]
@@ -855,7 +855,7 @@ class SupersetSecurityManager(SecurityManager):
 
         if not self.datasource_access(datasource):
             raise SupersetSecurityException(
-                self.get_datasource_access_error_msg(datasource),
+                self.get_datasource_access_error_msg(datasource.name),
                 self.get_datasource_access_link(datasource),
             )
 

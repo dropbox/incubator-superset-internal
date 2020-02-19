@@ -34,6 +34,7 @@ import pandas as pd
 import psycopg2
 import sqlalchemy as sqla
 
+from superset.utils.core import get_example_database
 from tests.test_app import app
 from superset import dataframe, db, jinja_context, security_manager, sql_lab
 from superset.connectors.sqla.models import SqlaTable
@@ -643,6 +644,63 @@ class CoreTests(SupersetTestCase):
         assert "language" in resp
         self.logout()
 
+    def test_explore_new(self):
+        self.login("admin")
+        examples_db = get_example_database()
+        examples_dbid = examples_db.id
+        table_schema = None
+        if examples_db.backend == "mysql":
+            table_schema = "superset"
+        elif examples_db.backend == "sqlite":
+            table_schema = "main"
+        elif examples_db.backend == "postgres":
+            # no schema is created for this test in postgres
+            table_schema = ""
+
+        table_name = "ab_role"
+        full_table_name = f"{table_schema}.{table_name}" if table_schema else table_name
+        resp = self.get_resp(
+            f"/superset/explore_new/{examples_dbid}/table/{full_table_name}"
+        )
+        self.assertIn(full_table_name, resp)
+
+        # ensure owner is set correctly
+        table = (
+            db.session.query(SqlaTable)
+            .filter_by(
+                database_id=examples_dbid, table_name=table_name, schema=table_schema
+            )
+            .one()
+        )
+        self.assertEqual([owner.username for owner in table.owners], ["admin"])
+
+        # ensure that you can call it twice, e.g. explore predefined table as well.g
+        resp = self.get_resp(
+            f"/superset/explore_new/{examples_dbid}/table/{full_table_name}"
+        )
+        self.assertIn(full_table_name, resp)
+
+        db.session.delete(table)
+        db.session.commit()
+
+        # test is_sqllab_view flag
+        sqllab_resp = self.get_resp(
+            f"/superset/explore_new/{examples_dbid}/table/{full_table_name}?is_sqllab_view=true"
+        )
+        self.assertIn(full_table_name, sqllab_resp)
+
+        # ensure is_sqllab_view is set
+        table = (
+            db.session.query(SqlaTable)
+            .filter_by(
+                database_id=examples_dbid, table_name=table_name, schema=table_schema
+            )
+            .one()
+        )
+        self.assertTrue(table.is_sqllab_view)
+        db.session.delete(table)
+        db.session.commit()
+
     def test_import_csv(self):
         self.login(username="admin")
         table_name = "".join(random.choice(string.ascii_uppercase) for _ in range(5))
@@ -921,7 +979,12 @@ class CoreTests(SupersetTestCase):
             "sql": "SELECT * FROM birth_names LIMIT 100",
             "status": utils.QueryStatus.PENDING,
         }
-        serialized_data, selected_columns, all_columns, expanded_columns = sql_lab._serialize_and_expand_data(
+        (
+            serialized_data,
+            selected_columns,
+            all_columns,
+            expanded_columns,
+        ) = sql_lab._serialize_and_expand_data(
             cdf, db_engine_spec, use_new_deserialization
         )
         payload = {
@@ -964,7 +1027,12 @@ class CoreTests(SupersetTestCase):
             "sql": "SELECT * FROM birth_names LIMIT 100",
             "status": utils.QueryStatus.PENDING,
         }
-        serialized_data, selected_columns, all_columns, expanded_columns = sql_lab._serialize_and_expand_data(
+        (
+            serialized_data,
+            selected_columns,
+            all_columns,
+            expanded_columns,
+        ) = sql_lab._serialize_and_expand_data(
             cdf, db_engine_spec, use_new_deserialization
         )
         payload = {
