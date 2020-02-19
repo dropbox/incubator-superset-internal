@@ -277,15 +277,15 @@ class SupersetSecurityManager(SecurityManager):
             "datasource_access", datasource.perm or ""
         )
 
-    def get_datasource_access_error_msg(self, datasource: "BaseDatasource") -> str:
+    def get_datasource_access_error_msg(self, datasource_name: Optional[str]) -> str:
         """
         Return the error message for the denied Superset datasource.
 
-        :param datasource: The denied Superset datasource
+        :param datasource_name: The denied Superset datasource name
         :returns: The error message
         """
 
-        return f"""This endpoint requires the datasource {datasource.name}, database or
+        return f"""This endpoint requires the datasource {datasource_name}, database or
             `all_datasource_access` permission"""
 
     def get_datasource_access_link(self, datasource: "BaseDatasource") -> Optional[str]:
@@ -392,7 +392,6 @@ class SupersetSecurityManager(SecurityManager):
     ) -> Set["Table"]:
         """
         Return the list of rejected SQL tables.
-
         :param sql: The SQL statement
         :param database: The SQL database
         :param schema: The SQL database schema
