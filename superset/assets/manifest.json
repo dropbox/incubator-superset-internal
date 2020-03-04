@@ -1,0 +1,112 @@
+{
+  "addSlice.js": "/static/assets/addSlice.1680e766.entry.js",
+  "belgium.geojson": "/static/assets/647f3b061407d2df992b141838c6a9fd.geojson",
+  "brazil.geojson": "/static/assets/5f64d14062abb5f5fd6610972976ebe6.geojson",
+  "bulgaria.geojson": "/static/assets/5ba53f6ca41eea9fcd804bb85b15b717.geojson",
+  "canada.geojson": "/static/assets/86469739648332fa1144cb8cb2127c10.geojson",
+  "china.geojson": "/static/assets/e2b4b67c1386e8a5955cd5adc8072937.geojson",
+  "dashboard.js": "/static/assets/dashboard.1680e766.entry.js",
+  "egypt.geojson": "/static/assets/a8835fa1f5787fe6c859bbf27451669c.geojson",
+  "entrypoints": {
+    "theme": {
+      "js": [
+        "/static/assets/theme.1680e766.entry.js"
+      ]
+    },
+    "preamble": {
+      "js": [
+        "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+        "/static/assets/preamble.1680e766.entry.js"
+      ]
+    },
+    "addSlice": {
+      "js": [
+        "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+        "/static/assets/addSlice.1680e766.entry.js"
+      ]
+    },
+    "explore": {
+      "js": [
+        "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+        "/static/assets/explore.1680e766.entry.js"
+      ]
+    },
+    "dashboard": {
+      "js": [
+        "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+        "/static/assets/dashboard.1680e766.entry.js"
+      ]
+    },
+    "sqllab": {
+      "js": [
+        "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+        "/static/assets/sqllab.1680e766.entry.js"
+      ]
+    },
+    "welcome": {
+      "js": [
+        "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+        "/static/assets/welcome.1680e766.entry.js"
+      ]
+    },
+    "profile": {
+      "js": [
+        "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+        "/static/assets/profile.1680e766.entry.js"
+      ]
+    },
+    "showSavedQuery": {
+      "js": [
+        "/static/assets/showSavedQuery.1680e766.entry.js"
+      ]
+    }
+  },
+  "explore.js": "/static/assets/explore.1680e766.entry.js",
+  "france.geojson": "/static/assets/e5a566e2a4a20c76b6ceb68898b4551c.geojson",
+  "germany.geojson": "/static/assets/c4f01c1b263f64ebf76fd32988955ee5.geojson",
+  "glyphicons-halflings-regular.eot": "/static/assets/f4769f9bdb7466be65088239c12046d1.eot",
+  "glyphicons-halflings-regular.svg": "/static/assets/89889688147bd7575d6327160d64e760.svg",
+  "glyphicons-halflings-regular.ttf": "/static/assets/e18bbf611f2a2e43afc071aa2f4e1512.ttf",
+  "glyphicons-halflings-regular.woff": "/static/assets/fa2772327f55d8198301fdb8bcfc8158.woff",
+  "glyphicons-halflings-regular.woff2": "/static/assets/448c34a56d699c29117adc64c43affeb.woff2",
+  "india.geojson": "/static/assets/341142ac8466aaa1ffca6462f1f4e3f9.geojson",
+  "iran.geojson": "/static/assets/eac4e606a790dc58734d64abe051c0ce.geojson",
+  "italy.geojson": "/static/assets/f3c7f8f357bd44946bd2bd448859bda4.geojson",
+  "japan.geojson": "/static/assets/33560d2fbb7709aa4678a7d6b3e58de2.geojson",
+  "korea.geojson": "/static/assets/6d76a3e09e096cb8b2847229809ede46.geojson",
+  "liechtenstein.geojson": "/static/assets/92586e10bd0fc50d383f065848f9ff30.geojson",
+  "morocco.geojson": "/static/assets/bbf6ca5c90a4692792cb7fdfdad73104.geojson",
+  "myanmar.geojson": "/static/assets/0135d056b222ed13c7c12cd018051192.geojson",
+  "netherlands.geojson": "/static/assets/bb3889bfa65fcf72a4eca68e7ab91e64.geojson",
+  "portugal.geojson": "/static/assets/a05665706019af9fc61b0dc71b4e706f.geojson",
+  "preamble.js": "/static/assets/preamble.1680e766.entry.js",
+  "profile.js": "/static/assets/profile.1680e766.entry.js",
+  "russia.geojson": "/static/assets/f643464ab125c1e94588d58ac77d2704.geojson",
+  "showSavedQuery.js": "/static/assets/showSavedQuery.1680e766.entry.js",
+  "singapore.geojson": "/static/assets/9f521e1094332bf3de8bbcc9ce2170a0.geojson",
+  "spain.geojson": "/static/assets/f0de53f3380e55031f5ed7e0986c7b67.geojson",
+  "sqllab.js": "/static/assets/sqllab.1680e766.entry.js",
+  "switzerland.geojson": "/static/assets/75b84c13b90b14e8d6f512f522ec3897.geojson",
+  "thailand.geojson": "/static/assets/402430a4e9f8931d5362e650c9ab391f.geojson",
+  "theme.js": "/static/assets/theme.1680e766.entry.js",
+  "thumbnail.png": "/static/assets/thumbnail.e26bee8a.png",
+  "timorleste.geojson": "/static/assets/fe50f1df71b69257315717808fb60e86.geojson",
+  "uk.geojson": "/static/assets/420625849885a90999dd7f0eea575435.geojson",
+  "ukraine.geojson": "/static/assets/d837f5941b13844653f61455735424f7.geojson",
+  "usa.geojson": "/static/assets/1680a595633a783cd68d7f6509bc5326.geojson",
+  "vendors-addSlice-dashboard-explore-preamble-profile-showSavedQuery-sqllab-welcome.js": "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-showSavedQuery-sqllab-welcome.900ebf72.chunk.js",
+  "vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.js": "/static/assets/vendors-addSlice-dashboard-explore-preamble-profile-sqllab-welcome.1680e766.chunk.js",
+  "vendors-addSlice-dashboard-explore-profile-showSavedQuery-sqllab-welcome.js": "/static/assets/vendors-addSlice-dashboard-explore-profile-showSavedQuery-sqllab-welcome.900ebf72.chunk.js",
+  "vendors-addSlice-dashboard-explore-profile-sqllab-welcome.js": "/static/assets/vendors-addSlice-dashboard-explore-profile-sqllab-welcome.900ebf72.chunk.js",
+  "vendors-addSlice-dashboard-explore-sqllab-welcome.js": "/static/assets/vendors-addSlice-dashboard-explore-sqllab-welcome.900ebf72.chunk.js",
+  "vendors-addSlice-dashboard-explore-sqllab.js": "/static/assets/vendors-addSlice-dashboard-explore-sqllab.900ebf72.chunk.js",
+  "vendors-addSlice-dashboard-explore.js": "/static/assets/vendors-addSlice-dashboard-explore.900ebf72.chunk.js",
+  "vendors-dashboard-explore-sqllab-welcome.js": "/static/assets/vendors-dashboard-explore-sqllab-welcome.900ebf72.chunk.js",
+  "vendors-dashboard-explore.js": "/static/assets/vendors-dashboard-explore.900ebf72.chunk.js",
+  "vendors-dashboard-sqllab.js": "/static/assets/vendors-dashboard-sqllab.900ebf72.chunk.js",
+  "vendors-explore-sqllab.js": "/static/assets/vendors-explore-sqllab.900ebf72.chunk.js",
+  "vendors-major.js": "/static/assets/vendors-major.900ebf72.chunk.js",
+  "vendors-showSavedQuery-sqllab.js": "/static/assets/vendors-showSavedQuery-sqllab.900ebf72.chunk.js",
+  "welcome.js": "/static/assets/welcome.1680e766.entry.js",
+  "zambia.geojson": "/static/assets/692564493e0a03962af1d1e73bf8b590.geojson"
+}
