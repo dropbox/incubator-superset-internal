@@ -585,6 +585,8 @@ UPLOADED_CSV_HIVE_NAMESPACE = None
 # dictionary.
 JINJA_CONTEXT_ADDONS: Dict[str, Callable] = {}
 
+CUSTOM_TEMPLATE_PROCESSOR = {}
+
 # Roles that are controlled by the API / Superset and should not be changes
 # by humans.
 ROBOT_PERMISSION_ROLES = ["Public", "Gamma", "Alpha", "Admin", "sql_lab"]

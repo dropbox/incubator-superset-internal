@@ -31,7 +31,6 @@ from werkzeug.local import LocalProxy
 from superset.utils.cache_manager import CacheManager
 from superset.utils.feature_flag_manager import FeatureFlagManager
 
-
 class JinjaContextManager:
     def __init__(self) -> None:
         self._base_context = {
@@ -42,16 +41,21 @@ class JinjaContextManager:
             "timedelta": timedelta,
             "uuid": uuid,
         }
+        self._template_processors = {}
 
     def init_app(self, app):
         self._base_context = self._base_context.update(
             app.config["JINJA_CONTEXT_ADDONS"]
         )
+        self._template_processors.update(app.config["CUSTOM_TEMPLATE_PROCESSOR"])
 
     @property
     def base_context(self):
         return self._base_context
 
+    @property
+    def template_processors(self):
+        return self._template_processors
 
 class ResultsBackendManager:
     def __init__(self) -> None:
