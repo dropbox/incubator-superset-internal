@@ -44,6 +44,9 @@ if TYPE_CHECKING:
         User,
     )
     from superset.models.core import Database  # pylint: disable=unused-import
+    from superset.jinja_context import (  # pylint: disable=unused-import
+        BaseTemplateProcessor,
+    )
 
 # Realtime stats logger, a StatsD implementation exists
 STATS_LOGGER = DummyStatsLogger()
@@ -584,6 +587,59 @@ UPLOADED_CSV_HIVE_NAMESPACE = None
 # meaning values for existing keys get overwritten by the content of this
 # dictionary.
 JINJA_CONTEXT_ADDONS: Dict[str, Callable] = {}
+
+# A dictionary of macro template processors that gets merged into global
+# jinja template processors. The existing template processors get updated with this
+# dictionary, which means the existing keys get overwritten by the content of this
+# dictionary. The customized addons don't necessarily need to use jinjia templating
+# language. This allows you to define custom logic to process macro template.
+#
+# The example below configures a custom presto template processor which implements
+# its own logic of processing macro template with regex parsing. It uses $ style
+# macro instead of Jinja's {{ }} style.
+# By configuring it with CUSTOM_TEMPLATE_PROCESSOR, sql template on presto database
+# is processed by the custom one rather than the default one.
+#
+# def DATE(
+#     ts: datetime, day_offset: SupportsInt = 0, hour_offset: SupportsInt = 0
+# ) -> str:
+#     """Current day as a string"""
+#     day_offset, hour_offset = int(day_offset), int(hour_offset)
+#     offset_day = (ts + timedelta(days=day_offset, hours=hour_offset)).date()
+#     return str(offset_day)
+#
+# class CustomPrestoTemplateProcessor(PrestoTemplateProcessor):
+#     """A custom presto template processor."""
+#
+#     engine = "presto"
+#
+#     def process_template(self, sql: str, **kwargs) -> str:
+#         """Processes a sql template with $ style macro using regex."""
+#         # Add custom macros functions.
+#         macros = {
+#             "DATE": partial(DATE, datetime.utcnow())
+#         }  # type: Dict[str, Any]
+#         # Update with macros defined in context and kwargs.
+#         macros.update(self.context)
+#         macros.update(kwargs)
+#
+#         def replacer(match):
+#             """Expands $ style macros with corresponding function calls."""
+#             macro_name, args_str = match.groups()
+#             args = [a.strip() for a in args_str.split(",")]
+#             if args == [""]:
+#                 args = []
+#             f = macros[macro_name[1:]]
+#             return f(*args)
+#
+#         macro_names = ["$" + name for name in macros.keys()]
+#         pattern = r"(%s)\s*\(([^()]*)\)" % "|".join(map(re.escape, macro_names))
+#         return re.sub(pattern, replacer, sql)
+#
+# CUSTOM_TEMPLATE_PROCESSOR = {
+#     CustomPrestoTemplateProcessor.engine: CustomPrestoTemplateProcessor
+# }
+CUSTOM_TEMPLATE_PROCESSOR = {}  # type: Dict[str, BaseTemplateProcessor]
 
 # Roles that are controlled by the API / Superset and should not be changes
 # by humans.

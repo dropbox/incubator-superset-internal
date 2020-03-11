@@ -14,9 +14,14 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import re
 from copy import copy
+from datetime import datetime, timedelta
+from functools import partial
+from typing import SupportsInt
 
 from superset.config import *  # type: ignore
+from superset.jinja_context import PrestoTemplateProcessor
 
 AUTH_USER_REGISTRATION_ROLE = "alpha"
 SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(DATA_DIR, "unittests.db")
@@ -59,3 +64,44 @@ class CeleryConfig(object):
 CELERY_CONFIG = CeleryConfig
 
 RESULTS_BACKEND_USE_MSGPACK = True
+
+
+def DATE(
+    ts: datetime, day_offset: SupportsInt = 0, hour_offset: SupportsInt = 0
+) -> str:
+    """Current day as a string"""
+    day_offset, hour_offset = int(day_offset), int(hour_offset)
+    offset_day = (ts + timedelta(days=day_offset, hours=hour_offset)).date()
+    return str(offset_day)
+
+
+class CustomPrestoTemplateProcessor(PrestoTemplateProcessor):
+    """A custom presto template processor for test."""
+
+    engine = "presto"
+
+    def process_template(self, sql: str, **kwargs) -> str:
+        """Processes a sql template with $ style macro using regex."""
+        # Add custom macros functions.
+        macros = {"DATE": partial(DATE, datetime.utcnow())}  # type: Dict[str, Any]
+        # Update with macros defined in context and kwargs.
+        macros.update(self.context)
+        macros.update(kwargs)
+
+        def replacer(match):
+            """Expands $ style macros with corresponding function calls."""
+            macro_name, args_str = match.groups()
+            args = [a.strip() for a in args_str.split(",")]
+            if args == [""]:
+                args = []
+            f = macros[macro_name[1:]]
+            return f(*args)
+
+        macro_names = ["$" + name for name in macros.keys()]
+        pattern = r"(%s)\s*\(([^()]*)\)" % "|".join(map(re.escape, macro_names))
+        return re.sub(pattern, replacer, sql)
+
+
+CUSTOM_TEMPLATE_PROCESSOR = {
+    CustomPrestoTemplateProcessor.engine: CustomPrestoTemplateProcessor
+}
