@@ -51,9 +51,9 @@ from superset.utils.core import get_email_address_list, send_email_smtp
 config = app.config
 logging.getLogger("tasks.email_reports").setLevel(logging.INFO)
 
-# Time in seconds, we will wait for the page to load and render
-PAGE_RENDER_WAIT = 30
-
+EMAIL_PAGE_RENDER_WAIT = config["EMAIL_PAGE_RENDER_WAIT"]
+WEBDRIVER_BASEURL = config["WEBDRIVER_BASEURL"]
+WEBDRIVER_BASEURL_USER_FRIENDLY = config["WEBDRIVER_BASEURL_USER_FRIENDLY"]
 
 EmailContent = namedtuple("EmailContent", ["body", "data", "images"])
 
@@ -135,11 +135,11 @@ def _get_auth_cookies():
     return cookies
 
 
-def _get_url_path(view, **kwargs):
+def _get_url_path(view, user_friendly=False, **kwargs):
     with app.test_request_context():
-        return urllib.parse.urljoin(
-            str(config["WEBDRIVER_BASEURL"]), url_for(view, **kwargs)
-        )
+        base_url = WEBDRIVER_BASEURL_USER_FRIENDLY if user_friendly \
+            else WEBDRIVER_BASEURL
+        return urllib.parse.urljoin(str(base_url), url_for(view, **kwargs))
 
 
 def create_webdriver():
@@ -204,19 +204,22 @@ def deliver_dashboard(schedule):
     dashboard = schedule.dashboard
 
     dashboard_url = _get_url_path("Superset.dashboard", dashboard_id=dashboard.id)
+    dashboard_url_user_friendly = _get_url_path(
+        "Superset.dashboard", user_friendly=True, dashboard_id=dashboard.id
+    )
 
     # Create a driver, fetch the page, wait for the page to render
     driver = create_webdriver()
     window = config["WEBDRIVER_WINDOW"]["dashboard"]
     driver.set_window_size(*window)
     driver.get(dashboard_url)
-    time.sleep(PAGE_RENDER_WAIT)
+    time.sleep(EMAIL_PAGE_RENDER_WAIT)
 
     # Set up a function to retry once for the element.
     # This is buggy in certain selenium versions with firefox driver
     get_element = getattr(driver, "find_element_by_class_name")
     element = retry_call(
-        get_element, fargs=["grid-container"], tries=2, delay=PAGE_RENDER_WAIT
+        get_element, fargs=["grid-container"], tries=2, delay=EMAIL_PAGE_RENDER_WAIT
     )
 
     try:
@@ -230,7 +233,7 @@ def deliver_dashboard(schedule):
 
     # Generate the email body and attachments
     email = _generate_mail_content(
-        schedule, screenshot, dashboard.dashboard_title, dashboard_url
+        schedule, screenshot, dashboard.dashboard_title, dashboard_url_user_friendly
     )
 
     subject = __(
@@ -250,7 +253,9 @@ def _get_slice_data(schedule):
     )
 
     # URL to include in the email
-    url = _get_url_path("Superset.slice", slice_id=slc.id)
+    slice_url_user_friendly = _get_url_path(
+        "Superset.slice", slice_id=slc.id, user_friendly=True
+    )
 
     cookies = {}
     for cookie in _get_auth_cookies():
@@ -277,7 +282,7 @@ def _get_slice_data(schedule):
                 columns=columns,
                 rows=rows,
                 name=slc.slice_name,
-                link=url,
+                link=slice_url_user_friendly,
             )
 
     elif schedule.delivery_type == EmailDeliveryType.attachment:
@@ -285,7 +290,7 @@ def _get_slice_data(schedule):
         body = __(
             '<b><a href="%(url)s">Explore in Superset</a></b><p></p>',
             name=slc.slice_name,
-            url=url,
+            url=slice_url_user_friendly,
         )
 
     return EmailContent(body, data, None)
@@ -302,7 +307,7 @@ def _get_slice_visualization(schedule):
     slice_url = _get_url_path("Superset.slice", slice_id=slc.id)
 
     driver.get(slice_url)
-    time.sleep(PAGE_RENDER_WAIT)
+    time.sleep(EMAIL_PAGE_RENDER_WAIT)
 
     # Set up a function to retry once for the element.
     # This is buggy in certain selenium versions with firefox driver
@@ -310,7 +315,7 @@ def _get_slice_visualization(schedule):
         driver.find_element_by_class_name,
         fargs=["chart-container"],
         tries=2,
-        delay=PAGE_RENDER_WAIT,
+        delay=EMAIL_PAGE_RENDER_WAIT,
     )
 
     try:
