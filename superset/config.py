@@ -751,6 +751,14 @@ WEBDRIVER_CONFIGURATION: Dict[Any, Any] = {}
 
 # The base URL to query for accessing the user interface
 WEBDRIVER_BASEURL = "http://0.0.0.0:8080/"
+# Function that allows to discover the webdriver base url
+# if the static url is not an option.
+GET_WEBDRIVER_BASEURL = lambda: WEBDRIVER_BASEURL
+# The base URL for the email report hyperlinks.
+GET_WEBDRIVER_BASEURL_USER_FRIENDLY = GET_WEBDRIVER_BASEURL
+# Time in seconds, selenium will wait for the page to load
+# and render for the email report.
+EMAIL_PAGE_RENDER_WAIT = 30
 
 # Send user to a link where they can report bugs
 BUG_REPORT_URL = None
