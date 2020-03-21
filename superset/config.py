@@ -482,8 +482,6 @@ class CeleryConfig(object):  # pylint: disable=too-few-public-methods
         "sql_lab.get_sql_results": {"rate_limit": "100/s"},
         "email_reports.send": {
             "rate_limit": "1/s",
-            "time_limit": 120,
-            "soft_time_limit": 150,
             "ignore_result": True,
         },
     }
@@ -790,6 +788,8 @@ WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL
 # Time in seconds, selenium will wait for the page to load
 # and render for the email report.
 EMAIL_PAGE_RENDER_WAIT = 30
+# Timeout in seconds for the celery for the email report task.
+EMAIL_CELERY_TIMEOUT = 300
 
 # Send user to a link where they can report bugs
 BUG_REPORT_URL = None

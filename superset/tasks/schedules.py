@@ -52,6 +52,7 @@ config = app.config
 logging.getLogger("tasks.email_reports").setLevel(logging.INFO)
 
 EMAIL_PAGE_RENDER_WAIT = config["EMAIL_PAGE_RENDER_WAIT"]
+EMAIL_CELERY_TIMEOUT = config["EMAIL_CELERY_TIMEOUT"]
 WEBDRIVER_BASEURL = config["WEBDRIVER_BASEURL"]
 WEBDRIVER_BASEURL_USER_FRIENDLY = config["WEBDRIVER_BASEURL_USER_FRIENDLY"]
 
@@ -351,7 +352,12 @@ def deliver_slice(schedule):
     _deliver_email(schedule, subject, email)
 
 
-@celery_app.task(name="email_reports.send", bind=True, soft_time_limit=300)
+@celery_app.task(
+    name="email_reports.send",
+    bind=True,
+    soft_time_limit=EMAIL_CELERY_TIMEOUT,
+    time_limit=EMAIL_CELERY_TIMEOUT
+)
 def schedule_email_report(
     task, report_type, schedule_id, recipients=None
 ):  # pylint: disable=unused-argument
