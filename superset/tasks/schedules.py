@@ -306,6 +306,9 @@ def _get_slice_visualization(schedule):
     driver.set_window_size(*window)
 
     slice_url = _get_url_path("Superset.slice", slice_id=slc.id)
+    slice_url_user_friendly = _get_url_path(
+        "Superset.slice", slice_id=slc.id, user_friendly=True
+    )
 
     driver.get(slice_url)
     time.sleep(EMAIL_PAGE_RENDER_WAIT)
@@ -329,7 +332,9 @@ def _get_slice_visualization(schedule):
         destroy_webdriver(driver)
 
     # Generate the email body and attachments
-    return _generate_mail_content(schedule, screenshot, slc.slice_name, slice_url)
+    return _generate_mail_content(
+        schedule, screenshot, slc.slice_name, slice_url_user_friendly
+    )
 
 
 def deliver_slice(schedule):
