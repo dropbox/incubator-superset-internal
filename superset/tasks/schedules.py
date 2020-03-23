@@ -52,8 +52,8 @@ config = app.config
 logging.getLogger("tasks.email_reports").setLevel(logging.INFO)
 
 EMAIL_PAGE_RENDER_WAIT = config["EMAIL_PAGE_RENDER_WAIT"]
-WEBDRIVER_BASEURL = config["WEBDRIVER_BASEURL"]
-WEBDRIVER_BASEURL_USER_FRIENDLY = config["WEBDRIVER_BASEURL_USER_FRIENDLY"]
+GET_WEBDRIVER_BASEURL = config["GET_WEBDRIVER_BASEURL"]
+GET_WEBDRIVER_BASEURL_USER_FRIENDLY = config["GET_WEBDRIVER_BASEURL_USER_FRIENDLY"]
 
 EmailContent = namedtuple("EmailContent", ["body", "data", "images"])
 
@@ -138,7 +138,9 @@ def _get_auth_cookies():
 def _get_url_path(view, user_friendly=False, **kwargs):
     with app.test_request_context():
         base_url = (
-            WEBDRIVER_BASEURL_USER_FRIENDLY if user_friendly else WEBDRIVER_BASEURL
+            GET_WEBDRIVER_BASEURL_USER_FRIENDLY()
+            if user_friendly
+            else GET_WEBDRIVER_BASEURL()
         )
         return urllib.parse.urljoin(str(base_url), url_for(view, **kwargs))
 
