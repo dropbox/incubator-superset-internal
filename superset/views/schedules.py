@@ -198,11 +198,11 @@ class DashboardEmailScheduleView(
 
     label_columns = {
         "dashboard": _("Dashboard"),
-        "created_on": _("Created On"),
-        "changed_on": _("Changed On"),
+        "created_on": _("Created On UTC"),
+        "changed_on": _("Changed On UTC"),
         "user": _("User"),
         "active": _("Active"),
-        "crontab": _("Crontab"),
+        "crontab": _("Crontab UTC"),
         "recipients": _("Recipients"),
         "deliver_as_group": _("Deliver As Group"),
         "delivery_type": _("Delivery Type"),
@@ -258,11 +258,11 @@ class SliceEmailScheduleView(EmailScheduleView):  # pylint: disable=too-many-anc
 
     label_columns = {
         "slice": _("Chart"),
-        "created_on": _("Created On"),
-        "changed_on": _("Changed On"),
+        "created_on": _("Created On UTC"),
+        "changed_on": _("Changed On UTC"),
         "user": _("User"),
         "active": _("Active"),
-        "crontab": _("Crontab"),
+        "crontab": _("Crontab UTC"),
         "recipients": _("Recipients"),
         "deliver_as_group": _("Deliver As Group"),
         "delivery_type": _("Delivery Type"),
