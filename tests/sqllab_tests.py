@@ -19,6 +19,7 @@
 import json
 from datetime import datetime, timedelta
 from random import random
+from typing import Optional, List
 from unittest import mock
 
 import prison
@@ -117,34 +118,81 @@ class SqlLabTests(SupersetTestCase):
         data = self.run_sql("EXPLAIN SELECT * FROM birth_names", "1")
         self.assertLess(0, len(data["data"]))
 
+    def create_user(self, username: str, roles: Optional[List[str]]):
+        user_to_create = security_manager.find_user(username)
+        if not user_to_create:
+            security_manager.add_user(
+                username,
+                username,
+                username,
+                f"{username}@superset.com",
+                security_manager.find_role("Gamma"),  # it needs a role
+                password="general",
+            )
+            db.session.commit()
+            user_to_create = security_manager.find_user(username)
+            assert user_to_create
+        user_to_create.roles = [security_manager.find_role(r) for r in roles]
+        db.session.commit()
+
     def test_sql_json_has_access(self):
         examples_db = get_example_database()
         examples_db_permission_view = security_manager.add_permission_view_menu(
             "database_access", examples_db.perm
         )
-
-        astronaut = security_manager.add_role("Astronaut")
+        astronaut = security_manager.add_role("ExampleDBAccess")
         security_manager.add_permission_role(astronaut, examples_db_permission_view)
-        # Astronaut role is Gamma + sqllab + db permissions
-        for perm in security_manager.find_role("Gamma").permissions:
-            security_manager.add_permission_role(astronaut, perm)
-        for perm in security_manager.find_role("sql_lab").permissions:
-            security_manager.add_permission_role(astronaut, perm)
+        # Gamma user, with sqllab and db permission
+        self.create_user("Gagarin", ["ExampleDBAccess", "Gamma", "sql_lab"])
 
-        gagarin = security_manager.find_user("gagarin")
-        if not gagarin:
-            security_manager.add_user(
-                "gagarin",
-                "Iurii",
-                "Gagarin",
-                "gagarin@cosmos.ussr",
-                astronaut,
-                password="general",
-            )
-        data = self.run_sql(QUERY_1, "3", user_name="gagarin")
+        data = self.run_sql(QUERY_1, "1", user_name="Gagarin")
         db.session.query(Query).delete()
         db.session.commit()
         self.assertLess(0, len(data["data"]))
+
+    def test_sql_json_schema_access(self):
+        examples_db = get_example_database()
+        if examples_db.backend == "sqlite":
+            # sqlite doesn't support database creation
+            return
+
+        sqllab_test_db_schema_permission_view = security_manager.add_permission_view_menu(
+            "schema_access", f"[{examples_db.name}].[sqllab_test_db]"
+        )
+        schema_perm_role = security_manager.add_role("SchemaPermission")
+        security_manager.add_permission_role(
+            schema_perm_role, sqllab_test_db_schema_permission_view
+        )
+        self.create_user("SchemaUser", ["SchemaPermission", "Gamma", "sql_lab"])
+
+        db.session.execute(
+            "CREATE TABLE IF NOT EXISTS sqllab_test_db.test_table AS SELECT 1,2"
+        )
+
+        data = self.run_sql(
+            "SELECT * FROM sqllab_test_db.test_table", "3", user_name="SchemaUser"
+        )
+        self.assertEqual(1, len(data["data"]))
+
+        data = self.run_sql(
+            "SELECT * FROM sqllab_test_db.test_table",
+            "4",
+            user_name="SchemaUser",
+            schema="sqllab_test_db",
+        )
+        self.assertEqual(1, len(data["data"]))
+
+        data = self.run_sql(
+            "SELECT * FROM test_table",
+            "5",
+            user_name="SchemaUser",
+            schema="sqllab_test_db",
+        )
+        self.assertEqual(1, len(data["data"]))
+
+        db.session.query(Query).delete()
+        db.session.execute("DROP TABLE IF EXISTS sqllab_test_db.test_table")
+        db.session.commit()
 
     def test_queries_endpoint(self):
         self.run_some_queries()

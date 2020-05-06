@@ -355,13 +355,12 @@ class SupersetSecurityManager(SecurityManager):
         :param schema: The SQL database schema
         :returns: The rejected tables
         """
-
         query = sql_parse.ParsedQuery(sql)
 
         return {
             table
             for table in query.tables
-            if not self.can_access_datasource(database, table, schema)
+            if not self.can_access_datasource(database, table, table.schema or schema)
         }
 
     def get_public_role(self) -> Optional[Any]:  # Optional[self.role_model]

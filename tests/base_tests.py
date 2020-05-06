@@ -240,6 +240,7 @@ class SupersetTestCase(TestCase):
         sql_editor_id=None,
         select_as_cta=False,
         tmp_table_name=None,
+        schema=None,
     ):
         if user_name:
             self.logout()
@@ -256,6 +257,8 @@ class SupersetTestCase(TestCase):
             json_payload["tmp_table_name"] = tmp_table_name
         if select_as_cta:
             json_payload["select_as_cta"] = select_as_cta
+        if schema:
+            json_payload["schema"] = schema
 
         resp = self.get_json_resp(
             "/superset/sql_json/", raise_on_error=False, json_=json_payload
