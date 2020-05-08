@@ -165,10 +165,25 @@ class CsvToDatabaseView(SimpleFormView):
                 df_to_sql_kwargs,
             )
 
+            # Connect table to the database that should be used for exploration.
+            # E.g. if hive was used to upload a csv, presto will be a better option
+            # to explore the table.
+            expore_database = database
+            explore_database_id = database.get_extra().get("explore_database_id", None)
+            if explore_database_id:
+                expore_database = (
+                    db.session.query(models.Database)
+                    .filter_by(id=explore_database_id)
+                    .one_or_none()
+                    or database
+                )
+
             table = (
                 db.session.query(SqlaTable)
                 .filter_by(
-                    table_name=table_name, schema=schema_name, database_id=database.id,
+                    table_name=table_name,
+                    schema=schema_name,
+                    database_id=expore_database.id,
                 )
                 .one_or_none()
             )
@@ -177,7 +192,7 @@ class CsvToDatabaseView(SimpleFormView):
                 table.fetch_metadata()
             if not table:
                 table = SqlaTable(table_name=table_name)
-                table.database = database
+                table.database = expore_database
                 table.database_id = database.id
                 table.user_id = g.user.id
                 table.schema = schema_name

@@ -171,6 +171,7 @@ class HiveEngineSpec(PrestoEngineSpec):
             bucket_path,
             os.path.join(upload_prefix, table_name, os.path.basename(filename)),
         )
+        # TODO(bkyryliuk): support other cvs delimiters
         sql = f"""CREATE TABLE {full_table_name} ( {schema_definition} )
             ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS
             TEXTFILE LOCATION '{location}'
