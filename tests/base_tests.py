@@ -18,7 +18,7 @@
 """Unit tests for Superset"""
 import imp
 import json
-from typing import Dict, Union
+from typing import Dict, Union, List
 from unittest.mock import Mock, patch
 
 import pandas as pd
@@ -58,6 +58,24 @@ class SupersetTestCase(TestCase):
 
     def create_app(self):
         return app
+
+    @staticmethod
+    def create_user_with_roles(username: str, roles: List[str]):
+        user_to_create = security_manager.find_user(username)
+        if not user_to_create:
+            security_manager.add_user(
+                username,
+                username,
+                username,
+                f"{username}@superset.com",
+                security_manager.find_role("Gamma"),  # it needs a role
+                password="general",
+            )
+            db.session.commit()
+            user_to_create = security_manager.find_user(username)
+            assert user_to_create
+        user_to_create.roles = [security_manager.find_role(r) for r in roles]
+        db.session.commit()
 
     @staticmethod
     def create_user(
@@ -260,6 +278,8 @@ class SupersetTestCase(TestCase):
             json_payload["tmp_table_name"] = tmp_table_name
         if select_as_cta:
             json_payload["select_as_cta"] = select_as_cta
+        if schema:
+            json_payload["schema"] = schema
 
         resp = self.get_json_resp(
             "/superset/sql_json/", raise_on_error=False, json_=json_payload
