@@ -85,7 +85,7 @@ from superset.security.analytics_db_safety import (
     check_sqlalchemy_uri,
     DBSecurityException,
 )
-from superset.sql_parse import ParsedQuery, Table
+from superset.sql_parse import CtaMethod, ParsedQuery, Table
 from superset.sql_validators import get_validator_by_name
 from superset.utils import core as utils, dashboard_import_export
 from superset.utils.dashboard_filter_scopes_converter import copy_filter_scopes
@@ -2493,6 +2493,9 @@ class Superset(BaseSupersetView):
             )
             limit = 0
         select_as_cta: bool = cast(bool, query_params.get("select_as_cta"))
+        cta_method: CtaMethod = cast(
+            CtaMethod, query_params.get("cta_method", CtaMethod.TABLE)
+        )
         tmp_table_name: str = cast(str, query_params.get("tmp_table_name"))
         client_id: str = cast(
             str, query_params.get("client_id") or utils.shortid()[:10]
@@ -2521,6 +2524,7 @@ class Superset(BaseSupersetView):
             sql=sql,
             schema=schema,
             select_as_cta=select_as_cta,
+            cta_method=cta_method,
             start_time=now_as_float(),
             tab_name=tab_name,
             status=status,

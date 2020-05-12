@@ -17,8 +17,9 @@
 """A collection of ORM sqlalchemy models for SQL Lab"""
 import re
 from datetime import datetime
-
 # pylint: disable=ungrouped-imports
+from enum import Enum
+
 import simplejson as json
 import sqlalchemy as sqla
 from flask import Markup
@@ -38,6 +39,7 @@ from sqlalchemy.orm import backref, relationship
 from superset import security_manager
 from superset.models.helpers import AuditMixinNullable, ExtraJSONMixin
 from superset.models.tags import QueryUpdater
+from superset.sql_parse import CtaMethod
 from superset.utils.core import QueryStatus, user_label
 
 
@@ -70,6 +72,7 @@ class Query(Model, ExtraJSONMixin):
     limit = Column(Integer)
     select_as_cta = Column(Boolean)
     select_as_cta_used = Column(Boolean, default=False)
+    cta_method = Column(String(16), default=CtaMethod.TABLE)
 
     progress = Column(Integer, default=0)  # 1..100
     # # of rows in the result set or rows modified.

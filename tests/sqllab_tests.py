@@ -18,6 +18,7 @@
 """Unit tests for Sql Lab"""
 import json
 from datetime import datetime, timedelta
+from parameterized import parameterized
 from random import random
 from unittest import mock
 
@@ -30,6 +31,7 @@ from superset.dataframe import df_to_records
 from superset.db_engine_specs import BaseEngineSpec
 from superset.models.sql_lab import Query
 from superset.result_set import SupersetResultSet
+from superset.sql_parse import CtaMethod
 from superset.utils.core import datetime_to_epoch, get_example_database
 
 from .base_tests import SupersetTestCase
@@ -72,7 +74,8 @@ class SqlLabTests(SupersetTestCase):
         "superset.views.core.get_cta_schema_name",
         lambda d, u, s, sql: f"{u.username}_database",
     )
-    def test_sql_json_cta_dynamic_db(self):
+    @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+    def test_sql_json_cta_dynamic_db(self, cta_method):
         main_db = get_example_database()
         if main_db.backend == "sqlite":
             # sqlite doesn't support database creation
@@ -88,6 +91,7 @@ class SqlLabTests(SupersetTestCase):
             database_name="examples",
             tmp_table_name="test_target",
             select_as_cta=True,
+            cta_method=cta_method,
         )
 
         # assertions
@@ -100,6 +104,43 @@ class SqlLabTests(SupersetTestCase):
         db.session.execute("DROP TABLE admin_database.test_target")
         main_db.allow_ctas = old_allow_ctas
         db.session.commit()
+
+        @mock.patch(
+            "superset.views.core.get_cta_schema_name",
+            lambda d, u, s, sql: f"{u.username}_database",
+        )
+        @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+        def test_sql_json_cta_dynamic_db(self, cta_method: CtaMethod):
+            main_db = get_example_database()
+            if main_db.backend == "sqlite":
+                # sqlite doesn't support database creation
+                return
+
+            old_allow_ctas = main_db.allow_ctas
+            main_db.allow_ctas = True  # enable cta
+
+            self.login("admin")
+            self.run_sql(
+                "SELECT * FROM birth_names",
+                "1",
+                database_name="examples",
+                tmp_table_name="test_target",
+                select_as_cta=True,
+                cta_method=cta_method,
+            )
+
+            # assertions
+            data = db.session.execute(
+                "SELECT * FROM admin_database.test_target"
+            ).fetchall()
+            self.assertEqual(
+                75691, len(data)
+            )  # SQL_MAX_ROW not applied due to the SQLLAB_CTAS_NO_LIMIT set to True
+
+            # cleanup
+            db.session.execute("DROP TABLE admin_database.test_target")
+            main_db.allow_ctas = old_allow_ctas
+            db.session.commit()
 
     def test_multi_sql(self):
         self.login("admin")

@@ -17,20 +17,15 @@
 # isort:skip_file
 """Unit tests for Superset Celery worker"""
 import datetime
-import io
 import json
-import logging
+from parameterized import parameterized
 import subprocess
 import time
 import unittest
 import unittest.mock as mock
 
 import flask
-import sqlalchemy
-from contextlib2 import contextmanager
 from flask import current_app
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import NullPool
 
 from tests.test_app import app
 from superset import db, sql_lab
@@ -39,7 +34,7 @@ from superset.db_engine_specs.base import BaseEngineSpec
 from superset.extensions import celery_app
 from superset.models.helpers import QueryStatus
 from superset.models.sql_lab import Query
-from superset.sql_parse import ParsedQuery
+from superset.sql_parse import ParsedQuery, CtaMethod
 from superset.utils.core import get_example_database
 
 from .base_tests import SupersetTestCase
@@ -142,7 +137,14 @@ class CeleryTestCase(SupersetTestCase):
         )
 
     def run_sql(
-        self, db_id, sql, client_id=None, cta=False, tmp_table="tmp", async_=False
+        self,
+        db_id,
+        sql,
+        client_id=None,
+        cta=False,
+        tmp_table="tmp",
+        async_=False,
+        cta_method=CtaMethod.TABLE,
     ):
         self.login()
         resp = self.client.post(
@@ -154,33 +156,50 @@ class CeleryTestCase(SupersetTestCase):
                 select_as_cta=cta,
                 tmp_table_name=tmp_table,
                 client_id=client_id,
+                cta_method=cta_method,
             ),
         )
         self.logout()
         return json.loads(resp.data)
 
-    def test_run_sync_query_dont_exist(self):
+    @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+    def test_run_sync_query_dont_exist(self, cta_method):
         main_db = get_example_database()
         db_id = main_db.id
         sql_dont_exist = "SELECT name FROM table_dont_exist"
-        result1 = self.run_sql(db_id, sql_dont_exist, "1", cta=True)
-        self.assertTrue("error" in result1)
+        result = self.run_sql(
+            db_id, sql_dont_exist, f"1_{cta_method}", cta=True, cta_method=cta_method
+        )
+        if cta_method == CtaMethod.TABLE:
+            self.assertTrue("error" in result)
+        if cta_method == CtaMethod.VIEW:
+            # View creation doesn't require a valid sql.
+            self.assertEqual(result["status"], "success")
+            self.assertEqual(result["data"], [])
 
-    def test_run_sync_query_cta(self):
+    @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+    def test_run_sync_query_cta(self, cta_method):
         main_db = get_example_database()
         db_id = main_db.id
         tmp_table_name = "tmp_async_22"
         self.drop_table_if_exists(tmp_table_name, main_db)
         name = "James"
         sql_where = f"SELECT name FROM birth_names WHERE name='{name}' LIMIT 1"
-        result = self.run_sql(db_id, sql_where, "2", tmp_table=tmp_table_name, cta=True)
+        result = self.run_sql(
+            db_id,
+            sql_where,
+            f"2_{cta_method}",
+            tmp_table=tmp_table_name,
+            cta=True,
+            cta_method=cta_method,
+        )
         self.assertEqual(QueryStatus.SUCCESS, result["query"]["state"])
         self.assertEqual([], result["data"])
         self.assertEqual([], result["columns"])
         query2 = self.get_query_by_id(result["query"]["serverId"])
 
         # Check the data in the tmp table.
-        results = self.run_sql(db_id, query2.select_sql, "sdf2134")
+        results = self.run_sql(db_id, query2.select_sql, f"7_{cta_method}")
         self.assertEqual(results["status"], "success")
         self.assertGreater(len(results["data"]), 0)
 
@@ -211,7 +230,8 @@ class CeleryTestCase(SupersetTestCase):
     @mock.patch(
         "superset.views.core.get_cta_schema_name", lambda d, u, s, sql: CTAS_SCHEMA_NAME
     )
-    def test_run_sync_query_cta_config(self):
+    @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+    def test_run_sync_query_cta_config(self, cta_method):
         main_db = get_example_database()
         db_id = main_db.id
         if main_db.backend == "sqlite":
@@ -223,7 +243,12 @@ class CeleryTestCase(SupersetTestCase):
         name = "James"
         sql_where = f"SELECT name FROM birth_names WHERE name='{name}'"
         result = self.run_sql(
-            db_id, sql_where, "cid2", tmp_table=tmp_table_name, cta=True
+            db_id,
+            sql_where,
+            f"3_{cta_method}",
+            tmp_table=tmp_table_name,
+            cta=True,
+            cta_method=cta_method,
         )
 
         self.assertEqual(QueryStatus.SUCCESS, result["query"]["state"])
@@ -247,7 +272,8 @@ class CeleryTestCase(SupersetTestCase):
     @mock.patch(
         "superset.views.core.get_cta_schema_name", lambda d, u, s, sql: CTAS_SCHEMA_NAME
     )
-    def test_run_async_query_cta_config(self):
+    @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+    def test_run_async_query_cta_config(self, cta_method):
         main_db = get_example_database()
         db_id = main_db.id
         if main_db.backend == "sqlite":
@@ -260,10 +286,11 @@ class CeleryTestCase(SupersetTestCase):
         result = self.run_sql(
             db_id,
             sql_where,
-            "cid3",
+            f"4_{cta_method}",
             async_=True,
             tmp_table="sqllab_test_table_async_1",
             cta=True,
+            cta_method=cta_method,
         )
         db.session.close()
         time.sleep(CELERY_SLEEP_TIME)
@@ -280,7 +307,8 @@ class CeleryTestCase(SupersetTestCase):
         )
         self.drop_table_if_exists(expected_full_table_name, get_example_database())
 
-    def test_run_async_cta_query(self):
+    @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+    def test_run_async_cta_query(self, cta_method):
         main_db = get_example_database()
         db_id = main_db.id
 
@@ -290,7 +318,13 @@ class CeleryTestCase(SupersetTestCase):
 
         sql_where = "SELECT name FROM birth_names WHERE name='James' LIMIT 10"
         result = self.run_sql(
-            db_id, sql_where, "cid4", async_=True, tmp_table="tmp_async_4", cta=True
+            db_id,
+            sql_where,
+            f"5_{cta_method}",
+            async_=True,
+            tmp_table="tmp_async_4",
+            cta=True,
+            cta_method=cta_method,
         )
         db.session.close()
         assert result["query"]["state"] in (
@@ -306,7 +340,7 @@ class CeleryTestCase(SupersetTestCase):
 
         self.assertTrue(f"FROM {table_name}" in query.select_sql)
         self.assertEqual(
-            f"CREATE TABLE {table_name} AS \n"
+            f"CREATE {cta_method} {table_name} AS \n"
             "SELECT name FROM birth_names "
             "WHERE name='James' "
             "LIMIT 10",
@@ -317,7 +351,8 @@ class CeleryTestCase(SupersetTestCase):
         self.assertEqual(True, query.select_as_cta)
         self.assertEqual(True, query.select_as_cta_used)
 
-    def test_run_async_cta_query_with_lower_limit(self):
+    @parameterized.expand([CtaMethod.TABLE, CtaMethod.VIEW])
+    def test_run_async_cta_query_with_lower_limit(self, cta_method):
         main_db = get_example_database()
         db_id = main_db.id
         tmp_table = "tmp_async_2"
@@ -325,7 +360,13 @@ class CeleryTestCase(SupersetTestCase):
 
         sql_where = "SELECT name FROM birth_names LIMIT 1"
         result = self.run_sql(
-            db_id, sql_where, "id1", async_=True, tmp_table=tmp_table, cta=True
+            db_id,
+            sql_where,
+            f"6_{cta_method}",
+            async_=True,
+            tmp_table=tmp_table,
+            cta=True,
+            cta_method=cta_method,
         )
         db.session.close()
         assert result["query"]["state"] in (
@@ -341,7 +382,8 @@ class CeleryTestCase(SupersetTestCase):
 
         self.assertIn(f"FROM {tmp_table}", query.select_sql)
         self.assertEqual(
-            f"CREATE TABLE {tmp_table} AS \n" "SELECT name FROM birth_names LIMIT 1",
+            f"CREATE {cta_method} {tmp_table} AS \n"
+            "SELECT name FROM birth_names LIMIT 1",
             query.executed_sql,
         )
         self.assertEqual(sql_where, query.sql)
