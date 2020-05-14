@@ -83,6 +83,11 @@ class EmailScheduleView(
             description="List of recipients to send test email to. "
             "If empty, we send it to the original recipients",
         ),
+        "test_slack_channel": StringField(
+            "Test Slack Channel",
+            default=None,
+            description="A slack channel to send test message to.",
+        ),
     }
 
     edit_form_extra_fields = add_form_extra_fields
@@ -92,8 +97,16 @@ class EmailScheduleView(
             test_email_recipients = form.test_email_recipients.data.strip()
         else:
             test_email_recipients = None
+
+        test_slack_channel = (
+            form.test_slack_channel.data.strip()
+            if form.test_slack_channel.data
+            else None
+        )
+
         self._extra_data["test_email"] = form.test_email.data
         self._extra_data["test_email_recipients"] = test_email_recipients
+        self._extra_data["test_slack_channel"] = test_slack_channel
 
     def pre_add(self, item):
         try:
@@ -113,8 +126,9 @@ class EmailScheduleView(
         # Schedule a test mail if the user requested for it.
         if self._extra_data["test_email"]:
             recipients = self._extra_data["test_email_recipients"] or item.recipients
+            slack_channel = self._extra_data["test_slack_channel"] or item.slack_channel
             args = (self.schedule_type, item.id)
-            kwargs = dict(recipients=recipients)
+            kwargs = dict(recipients=recipients, slack_channel=slack_channel)
             schedule_email_report.apply_async(args=args, kwargs=kwargs)
 
         # Notify the user that schedule changes will be activate only in the
@@ -180,10 +194,12 @@ class DashboardEmailScheduleView(
         "active",
         "crontab",
         "recipients",
+        "slack_channel",
         "deliver_as_group",
         "delivery_type",
         "test_email",
         "test_email_recipients",
+        "test_slack_channel",
     ]
 
     edit_columns = add_columns
@@ -204,6 +220,7 @@ class DashboardEmailScheduleView(
         "active": _("Active"),
         "crontab": _("Crontab"),
         "recipients": _("Recipients"),
+        "slack_channel": _("Slack Channel"),
         "deliver_as_group": _("Deliver As Group"),
         "delivery_type": _("Delivery Type"),
     }
@@ -238,11 +255,13 @@ class SliceEmailScheduleView(EmailScheduleView):  # pylint: disable=too-many-anc
         "active",
         "crontab",
         "recipients",
+        "slack_channel",
         "deliver_as_group",
         "delivery_type",
         "email_format",
         "test_email",
         "test_email_recipients",
+        "test_slack_channel",
     ]
 
     edit_columns = add_columns
@@ -264,6 +283,7 @@ class SliceEmailScheduleView(EmailScheduleView):  # pylint: disable=too-many-anc
         "active": _("Active"),
         "crontab": _("Crontab"),
         "recipients": _("Recipients"),
+        "slack_channel": _("Slack Channel"),
         "deliver_as_group": _("Deliver As Group"),
         "delivery_type": _("Delivery Type"),
         "email_format": _("Email Format"),
