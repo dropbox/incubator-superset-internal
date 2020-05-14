@@ -101,6 +101,7 @@ setup(
         "retry>=0.9.2",
         "selenium>=3.141.0",
         "simplejson>=3.15.0",
+        "slackclient>=2.5.0",
         "sqlalchemy>=1.3.16, <2.0",
         "sqlalchemy-utils>=0.33.2",
         "sqlparse>=0.3.0, <0.4",
