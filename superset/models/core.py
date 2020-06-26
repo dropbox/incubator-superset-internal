@@ -188,6 +188,10 @@ class Database(
         )
 
     @property
+    def explore_database_visualization_id(self) -> int:
+        return self.get_extra().get("explore_database_id", self.id)
+
+    @property
     def data(self) -> Dict[str, Any]:
         return {
             "id": self.id,
@@ -196,6 +200,7 @@ class Database(
             "allow_multi_schema_metadata_fetch": self.allow_multi_schema_metadata_fetch,
             "allows_subquery": self.allows_subquery,
             "allows_cost_estimate": self.allows_cost_estimate,
+            "explore_database_visualization_id": self.explore_database_visualization_id,
         }
 
     @property

@@ -238,7 +238,7 @@ export default class ResultSet extends React.PureComponent {
               <ExploreCtasResultsButton
                 table={tmpTable}
                 schema={tmpSchema}
-                dbId={query.dbId}
+                dbId={this.props.database.explore_database_visualization_id}
                 database={this.props.database}
                 actions={this.props.actions}
               />
