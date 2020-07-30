@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 from flask import flash
 from flask_appbuilder import expose
@@ -54,14 +54,19 @@ class R(BaseSupersetView):  # pylint: disable=invalid-name
         return None
 
     @event_logger.log_this
-    @expose("/<int:url_id>")
-    def index(self, url_id: int) -> FlaskResponse:
+    @expose("/<url_id>")
+    def index(self, url_id: Any) -> FlaskResponse:  # pylint: disable=no-self-use
+        standalone_prexif = ""
+        if url_id.endswith("&standalone=true"):
+            url_id = int(url_id.split("&")[0])
+            standalone_prexif = "&standalone=true"
+
         url = db.session.query(models.Url).get(url_id)
         if url and url.url:
             explore_url = self._validate_explore_url(url.url)
             if explore_url:
                 if explore_url.startswith("//explore/?"):
-                    explore_url = f"//explore/?r={url_id}"
+                    explore_url = f"//explore/?r={url_id}{standalone_prexif}"
                 return redirect(explore_url[1:])
 
             dashboard_url = self._validate_dashboard_url(url.url)
