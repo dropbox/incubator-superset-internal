@@ -542,6 +542,7 @@ def schedule_alert_query(  # pylint: disable=unused-argument
     is_test_alert: Optional[bool] = False,
 ) -> None:
     model_cls = get_scheduler_model(report_type)
+    logger.info("Fetching %s: %i", model_cls, schedule_id)
     schedule = db.session.query(model_cls).get(schedule_id)
 
     # The user may have disabled the schedule. If so, ignore this
