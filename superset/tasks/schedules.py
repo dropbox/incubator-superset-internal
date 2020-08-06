@@ -47,7 +47,7 @@ from flask_login import login_user
 from retry.api import retry_call
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import chrome, firefox
-from sqlalchemy.exc import NoSuchColumnError, ResourceClosedError, OperationalError
+from sqlalchemy.exc import NoSuchColumnError, ResourceClosedError
 from werkzeug.http import parse_cookie
 
 from superset import app, db, security_manager, thumbnail_cache
@@ -69,7 +69,6 @@ from superset.utils.screenshots import ChartScreenshot
 from superset.utils.urls import get_url_path
 
 # pylint: disable=too-few-public-methods
-from superset.views.base_api import statsd_metrics
 
 if TYPE_CHECKING:
     # pylint: disable=unused-import
@@ -81,6 +80,7 @@ config = app.config
 logger = logging.getLogger("tasks.email_reports")
 logger.setLevel(logging.INFO)
 
+stats_logger = current_app.config["STATS_LOGGER"]
 EMAIL_PAGE_RENDER_WAIT = config["EMAIL_PAGE_RENDER_WAIT"]
 WEBDRIVER_BASEURL = config["WEBDRIVER_BASEURL"]
 WEBDRIVER_BASEURL_USER_FRIENDLY = config["WEBDRIVER_BASEURL_USER_FRIENDLY"]
@@ -535,6 +535,8 @@ def schedule_email_report(  # pylint: disable=unused-argument
     name="alerts.run_query",
     bind=True,
     soft_time_limit=config["EMAIL_ASYNC_TIME_LIMIT_SEC"],
+    # TODO: find cause of https://github.com/apache/incubator-superset/issues/10530
+    # and remove retry
     autoretry_for=(NoSuchColumnError, ResourceClosedError,),
     retry_kwargs={"max_retries": 5},
     retry_backoff=True,
@@ -546,30 +548,34 @@ def schedule_alert_query(  # pylint: disable=unused-argument
     recipients: Optional[str] = None,
     is_test_alert: Optional[bool] = False,
 ) -> None:
-    stats_logger = current_app.config["STATS_LOGGER"]
-    stats_logger.incr(f"run_alert_task")
-
     model_cls = get_scheduler_model(report_type)
-    dbsession = db.create_scoped_session()
-    schedule = dbsession.query(model_cls).get(schedule_id)
 
-    # The user may have disabled the schedule. If so, ignore this
-    if not schedule or not schedule.active:
-        logger.info("Ignoring deactivated alert")
-        return
+    try:
+        schedule = db.session.query(model_cls).get(schedule_id)
 
-    if report_type == ScheduleType.alert:
-        if is_test_alert and recipients:
-            deliver_alert(schedule_id, recipients)
+        # The user may have disabled the schedule. If so, ignore this
+        if not schedule or not schedule.active:
+            logger.info("Ignoring deactivated alert")
             return
 
-        if run_alert_query(
-            schedule_id, schedule.database_id, schedule.sql, schedule.label
-        ):
-            # deliver_dashboard OR deliver_slice
-            return
-    else:
-        raise RuntimeError("Unknown report type")
+        if report_type == ScheduleType.alert:
+            if is_test_alert and recipients:
+                deliver_alert(schedule.id, recipients)
+                return
+
+            if run_alert_query(
+                schedule.id, schedule.database_id, schedule.sql, schedule.label
+            ):
+                # deliver_dashboard OR deliver_slice
+                return
+        else:
+            raise RuntimeError("Unknown report type")
+    except NoSuchColumnError as column_error:
+        stats_logger.incr("run_alert_task.error.nosuchcolumnerror")
+        raise column_error
+    except ResourceClosedError as resource_error:
+        stats_logger.incr("run_alert_task.error.resourceclosederror")
+        raise resource_error
 
 
 class AlertState:
