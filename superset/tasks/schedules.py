@@ -44,7 +44,7 @@ from dateutil.tz import tzlocal
 from flask import current_app, render_template, Response, session, url_for
 from flask_babel import gettext as __
 from flask_login import login_user
-from retry.api import retry_call, retry
+from retry.api import retry_call
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import chrome, firefox
 from sqlalchemy.exc import NoSuchColumnError, ResourceClosedError, OperationalError
@@ -550,8 +550,8 @@ def schedule_alert_query(  # pylint: disable=unused-argument
     stats_logger.incr(f"run_alert_task")
 
     model_cls = get_scheduler_model(report_type)
-    logger.info("Fetching alert: %i", schedule_id)
-    schedule = db.session.query(model_cls).get(schedule_id)
+    dbsession = db.create_scoped_session()
+    schedule = dbsession.query(model_cls).get(schedule_id)
 
     # The user may have disabled the schedule. If so, ignore this
     if not schedule or not schedule.active:
@@ -727,7 +727,8 @@ def schedule_window(
     if not model_cls:
         return None
 
-    schedules = db.session.query(model_cls).filter(model_cls.active.is_(True))
+    dbsession = db.create_scoped_session()
+    schedules = dbsession.query(model_cls).filter(model_cls.active.is_(True))
 
     for schedule in schedules:
         logging.info("Processing schedule %s", schedule)
