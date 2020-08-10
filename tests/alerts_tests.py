@@ -32,7 +32,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def setup_module():
+@pytest.yield_fixture(scope="module")
+def setup_database():
     with app.app_context():
         slice_id = db.session.query(Slice).all()[0].id
         database_id = utils.get_example_database().id
@@ -74,55 +75,54 @@ def setup_module():
 
         db.session.bulk_save_objects(alerts)
         db.session.commit()
+        yield db.session
 
-
-def teardown_module():
-    with app.app_context():
         db.session.query(AlertLog).delete()
         db.session.query(Alert).delete()
 
 
 @patch("superset.tasks.schedules.deliver_alert")
 @patch("superset.tasks.schedules.logging.Logger.error")
-def test_run_alert_query(mock_error, mock_deliver_alert):
-    with app.app_context():
-        run_alert_query(db.session.query(Alert).filter_by(id=1).one().id)
-        alert1 = db.session.query(Alert).filter_by(id=1).one()
-        assert mock_deliver_alert.call_count == 0
-        assert len(alert1.logs) == 1
-        assert alert1.logs[0].alert_id == 1
-        assert alert1.logs[0].state == "pass"
+def test_run_alert_query(mock_error, mock_deliver_alert, setup_database):
+    dbsession = setup_database
 
-        run_alert_query(db.session.query(Alert).filter_by(id=2).one().id)
-        alert2 = db.session.query(Alert).filter_by(id=2).one()
-        assert mock_deliver_alert.call_count == 1
-        assert len(alert2.logs) == 1
-        assert alert2.logs[0].alert_id == 2
-        assert alert2.logs[0].state == "trigger"
+    # Test passing alert with null SQL result
+    alert1 = dbsession.query(Alert).filter_by(id=1).one()
+    run_alert_query(alert1.id, alert1.database_id, alert1.sql, alert1.label)
+    assert mock_deliver_alert.call_count == 0
+    assert mock_error.call_count == 0
 
-        run_alert_query(db.session.query(Alert).filter_by(id=3).one().id)
-        alert3 = db.session.query(Alert).filter_by(id=3).one()
-        assert mock_deliver_alert.call_count == 1
-        assert mock_error.call_count == 2
-        assert len(alert3.logs) == 1
-        assert alert3.logs[0].alert_id == 3
-        assert alert3.logs[0].state == "error"
+    # Test passing alert with True SQL result
+    alert2 = dbsession.query(Alert).filter_by(id=2).one()
+    run_alert_query(alert2.id, alert2.database_id, alert2.sql, alert2.label)
+    assert mock_deliver_alert.call_count == 1
+    assert mock_error.call_count == 0
 
-        run_alert_query(db.session.query(Alert).filter_by(id=4).one().id)
-        assert mock_deliver_alert.call_count == 1
-        assert mock_error.call_count == 3
+    # Test passing alert with error in SQL query
+    alert3 = dbsession.query(Alert).filter_by(id=3).one()
+    run_alert_query(alert3.id, alert3.database_id, alert3.sql, alert3.label)
+    assert mock_deliver_alert.call_count == 1
+    assert mock_error.call_count == 2
 
-        run_alert_query(db.session.query(Alert).filter_by(id=5).one().id)
-        assert mock_deliver_alert.call_count == 1
-        assert mock_error.call_count == 4
+    # Test passing alert with invalid database
+    alert4 = dbsession.query(Alert).filter_by(id=4).one()
+    run_alert_query(alert4.id, alert4.database_id, alert4.sql, alert4.label)
+    assert mock_deliver_alert.call_count == 1
+    assert mock_error.call_count == 3
+
+    # Test passing alert with no SQL statement
+    alert5 = dbsession.query(Alert).filter_by(id=5).one()
+    run_alert_query(alert5.id, alert5.database_id, alert5.sql, alert5.label)
+    assert mock_deliver_alert.call_count == 1
+    assert mock_error.call_count == 4
 
 
 @patch("superset.tasks.schedules.deliver_alert")
 @patch("superset.tasks.schedules.run_alert_query")
 def test_schedule_alert_query(mock_run_alert, mock_deliver_alert, setup_database):
-    database = setup_database
-    active_alert = database.query(Alert).filter_by(id=1).one()
-    inactive_alert = database.query(Alert).filter_by(id=3).one()
+    dbsession = setup_database
+    active_alert = dbsession.query(Alert).filter_by(id=1).one()
+    inactive_alert = dbsession.query(Alert).filter_by(id=3).one()
 
     # Test that inactive alerts are no processed
     schedule_alert_query(report_type=ScheduleType.alert, schedule_id=inactive_alert.id)
