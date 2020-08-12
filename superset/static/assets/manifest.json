@@ -19,52 +19,52 @@
     },
     "addSlice": {
       "css": [
-        "/static/assets/addSlice.667a315ebd10ebaa4ff8.entry.css"
+        "/static/assets/addSlice.d4d545080daf1b5a6310.entry.css"
       ],
       "js": [
         "/static/assets/vendors-major.21f5743f5b8d6ac9053e.chunk.js",
         "/static/assets/vendors-addSlice-preamble-profile.43bcde87768bdb2fd05d.chunk.js",
-        "/static/assets/addSlice.667a315ebd10ebaa4ff8.entry.js"
+        "/static/assets/addSlice.d4d545080daf1b5a6310.entry.js"
       ]
     },
     "explore": {
       "css": [
-        "/static/assets/explore.ee3bcc7ae22e4d1ee522.entry.css"
+        "/static/assets/explore.dfaae149799a7c8bacbd.entry.css"
       ],
       "js": [
         "/static/assets/vendors-major.21f5743f5b8d6ac9053e.chunk.js",
         "/static/assets/1.3b7dd54f7617a3b5d19c.chunk.js",
-        "/static/assets/explore.ee3bcc7ae22e4d1ee522.entry.js"
+        "/static/assets/explore.dfaae149799a7c8bacbd.entry.js"
       ]
     },
     "dashboard": {
       "css": [
-        "/static/assets/dashboard.83acf1fd7e5295c2d746.entry.css"
+        "/static/assets/dashboard.d05f9de1344fdb6a5d06.entry.css"
       ],
       "js": [
         "/static/assets/vendors-major.21f5743f5b8d6ac9053e.chunk.js",
         "/static/assets/1.3b7dd54f7617a3b5d19c.chunk.js",
-        "/static/assets/dashboard.83acf1fd7e5295c2d746.entry.js"
+        "/static/assets/dashboard.d05f9de1344fdb6a5d06.entry.js"
       ]
     },
     "sqllab": {
       "css": [
-        "/static/assets/sqllab.83fad57db84e5e2fbcb1.entry.css"
+        "/static/assets/sqllab.b7920998aaada9d688c8.entry.css"
       ],
       "js": [
         "/static/assets/vendors-major.21f5743f5b8d6ac9053e.chunk.js",
         "/static/assets/1.3b7dd54f7617a3b5d19c.chunk.js",
-        "/static/assets/sqllab.83fad57db84e5e2fbcb1.entry.js"
+        "/static/assets/sqllab.b7920998aaada9d688c8.entry.js"
       ]
     },
     "welcome": {
       "css": [
-        "/static/assets/welcome.c1ab9c8f2160f416274b.entry.css"
+        "/static/assets/welcome.5c48b2a76ca2a7a490f3.entry.css"
       ],
       "js": [
         "/static/assets/vendors-major.21f5743f5b8d6ac9053e.chunk.js",
         "/static/assets/1.3b7dd54f7617a3b5d19c.chunk.js",
-        "/static/assets/welcome.c1ab9c8f2160f416274b.entry.js"
+        "/static/assets/welcome.5c48b2a76ca2a7a490f3.entry.js"
       ]
     },
     "profile": {
