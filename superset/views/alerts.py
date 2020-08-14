@@ -14,6 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import json
 from typing import Dict, Optional, Union
 
 from croniter import croniter
@@ -23,15 +24,59 @@ from flask_babel import lazy_gettext as _
 from wtforms import BooleanField, Form, StringField
 
 from superset.constants import RouteMethod
-from superset.models.alerts import Alert, AlertLog
+from superset.models.alerts import (
+    Alert,
+    AlertLog,
+    AlertValidatorType,
+    SQLObservation,
+    SQLObserver,
+    Validator,
+)
 from superset.models.schedules import ScheduleType
 from superset.tasks.schedules import schedule_alert_query
+from superset.utils import core as utils
 from superset.utils.core import get_email_address_str, markdown
 
 from ..exceptions import SupersetException
+from ..sql_parse import ParsedQuery
+from ..tasks.alerts.oberver import check_observer_result
 from .base import SupersetModelView
 
 # TODO: access control rules for this module
+
+
+def check_observer_sql(item: "SQLObserverInlineView") -> None:
+    try:
+        parsed_query = ParsedQuery(item.sql)
+        sql = parsed_query.stripped()
+        df = item.database.get_df(sql)
+
+        error_msg = check_observer_result(df, item.id, item.name)
+
+        if error_msg:
+            raise SupersetException(f"Error: {error_msg}")
+
+    except Exception as ex:  # pylint: disable=broad-except
+        raise SupersetException(f"Observer raised exception: {ex}")
+
+
+def check_validator_config(item: "ValidatorInlineView") -> None:
+    config = json.loads(item.config)
+
+    if item.validator_type == AlertValidatorType.gte_threshold and not config.get(
+        "gte_threshold"
+    ):
+        raise SupersetException(
+            "Error: Greater Than or Equal To Validator needs a specified threshold. "
+            'Add "gte_threshold": value to config.'
+        )
+    if item.validator_type == AlertValidatorType.lte_threshold and not config.get(
+        "lte_threshold"
+    ):
+        raise SupersetException(
+            "Error: Less Than or Equal To Validator needs a specified threshold. "
+            'Add "lte_threshold": value to config.'
+        )
 
 
 class AlertLogModelView(
@@ -47,6 +92,128 @@ class AlertLogModelView(
     )
 
 
+class AlertObservationModelView(
+    CompactCRUDMixin, SupersetModelView
+):  # pylint: disable=too-many-ancestors
+    datamodel = SQLAInterface(SQLObservation)
+    include_route_methods = {RouteMethod.LIST} | {"show"}
+    list_title = _("List Observations")
+    show_title = _("Show Observation")
+    list_columns = (
+        "dttm",
+        "value",
+        "valid_result",
+    )
+
+
+class SQLObserverInlineView(  # pylint: disable=too-many-ancestors
+    CompactCRUDMixin, SupersetModelView
+):
+    datamodel = SQLAInterface(SQLObserver)
+    include_route_methods = RouteMethod.RELATED_VIEW_SET | RouteMethod.API_SET
+    list_title = _("SQL Observers")
+    show_title = _("Show SQL Observer")
+    add_title = _("Add SQL Observer")
+    edit_title = _("Edit SQL Observer")
+
+    edit_columns = [
+        "name",
+        "alert",
+        "database",
+        "sql",
+    ]
+
+    add_columns = edit_columns
+
+    list_columns = [
+        "name",
+        "alert.label",
+        "database",
+    ]
+
+    label_columns = {
+        "name": _("Name"),
+        "alert": _("Alert Label"),
+        "database": _("Database"),
+        "sql": _("SQL"),
+    }
+
+    description_columns = {
+        "sql": _(
+            "A SQL statement that defines whether the alert should get triggered or "
+            "not. The query is expected to return either NULL or a number value."
+        )
+    }
+
+    def pre_add(self, item: "SQLObserverInlineView") -> None:
+        if item.alert.sql_observer and item.alert.sql_observer[0].id != item.id:
+            raise SupersetException("Error: An alert should only have one observer.")
+
+        check_observer_sql(item)
+
+    def pre_update(self, item: "SQLObserverInlineView") -> None:
+        check_observer_sql(item)
+
+
+class ValidatorInlineView(  # pylint: disable=too-many-ancestors
+    CompactCRUDMixin, SupersetModelView
+):
+    datamodel = SQLAInterface(Validator)
+    include_route_methods = RouteMethod.RELATED_VIEW_SET | RouteMethod.API_SET
+    list_title = _("Validators")
+    show_title = _("Show Validator")
+    add_title = _("Add Validator")
+    edit_title = _("Edit Validator")
+
+    edit_columns = [
+        "name",
+        "alert",
+        "validator_type",
+        "config",
+    ]
+
+    add_columns = edit_columns
+
+    list_columns = [
+        "name",
+        "validator_type",
+        "alert.label",
+    ]
+
+    label_columns = {
+        "name": _("Name"),
+        "validator_type": _("Validator Type"),
+        "alert": _("Alert"),
+    }
+
+    description_columns = {
+        "validator_type": utils.markdown(
+            "Determines when to trigger alert based off value from SQLObserver query. "
+            "Alert will be triggered:"
+            "<ul><li>Not Null - When the return value is Not NULL, Empty, or 0</li>"
+            "<li>Greater Than or Equal To - When `return_value >= gte_threshold`"
+            " is True</li>"
+            "<li>Less Than or Equal To - When `return_value <= lte_threshold`"
+            " is True</li></ul>",
+            True,
+        ),
+        "config": utils.markdown(
+            "JSON string containing values the validator will compare against. "
+            "Each validator needs the following values:"
+            "<ul><li>Not Null - Nothing. You can leave the config as it is.</li>"
+            "<li>Greater Than or Equal To - `gte_threshold`</li>"
+            "<li>Less Than or Equal To - `lte_threshold`</li></ul>",
+            True,
+        ),
+    }
+
+    def pre_add(self, item: "ValidatorInlineView") -> None:
+        check_validator_config(item)
+
+    def pre_update(self, item: "ValidatorInlineView") -> None:
+        check_validator_config(item)
+
+
 class AlertModelView(SupersetModelView):  # pylint: disable=too-many-ancestors
     datamodel = SQLAInterface(Alert)
     route_base = "/alert"
@@ -58,7 +225,6 @@ class AlertModelView(SupersetModelView):  # pylint: disable=too-many-ancestors
 
     list_columns = (
         "label",
-        "database",
         "crontab",
         "last_eval_dttm",
         "last_state",
@@ -68,8 +234,6 @@ class AlertModelView(SupersetModelView):  # pylint: disable=too-many-ancestors
         "label",
         "active",
         "crontab",
-        "database",
-        "sql",
         # TODO: implement different types of alerts
         # "alert_type",
         "owners",
@@ -85,18 +249,9 @@ class AlertModelView(SupersetModelView):  # pylint: disable=too-many-ancestors
         "test_slack_channel",
     )
     label_columns = {
-        "sql": "SQL",
         "log_retention": _("Log Retentions (days)"),
     }
     description_columns = {
-        "sql": _(
-            "A SQL statement that defines whether the alert should get "
-            "triggered or not. If the statement return no row, the alert "
-            "is not triggered. If the statement returns one or many rows, "
-            "the cells will be evaluated to see if they are 'truthy' "
-            "if any cell is truthy, the alert will fire. Truthy values "
-            "are non zero, non null, non empty strings."
-        ),
         "crontab": markdown(
             "A CRON-like expression. "
             "[Crontab Guru](https://crontab.guru/) is "
@@ -134,7 +289,12 @@ class AlertModelView(SupersetModelView):  # pylint: disable=too-many-ancestors
     }
     edit_form_extra_fields = add_form_extra_fields
     edit_columns = add_columns
-    related_views = [AlertLogModelView]
+    related_views = [
+        AlertObservationModelView,
+        AlertLogModelView,
+        ValidatorInlineView,
+        SQLObserverInlineView,
+    ]
 
     def process_form(self, form: Form, is_created: bool) -> None:
         email_recipients = None
