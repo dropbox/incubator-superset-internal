@@ -2,172 +2,97 @@
   "app": "superset",
   "entrypoints": {
     "theme": {
-      "css": [],
+      "css": [
+        "/static/assets/theme.70df903ef1c1220188bb.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/theme.118c0589.entry.js"
+        "/static/assets/theme.70df903ef1c1220188bb.entry.js"
       ]
     },
     "preamble": {
       "css": [],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/preamble.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/vendors-addSlice-menu-preamble-profile.890a8b8163b56891a9bd.chunk.js",
+        "/static/assets/preamble.7cfb2cb774fcc4b8b62e.entry.js"
       ]
     },
     "addSlice": {
-      "css": [],
+      "css": [
+        "/static/assets/addSlice.710c759d79c515b20b60.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore.118c0589.chunk.js",
-        "/static/assets/addSlice.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/vendors-addSlice-menu-preamble-profile.890a8b8163b56891a9bd.chunk.js",
+        "/static/assets/addSlice.710c759d79c515b20b60.entry.js"
       ]
     },
     "explore": {
-      "css": [],
+      "css": [
+        "/static/assets/explore.80f6423b62ede13ef31b.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/20.118c0589.chunk.js",
-        "/static/assets/26.118c0589.chunk.js",
-        "/static/assets/15.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/35.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/39.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/54.118c0589.chunk.js",
-        "/static/assets/55.118c0589.chunk.js",
-        "/static/assets/vendors-dashboard-explore.118c0589.chunk.js",
-        "/static/assets/vendors-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/explore.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/1.b3bb2a9287c3333dc1e2.chunk.js",
+        "/static/assets/explore.80f6423b62ede13ef31b.entry.js"
       ]
     },
     "dashboard": {
-      "css": [],
+      "css": [
+        "/static/assets/dashboard.48841b55fb90028c9d73.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/20.118c0589.chunk.js",
-        "/static/assets/26.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/35.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/39.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/54.118c0589.chunk.js",
-        "/static/assets/55.118c0589.chunk.js",
-        "/static/assets/vendors-dashboard-explore.118c0589.chunk.js",
-        "/static/assets/vendors-dashboard-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-dashboard.118c0589.chunk.js",
-        "/static/assets/dashboard.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/1.b3bb2a9287c3333dc1e2.chunk.js",
+        "/static/assets/dashboard.48841b55fb90028c9d73.entry.js"
       ]
     },
     "sqllab": {
-      "css": [],
+      "css": [
+        "/static/assets/sqllab.1cc6b4c1719579d01fcf.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/20.118c0589.chunk.js",
-        "/static/assets/15.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/35.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/39.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-dashboard-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/sqllab.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/1.b3bb2a9287c3333dc1e2.chunk.js",
+        "/static/assets/sqllab.1cc6b4c1719579d01fcf.entry.js"
       ]
     },
     "crudViews": {
-      "css": [],
+      "css": [
+        "/static/assets/crudViews.6f73d7f7f7e446742db2.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/20.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/35.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/39.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-dashboard-explore-sqllab.118c0589.chunk.js",
-        "/static/assets/54.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-dashboard.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-profile.118c0589.chunk.js",
-        "/static/assets/crudViews.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/1.b3bb2a9287c3333dc1e2.chunk.js",
+        "/static/assets/crudViews.6f73d7f7f7e446742db2.entry.js"
       ]
     },
     "menu": {
       "css": [],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-sqllab.118c0589.chunk.js",
-        "/static/assets/menu.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/vendors-addSlice-menu-preamble-profile.890a8b8163b56891a9bd.chunk.js",
+        "/static/assets/menu.5487bacc400793f0f360.entry.js"
       ]
     },
     "profile": {
-      "css": [],
+      "css": [
+        "/static/assets/profile.9f9fff230829109c6a4a.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/35.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-crudViews-profile.118c0589.chunk.js",
-        "/static/assets/profile.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/vendors-addSlice-menu-preamble-profile.890a8b8163b56891a9bd.chunk.js",
+        "/static/assets/profile.9f9fff230829109c6a4a.entry.js"
       ]
     },
     "showSavedQuery": {
-      "css": [],
+      "css": [
+        "/static/assets/showSavedQuery.7969c9ed7828c86561bb.entry.css"
+      ],
       "js": [
-        "/static/assets/vendors-major.118c0589.chunk.js",
-        "/static/assets/20.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-preamble-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-menu-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-addSlice-crudViews-dashboard-explore-profile-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/vendors-showSavedQuery-sqllab.118c0589.chunk.js",
-        "/static/assets/showSavedQuery.118c0589.entry.js"
+        "/static/assets/vendors-major.4c1981364b7ab6231018.chunk.js",
+        "/static/assets/1.b3bb2a9287c3333dc1e2.chunk.js",
+        "/static/assets/showSavedQuery.7969c9ed7828c86561bb.entry.js"
       ]
     }
   }
