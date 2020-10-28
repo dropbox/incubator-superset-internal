@@ -439,7 +439,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
         appbuilder.add_view(
             DashboardEmailScheduleView,
             "Dashboard Email Schedules",
-            label=__("Dashboard Emails"),
+            label=__("Dashboard Emails (Beta)"),
             category="Manage",
             category_label=__("Manage"),
             icon="fa-search",
@@ -448,7 +448,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
         appbuilder.add_view(
             SliceEmailScheduleView,
             "Chart Emails",
-            label=__("Chart Email Schedules"),
+            label=__("Chart Email Schedules (Beta)"),
             category="Manage",
             category_label=__("Manage"),
             icon="fa-search",
@@ -463,7 +463,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
         appbuilder.add_view(
             AlertModelView,
             "Alerts",
-            label=__("Alerts"),
+            label=__("Alerts (Beta)"),
             category="Manage",
             category_label=__("Manage"),
             icon="fa-exclamation-triangle",
@@ -475,7 +475,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
         appbuilder.add_view(
             AlertView,
             "Alerts & Report",
-            label=__("Alerts & Reports"),
+            label=__("Alerts & Reports (Beta)"),
             category="Manage",
             category_label=__("Manage"),
             icon="fa-exclamation-triangle",
