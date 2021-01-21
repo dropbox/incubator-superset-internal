@@ -1,0 +1,4 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[66],{3268:function(t,n,e){"use strict";e.d(n,"b",(function(){return a})),e.d(n,"a",(function(){return o}));const a=(t,n,e=!1,a=!1)=>({append_form_data:e?{extras:{where:"1 = 0"}}:{filters:null==n||0===n.length?[]:[{col:t,op:a?"NOT IN":"IN",val:n}]}}),o=(t,n,e)=>{const a=[];return null!=n&&a.push({col:t,op:">=",val:n}),null!=e&&a.push({col:t,op:"<=",val:e}),{append_form_data:{filters:a}}}},3586:function(t,n,e){"use strict";e.r(n),e.d(n,"default",(function(){return c}));e(34);var a=e(62),o=(e(0),e(10)),r=e(3268),i=e(1);const u=a.c.div`
+  height: ${({height:t})=>t};
+  width: ${({width:t})=>t};
+`;function c(t){const{data:n,formData:e,height:a,width:c,setExtraFormData:h}=t,[l]=n,{min:s,max:d}=l,{groupby:f}=e,[p]=f||[];return Object(i.f)(u,{height:a,width:c},Object(i.f)(o.w,{range:!0,min:s,max:d,defaultValue:[s,d],onChange:t=>{const[n,e]=t;h(Object(r.a)(p,n,e))}}))}}}]);
