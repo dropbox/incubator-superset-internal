@@ -1,0 +1,5 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[93],{4877:function(e,t,a){"use strict";a.r(t),a.d(t,"default",(function(){return f}));a(40);var n=a(36),r=a.n(n),c=a(51),s=a(267),l=a(0),u=a(988),i=a(1);const o=c.c.div`
+  height: ${({height:e})=>e}px;
+  width: ${({width:e})=>e}px;
+  overflow-x: scroll;
+`;function f(e){const{formData:t,setDataMask:a,width:n,behaviors:c}=e,{defaultValue:f,currentValue:w}=t,[d,h]=Object(l.useState)(null!=f?f:"Last week"),b=e=>{h(e);const t={extraFormData:{override_form_data:{time_range:e}},currentState:{value:e}},n={};r()(c).call(c,s.a.NATIVE_FILTER)&&(n.nativeFilters=t),r()(c).call(c,s.a.CROSS_FILTER)&&(n.crossFilters=t),a(n)};return Object(l.useEffect)(()=>{b(null!=w?w:"Last week")},[w]),Object(l.useEffect)(()=>{b(null!=f?f:"Last week")},[f]),Object(i.f)(o,{width:n},Object(i.f)(u.a,{value:d,name:"time_range",onChange:b}))}}}]);
