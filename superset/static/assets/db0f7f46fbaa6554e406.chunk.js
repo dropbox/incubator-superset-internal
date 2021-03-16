@@ -1,0 +1,6 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[77],{4534:function(t,e,n){"use strict";n.d(e,"b",(function(){return r})),n.d(e,"a",(function(){return u}));var a=n(51),c=n(25);const r=a.c.div`
+  height: ${({height:t})=>t};
+  width: ${({width:t})=>t};
+`,u=Object(a.c)(c.t)`
+  width: 100%;
+`},4891:function(t,e,n){"use strict";n.r(e),n.d(e,"default",(function(){return b}));n(39);var a=n(11),c=n.n(a),r=n(85),u=n.n(r),i=n(543),o=n(15),l=n(0),s=n(25),f=n(4534),h=n(1);const{Option:d}=s.t;function b(t){var e;const{data:n,formData:a,height:r,width:s,setDataMask:b}=t,{defaultValue:w,currentValue:O,inputRef:g}=a,[j,p]=Object(l.useState)(null!=w?w:[]),v=t=>{const e=Object(i.a)(t),[n]=e,a={};n&&(a.time_grain_sqla=n),p(e),b({nativeFilters:{extraFormData:{override_form_data:{extras:a}},currentState:{value:e.length?e:null}}})};Object(l.useEffect)(()=>{v(null!=O?O:[])},[u()(O)]),Object(l.useEffect)(()=>{v(null!=w?w:[])},[u()(w)]);const m=0===(n||[]).length?Object(o.e)("No data"):Object(o.f)("%s option","%s options",n.length,n.length);return Object(h.f)(f.b,{height:r,width:s},Object(h.f)(f.a,{allowClear:!0,value:j,placeholder:m,onChange:v,ref:g},c()(e=n||[]).call(e,t=>{const{name:e,duration:n}=t;return Object(h.f)(d,{key:n,value:n},e)})))}}}]);
