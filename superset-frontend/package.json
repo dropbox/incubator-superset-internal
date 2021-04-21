@@ -61,7 +61,7 @@
   },
   "homepage": "https://superset.apache.org/",
   "dependencies": {
-    "@ant-design/icons": "^4.2.2",
+    "@ant-design/icons": "^4.6.2",
     "@babel/runtime-corejs3": "^7.12.5",
     "@data-ui/sparkline": "^0.0.84",
     "@emotion/core": "^10.0.35",
