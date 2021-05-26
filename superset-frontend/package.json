@@ -250,7 +250,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.3",
     "cross-env": "^5.2.0",
-    "css-loader": "^1.0.0",
+    "css-loader": "^5.2.6",
     "emotion-ts-plugin": "^0.5.3",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
