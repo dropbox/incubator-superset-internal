@@ -1,0 +1,25 @@
+"use strict";(globalThis.webpackChunksuperset=globalThis.webpackChunksuperset||[]).push([[5296],{29432:(e,t,r)=>{r.d(t,{hb:()=>m,QU:()=>E,Es:()=>h,JL:()=>p});var o,n=r(85639),s=r(67294);!function(e){e.LOADING="loading",e.COMPLETE="complete",e.ERROR="error"}(o||(o={}));const a={status:o.LOADING,result:null,error:null};function i(e,t){return(0,s.useMemo)((()=>{if(e.status!==o.COMPLETE)return e;try{return{...e,result:t(e.result)}}catch(e){return{status:o.ERROR,result:null,error:e}}}),[e,t])}const l=e=>e.result;function u(e){return i(function(e){const[t,r]=(0,s.useState)(a),i=(0,s.useRef)((()=>{}));return(0,s.useEffect)((()=>{r(a),i.current();let t=!1;return i.current=()=>{t=!0},(0,n.Z)({method:"GET",endpoint:e})({}).then((e=>{t||r({status:o.COMPLETE,result:e,error:null})})).catch((e=>{t||r({status:o.ERROR,result:null,error:e})})),()=>{t=!0}}),[e]),t}(e),l)}var c=r(15926);function d({owners:e}){return e?e.map((e=>`${e.first_name} ${e.last_name}`)):null}const f=r.n(c)().encode({columns:["owners.first_name","owners.last_name"],keys:["none"]});function m(e){return i(u(`/api/v1/chart/${e}?q=${f}`),d)}const E=e=>i(u(`/api/v1/dashboard/${e}`),(e=>({...e,metadata:e.json_metadata&&JSON.parse(e.json_metadata)||{},position_data:e.position_json&&JSON.parse(e.position_json)}))),h=e=>u(`/api/v1/dashboard/${e}/charts`),p=e=>u(`/api/v1/dashboard/${e}/datasets`)},14073:(e,t,r)=>{r.r(t),r.d(t,{MigrationContext:()=>w,default:()=>x});var o=r(67294),n=r(46415),s=r(60650),a=r(37703),i=r(5977),l=r(14114),u=r(38703),c=r(37840),d=r(74069),f=r(35932),m=r(11965);const E=(0,c.iK)(d.Z)`
+  .modal-content {
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .modal-header {
+    flex: 0 1 auto;
+  }
+
+  .modal-body {
+    flex: 1 1 auto;
+    overflow: auto;
+  }
+
+  .modal-footer {
+    flex: 0 1 auto;
+  }
+
+  .ant-modal-body {
+    overflow: auto;
+  }
+`,h=({onClickReview:e,onClickSnooze:t,onHide:r,show:n,hideFooter:a=!1})=>(0,m.tZ)(E,{show:n,onHide:r,title:(0,s.t)("Ready to review filters in this dashboard?"),hideFooter:a,footer:(0,m.tZ)(o.Fragment,null,(0,m.tZ)(f.Z,{buttonSize:"small",onClick:t},(0,s.t)("Remind me in 24 hours")),(0,m.tZ)(f.Z,{buttonSize:"small",onClick:r},(0,s.t)("Cancel")),(0,m.tZ)(f.Z,{buttonSize:"small",buttonStyle:"primary",onClick:e},(0,s.t)("Start Review"))),responsive:!0},(0,m.tZ)("div",null,(0,s.t)("filter_box will be deprecated in a future version of Superset. Please replace filter_box by dashboard filter components.")));var p=r(29432),O=r(63389),v=r(50810),b=r(14505),_=r(69753),S=r(72570),R=r(61337),Z=r(69856),y=r(27600),C=r(23525),D=r(70695),T=r(52794);const w=o.createContext(Z.Qi.NOOP);(0,_.Z)();const N=o.lazy((()=>Promise.all([r.e(1216),r.e(876),r.e(8680),r.e(193),r.e(5618),r.e(452)]).then(r.bind(r,51954)))),g=document.title,x=()=>{const e=(0,a.I0)(),t=(0,a.v9)((e=>e.user)),{addDangerToast:r}=(0,l.e)(),{idOrSlug:c}=(0,i.UO)(),{result:d,error:f}=(0,p.QU)(c),{result:E,error:_}=(0,p.Es)(c),{result:x,error:I}=(0,p.JL)(c),k=(0,o.useRef)(!1),Q=f||_,L=Boolean(d&&E),A=(0,C.e)(y.KD.migrationState),F=(0,n.c)(n.T.ENABLE_FILTER_BOX_MIGRATION),{dashboard_title:P,css:z,metadata:M,id:$=0}=d||{},[B,H]=(0,o.useState)(A||Z.Qi.NOOP);if((0,o.useEffect)((()=>{const r=E&&E.some((e=>{var t;return"filter_box"===(null==(t=e.form_data)?void 0:t.viz_type)}));if(d&&(0,D.M)(d,t)){if(null!=M&&M.native_filter_configuration)return void H(F?Z.Qi.CONVERTED:Z.Qi.NOOP);if(r)if(F){if(A&&Object.values(Z.Qi).includes(A))return void H(A);const e=(0,R.f)(Z.gO,0)||{};if(Date.now()-(e[$]||0)<Z.Yd)return void H(Z.Qi.SNOOZED);H(Z.Qi.UNDECIDED)}else(0,n.c)(n.T.DASHBOARD_NATIVE_FILTERS)&&e((0,S.Dz)((0,s.t)("filter_box will be deprecated in a future version of Superset. Please replace filter_box by dashboard filter components.")))}}),[L]),(0,o.useEffect)((()=>{L&&(k.current||(k.current=!0,(0,n.c)(n.T.DASHBOARD_NATIVE_FILTERS_SET)&&e((0,T.pi)())),e((0,O.Y)(d,E,B)))}),[L,B]),(0,o.useEffect)((()=>(P&&(document.title=P),()=>{document.title=g})),[P]),(0,o.useEffect)((()=>z?(0,b.Z)(z):()=>{}),[z]),(0,o.useEffect)((()=>{I?r((0,s.t)("Error loading chart datasources. Filters may not work correctly.")):e((0,v.Fy)(x))}),[r,x,I,e]),Q)throw Q;return L?(0,m.tZ)(o.Fragment,null,(0,m.tZ)(h,{show:B===Z.Qi.UNDECIDED,hideFooter:!F,onHide:()=>{H(Z.Qi.SNOOZED)},onClickReview:()=>{H(Z.Qi.REVIEWING)},onClickSnooze:()=>{const e=(0,R.f)(Z.gO,0)||{};(0,R._)(Z.gO,{...e,[$]:Date.now()}),H(Z.Qi.SNOOZED)}}),(0,m.tZ)(w.Provider,{value:B},(0,m.tZ)(N,null))):(0,m.tZ)(u.Z,null)}},14505:(e,t,r)=>{function o(e){const t="CssEditor-css",r=document.head||document.getElementsByTagName("head")[0],o=document.querySelector(`.${t}`)||function(e){const t=document.createElement("style");return t.className="CssEditor-css",t.type="text/css",t}();return"styleSheet"in o?o.styleSheet.cssText=e:o.innerHTML=e,r.appendChild(o),function(){o.remove()}}r.d(t,{Z:()=>o})}}]);
