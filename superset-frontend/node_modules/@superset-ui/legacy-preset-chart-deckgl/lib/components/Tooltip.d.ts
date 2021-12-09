@@ -1,0 +1,9 @@
+export declare type TooltipProps = {
+    tooltip: {
+        x: number;
+        y: number;
+        content: string;
+    } | null | undefined;
+};
+export default function Tooltip(props: TooltipProps): JSX.Element | null;
+//# sourceMappingURL=Tooltip.d.ts.map

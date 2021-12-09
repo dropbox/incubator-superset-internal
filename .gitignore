@@ -58,18 +58,3 @@ superset/bin/supersetc
 tmp
 rat-results.txt
 superset/app/
-
-# Node.js, webpack artifacts, storybook
-*.entry.js
-*.js.map
-node_modules
-npm-debug.log*
-superset/static/assets
-superset/static/version_info.json
-superset-frontend/**/esm/*
-superset-frontend/**/lib/*
-superset-frontend/**/storybook-static/*
-# Node.js, webpack artifacts
-node_modules
-npm-debug.log*
-yar
