@@ -66,10 +66,6 @@ superset-websocket/config.json
 *.js.map
 node_modules
 npm-debug.log*
-superset/static/assets
-superset/static/version_info.json
-superset-frontend/**/esm/*
-superset-frontend/**/lib/*
 superset-frontend/**/storybook-static/*
 yarn-error.log
 *.map
@@ -81,6 +77,8 @@ test-changelog.md
 plugins/*/package-lock.json
 packages/*/package-lock.json
 
+
+yarn-error.log
 # For country map geojson conversion script
 .ipynb_checkpoints/
 scripts/*.zip
