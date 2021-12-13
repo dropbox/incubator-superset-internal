@@ -1,0 +1,32 @@
+{
+    "name": "@types/d3-cloud",
+    "version": "1.2.5",
+    "description": "TypeScript definitions for d3JS cloud layout plugin by Jason Davies",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/d3-cloud",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "hans windhoff",
+            "url": "https://github.com/hansrwindhoff",
+            "githubUsername": "hansrwindhoff"
+        },
+        {
+            "name": "locknono",
+            "url": "https://github.com/locknono",
+            "githubUsername": "locknono"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/d3-cloud"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/d3": "^3"
+    },
+    "typesPublisherContentHash": "c2e384fca12c267d675beb59a9681b982d6281653a5e1d5795db41b2c9e41b4f",
+    "typeScriptVersion": "3.6"
+}

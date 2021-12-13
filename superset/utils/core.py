@@ -68,8 +68,8 @@ from typing import (
 from urllib.parse import unquote_plus
 from zipfile import ZipFile
 
+import bleach
 import markdown as md
-import nh3
 import numpy as np
 import pandas as pd
 import sqlalchemy as sa
@@ -663,7 +663,7 @@ def error_msg_from_exception(ex: Exception) -> str:
 
 
 def markdown(raw: str, markup_wrap: Optional[bool] = False) -> str:
-    safe_markdown_tags = {
+    safe_markdown_tags = [
         "h1",
         "h2",
         "h3",
@@ -689,10 +689,10 @@ def markdown(raw: str, markup_wrap: Optional[bool] = False) -> str:
         "dt",
         "img",
         "a",
-    }
+    ]
     safe_markdown_attrs = {
-        "img": {"src", "alt", "title"},
-        "a": {"href", "alt", "title"},
+        "img": ["src", "alt", "title"],
+        "a": ["href", "alt", "title"],
     }
     safe = md.markdown(
         raw or "",
@@ -702,8 +702,7 @@ def markdown(raw: str, markup_wrap: Optional[bool] = False) -> str:
             "markdown.extensions.codehilite",
         ],
     )
-    # pylint: disable=no-member
-    safe = nh3.clean(safe, tags=safe_markdown_tags, attributes=safe_markdown_attrs)
+    safe = bleach.clean(safe, safe_markdown_tags, safe_markdown_attrs)
     if markup_wrap:
         safe = Markup(safe)
     return safe
