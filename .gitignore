@@ -59,16 +59,11 @@ superset.egg-info/
 superset/bin/supersetc
 tmp
 rat-results.txt
-superset/app/
 
-# Node.js, webpack artifacts
-*.entry.js
-*.js.map
-node_modules
-npm-debug.log*
-superset/static/assets
-superset/static/version_info.json
 yarn-error.log
+# For country map geojson conversion script
+.ipynb_checkpoints/
+scripts/*.zip
 
 # IntelliJ
 *.iml
