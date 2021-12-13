@@ -13,7 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
+
+
 *.bak
 *.db
 *.pyc
@@ -36,15 +38,9 @@ cover
 .python-version
 .tox
 .vscode
-_build
-_images
-_modules
-_static
-build
 app.db
 apache_superset.egg-info/
 changelog.sh
-dist
 dump.rdb
 env
 venv*
@@ -60,21 +56,6 @@ tmp
 rat-results.txt
 superset/app/
 
-# Node.js, webpack artifacts, storybook
-*.entry.js
-*.js.map
-node_modules
-npm-debug.log*
-superset/static/assets
-superset/static/version_info.json
-superset-frontend/**/esm/*
-superset-frontend/**/lib/*
-superset-frontend/**/storybook-static/*
-yarn-error.log
-*.map
-*.min.js
-test-changelog.md
-*.tsbuildinfo
 
 # Ignore package-lock in packages
 plugins/*/package-lock.json
