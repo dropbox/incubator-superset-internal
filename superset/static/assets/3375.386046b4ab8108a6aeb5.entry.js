@@ -908,7 +908,7 @@ dateadd(datetime("2020-03-01"), 2, day)`))),
 (0,emotion_react_browser_esm.jsx)("h4", null, (0,TranslatorSingleton.t)('Syntax')),
 (0,emotion_react_browser_esm.jsx)("pre", null,
 (0,emotion_react_browser_esm.jsx)("code", null, `datetrunc([datetime], [dateunit])
-dateunit = (year | month | week)`)),
+dateunit = (year | quarter | month | week)`)),
 
 (0,emotion_react_browser_esm.jsx)("h4", null, (0,TranslatorSingleton.t)('Example')),
 (0,emotion_react_browser_esm.jsx)("pre", null,
