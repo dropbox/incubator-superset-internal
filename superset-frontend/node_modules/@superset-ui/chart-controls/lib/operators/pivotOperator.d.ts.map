@@ -1,0 +1,1 @@
+{"version":3,"file":"pivotOperator.d.ts","sourceRoot":"","sources":["../../src/operators/pivotOperator.ts"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;;;;;GAiBG;AACH,OAAO,EAAiC,mBAAmB,EAAE,MAAM,mBAAmB,CAAC;AACvF,OAAO,EAAE,qBAAqB,EAAE,MAAM,SAAS,CAAC;AAIhD,eAAO,MAAM,aAAa,EAAE,qBAAqB,CAAC,mBAAmB,GAAG,SAAS,CAwBhF,CAAC"}

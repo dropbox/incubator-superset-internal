@@ -1,0 +1,34 @@
+"use strict";
+
+exports.__esModule = true;
+exports.PAGE_SIZE_OPTIONS = void 0;
+
+var _chartControls = require("@superset-ui/chart-controls");
+
+var _core = require("@superset-ui/core");
+
+var _i18n = _interopRequireDefault(require("./i18n"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+(0, _core.addLocaleData)(_i18n.default);
+const PAGE_SIZE_OPTIONS = (0, _chartControls.formatSelectOptions)([[0, (0, _core.t)('page_size.all')], 10, 20, 50, 100, 200]);
+exports.PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
