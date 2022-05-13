@@ -27,11 +27,6 @@ import { FormLabel } from 'src/components/Form';
 
 export const options = [
   [0, t("Don't refresh")],
-  [10, t('10 seconds')],
-  [30, t('30 seconds')],
-  [60, t('1 minute')],
-  [300, t('5 minutes')],
-  [1800, t('30 minutes')],
   [3600, t('1 hour')],
   [21600, t('6 hours')],
   [43200, t('12 hours')],

@@ -168,11 +168,6 @@ describe('RefreshIntervalModal - RTL', () => {
 
     // Assert that all the other options exist
     const options = [
-      screen.getByText(/10 seconds/i),
-      screen.getByText(/30 seconds/i),
-      screen.getByText(/1 minute/i),
-      screen.getByText(/5 minutes/i),
-      screen.getByText(/30 minutes/i),
       screen.getByText(/1 hour/i),
       screen.getByText(/6 hours/i),
       screen.getByText(/12 hours/i),
@@ -191,12 +186,12 @@ describe('RefreshIntervalModal - RTL', () => {
     const selectedValue = screen.getByText(/don't refresh/i);
     expect(selectedValue.title).toMatch(/don't refresh/i);
 
-    // Display options and select "10 seconds"
+    // Display options and select "1 hour"
     await displayOptions();
-    userEvent.click(screen.getByText(/10 seconds/i));
+    userEvent.click(screen.getByText(/1 hour/i));
 
-    // Selected value should now be "10 seconds"
-    expect(selectedValue.title).toMatch(/10 seconds/i);
+    // Selected value should now be "1 hour"
+    expect(selectedValue.title).toMatch(/1 hour/i);
     expect(selectedValue.title).not.toMatch(/don't refresh/i);
   });
 
@@ -207,12 +202,12 @@ describe('RefreshIntervalModal - RTL', () => {
 
     screen.logTestingPlaygroundURL();
     // Select a new interval and click save
-    userEvent.click(screen.getByText(/10 seconds/i));
+    userEvent.click(screen.getByText(/1 hour/i));
     userEvent.click(screen.getByRole('button', { name: /save/i }));
 
     expect(editModeOnProps.setRefreshFrequency).toHaveBeenCalled();
     expect(editModeOnProps.setRefreshFrequency).toHaveBeenCalledWith(
-      10,
+      3600,
       editModeOnProps.editMode,
     );
     expect(editModeOnProps.addSuccessToast).toHaveBeenCalled();
@@ -230,7 +225,7 @@ describe('RefreshIntervalModal - RTL', () => {
     await openRefreshIntervalModal();
     await displayOptions();
 
-    userEvent.click(screen.getByText(/30 seconds/i));
+    userEvent.click(screen.getByText(/1 hour/i));
     userEvent.click(screen.getByRole('button', { name: /save/i }));
 
     // screen.debug(screen.getByRole('alert'));
