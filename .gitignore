@@ -58,6 +58,7 @@ superset.egg-info/
 superset/bin/supersetc
 tmp
 rat-results.txt
+
 # Ignore package-lock in packages
 plugins/*/package-lock.json
 packages/*/package-lock.json
