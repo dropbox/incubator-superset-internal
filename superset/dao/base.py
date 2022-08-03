@@ -22,6 +22,7 @@ from flask_appbuilder.models.sqla import Model
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError, StatementError
 from sqlalchemy.orm import Session
+import newrelic.agent
 
 from superset.dao.exceptions import (
     DAOConfigError,
@@ -55,16 +56,19 @@ class BaseDAO:
         """
         Find a model by id, if defined applies `base_filter`
         """
-        session = session or db.session
-        query = session.query(cls.model_cls)
-        if cls.base_filter:
-            data_model = SQLAInterface(cls.model_cls, session)
-            query = cls.base_filter(  # pylint: disable=not-callable
-                cls.id_column_name, data_model
-            ).apply(query, None)
-        id_filter = {cls.id_column_name: model_id}
+        with newrelic.agent.FunctionTrace("superset.dao.base.find_by_id.session", group="DAO"):
+            session = session or db.session
+        with newrelic.agent.FunctionTrace("superset.dao.base.find_by_id.query_contruction", group="DAO"):
+            query = session.query(cls.model_cls)
+            if cls.base_filter:
+                data_model = SQLAInterface(cls.model_cls, session)
+                query = cls.base_filter(  # pylint: disable=not-callable
+                    cls.id_column_name, data_model
+                ).apply(query, None)
+            id_filter = {cls.id_column_name: model_id}
         try:
-            return query.filter_by(**id_filter).one_or_none()
+            with newrelic.agent.FunctionTrace("superset.dao.base.find_by_id.query_execution", group="DAO"):
+                return query.filter_by(**id_filter).one_or_none()
         except StatementError:
             # can happen if int is passed instead of a string or similar
             return None
