@@ -16,9 +16,10 @@
 # under the License.
 # pylint: disable=arguments-renamed
 import logging
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING, Union
 
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, StatementError
+from sqlalchemy.orm import Session
 
 from superset.charts.filters import ChartFilter
 from superset.dao.base import BaseDAO
@@ -35,6 +36,20 @@ logger = logging.getLogger(__name__)
 class ChartDAO(BaseDAO):
     model_cls = Slice
     base_filter = ChartFilter
+
+    @classmethod
+    def find_by_id(
+        cls, model_id: Union[str, int], session: Session = None
+    ) -> Optional[Slice]:
+        """
+        Find a model by id, if defined applies `base_filter`
+        """
+        session = session or db.session
+        try:
+            return session.query(Slice).filter_by(id=model_id).one_or_none()
+        except StatementError:
+            # can happen if int is passed instead of a string or similar
+            return None
 
     @staticmethod
     def bulk_delete(models: Optional[List[Slice]], commit: bool = True) -> None:

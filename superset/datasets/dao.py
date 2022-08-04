@@ -15,10 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from flask import current_app
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, StatementError
+from sqlalchemy.orm import Session
 
 from superset.connectors.sqla.models import SqlaTable, SqlMetric, TableColumn
 from superset.dao.base import BaseDAO
@@ -34,6 +35,20 @@ logger = logging.getLogger(__name__)
 class DatasetDAO(BaseDAO):  # pylint: disable=too-many-public-methods
     model_cls = SqlaTable
     base_filter = DatasourceFilter
+
+    @classmethod
+    def find_by_id(
+        cls, model_id: Union[str, int], session: Session = None
+    ) -> Optional[SqlaTable]:
+        """
+        Find a model by id, if defined applies `base_filter`
+        """
+        session = session or db.session
+        try:
+            return session.query(SqlaTable).filter_by(id=model_id).one_or_none()
+        except StatementError:
+            # can happen if int is passed instead of a string or similar
+            return None
 
     @staticmethod
     def get_owner_by_id(owner_id: int) -> Optional[object]:
