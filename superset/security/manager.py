@@ -24,11 +24,13 @@ from typing import (
     Any,
     Callable,
     cast,
+    DefaultDict,
     Dict,
     List,
     NamedTuple,
     Optional,
     Set,
+    Tuple,
     TYPE_CHECKING,
     Union,
 )
@@ -40,9 +42,11 @@ from flask_appbuilder.security.sqla.manager import SecurityManager
 from flask_appbuilder.security.sqla.models import (
     assoc_permissionview_role,
     assoc_user_role,
+    Permission,
     PermissionView,
     Role,
     User,
+    ViewMenu,
 )
 from flask_appbuilder.security.views import (
     PermissionModelView,
@@ -56,7 +60,7 @@ from flask_login import AnonymousUserMixin, LoginManager
 from jwt.api_jwt import _jwt_global_obj
 from sqlalchemy import and_, or_
 from sqlalchemy.engine.base import Connection
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import joinedload, Session
 from sqlalchemy.orm.mapper import Mapper
 from sqlalchemy.orm.query import Query as SqlaQuery
 
@@ -1470,3 +1474,38 @@ class SupersetSecurityManager(  # pylint: disable=too-many-public-methods
             if str(resource["id"]) == str(dashboard.embedded[0].uuid):
                 return True
         return False
+
+    def get_permissions(
+        self,
+        user: User,
+    ) -> Tuple[Dict[str, List[List[str]]], DefaultDict[str, List[str]]]:
+        if not user.roles:
+            raise AttributeError("User object does not have roles")
+
+        roles = defaultdict(list)
+        permissions = defaultdict(set)
+
+        query = (
+            self.get_session.query(Role.name, Permission.name, ViewMenu.name)
+            .join(assoc_user_role, assoc_user_role.c.role_id == Role.id)
+            .join(Role.permissions)
+            .join(PermissionView.view_menu)
+            .join(PermissionView.permission)
+        )
+
+        if user.is_anonymous:
+            public_role = current_app.config.get("AUTH_ROLE_PUBLIC")
+            query = query.filter(Role.name == public_role)
+        else:
+            query = query.filter(assoc_user_role.c.user_id == user.id)
+
+        rows = query.all()
+        for role, permission, view_menu in rows:
+            if permission in ("datasource_access", "database_access"):
+                permissions[permission].add(view_menu)
+            roles[role].append([permission, view_menu])
+
+        transformed_permissions = defaultdict(list)
+        for perm in permissions:
+            transformed_permissions[perm] = list(permissions[perm])
+        return roles, transformed_permissions

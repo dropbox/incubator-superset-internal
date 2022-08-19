@@ -94,7 +94,7 @@ def bootstrap_user_data(user: User, include_perms: bool = False) -> Dict[str, An
         }
 
     if include_perms:
-        roles, permissions = get_permissions(user)
+        roles, permissions = security_manager.get_permissions(user)
         payload["roles"] = roles
         payload["permissions"] = permissions
 
