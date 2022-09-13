@@ -160,7 +160,7 @@ class Dashboard(BaseSupersetView):
         )
 
         bootstrap_data = {
-            "common": common_bootstrap_payload(),
+            "common": common_bootstrap_payload(g.user),
             "embedded": {"dashboard_id": dashboard_id_or_slug},
         }
 
