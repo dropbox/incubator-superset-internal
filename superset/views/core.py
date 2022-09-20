@@ -2763,7 +2763,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         payload = {
             "defaultDbId": config["SQLLAB_DEFAULT_DBID"],
             "common": common_bootstrap_payload(g.user),
-            **self._get_sqllab_tabs(get_user_id()),
+            **self._get_sqllab_tabs(g.user.get_user_id()),
         }
 
         form_data = request.form.get("form_data")
