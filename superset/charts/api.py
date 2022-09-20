@@ -126,6 +126,8 @@ class ChartRestApi(BaseSupersetModelRestApi):
         "slice_name",
         "viz_type",
         "query_context",
+        "dashboards.id",
+        "dashboards.dashboard_title",
         "is_managed_externally",
     ]
     show_select_columns = show_columns + ["table.id"]
@@ -166,6 +168,8 @@ class ChartRestApi(BaseSupersetModelRestApi):
         "thumbnail_url",
         "url",
         "viz_type",
+        "dashboards.id",
+        "dashboards.dashboard_title",
     ]
     list_select_columns = list_columns + ["changed_by_fk", "changed_on"]
     order_columns = [
