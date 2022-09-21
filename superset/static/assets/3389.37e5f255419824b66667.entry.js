@@ -838,4 +838,4 @@
   margin: auto ${2*e.gridUnit}px auto 0;
   color: ${e.colors.grayscale.base};
 `,O=e=>"object"==typeof e&&Array.isArray(e._schema)&&1===e._schema.length&&"Must provide a password for the database"===e._schema[0],M=e=>"string"==typeof e&&e.includes("already exists and `overwrite=true` was not passed"),I=e=>e.map((e=>Object.entries(e.extra).filter((([,e])=>O(e))).map((([e])=>e)))).flat(),k=e=>e.map((e=>Object.entries(e.extra).filter((([,e])=>M(e))).map((([e])=>e)))).flat(),N=e=>e.some((e=>{const t=Object.entries(e.extra).filter((([e])=>"issue_codes"!==e));return 0===t.length||!t.every((([,e])=>O(e)||M(e)))})),P=(e,t)=>void 0!==e&&o()(e,t).length>0,F=(e,t,n,a,o)=>{const i=(0,m.ZP)("can_this_form_get","CsvToDatabaseView",e)&&P(t,o),r=P(n,o)&&(0,m.ZP)("can_this_form_get","ColumnarToDatabaseView",e),s=P(a,o)&&(0,m.ZP)("can_this_form_get","ExcelToDatabaseView",e);return{canUploadCSV:i,canUploadColumnar:r,canUploadExcel:s,canUploadData:i||r||s}}}}]);
-//# sourceMappingURL=3389.71025547a96a71784626.entry.js.map
+//# sourceMappingURL=3389.37e5f255419824b66667.entry.js.map
