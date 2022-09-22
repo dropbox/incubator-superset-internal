@@ -120,7 +120,8 @@ export default function HeaderReportDropDown({
         perms => perms[0] === 'menu_access' && perms[1] === 'Manage',
       ),
     );
-    return permissions.some(permission => permission[0].length > 0);
+
+    return permissions.some(permission => permission.length > 0);
   };
 
   const [currentReportDeleting, setCurrentReportDeleting] =
