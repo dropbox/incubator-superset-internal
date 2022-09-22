@@ -119,8 +119,9 @@ export default function HeaderReportDropDown({
       user.roles[key].filter(
         perms => perms[0] === 'menu_access' && perms[1] === 'Manage',
       ),
-    );
-    return permissions[0].length > 0;
+    ).filter(permissions => permissions[0].length > 0);
+
+    return permissions.length > 0;
   };
 
   const [currentReportDeleting, setCurrentReportDeleting] =

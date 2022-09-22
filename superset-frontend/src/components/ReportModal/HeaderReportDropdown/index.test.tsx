@@ -58,7 +58,7 @@ const stateWithUserAndReport = {
       lastName: 'admin',
       permissions: {},
       createdOn: '2022-01-12T10:17:37.801361',
-      roles: { Admin: [['menu_access', 'Manage']] },
+      roles: { NonAdmin: [['no_menu_access', 'Manage']], Admin: [['menu_access', 'Manage']] },
       userId: 1,
       username: 'admin',
     },
