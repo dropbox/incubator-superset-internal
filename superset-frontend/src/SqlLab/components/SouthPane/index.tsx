@@ -140,17 +140,25 @@ export default function SouthPane({
       // get the latest query
       latestQuery = editorQueries.find(({ id }) => id === latestQueryId);
     }
+
+    console.log(latestQuery);
+
     let results;
     if (latestQuery) {
+      console.log(latestQuery);
+
       if (latestQuery?.extra?.errors) {
         latestQuery.errors = latestQuery.extra.errors;
       }
+
+      console.log(isFeatureEnabled(FeatureFlag.SQLLAB_BACKEND_PERSISTENCE))
       if (
         isFeatureEnabled(FeatureFlag.SQLLAB_BACKEND_PERSISTENCE) &&
         latestQuery.state === 'success' &&
         !latestQuery.resultsKey &&
         !latestQuery.results
       ) {
+        console.log("Here")
         results = (
           <Alert
             type="warning"
