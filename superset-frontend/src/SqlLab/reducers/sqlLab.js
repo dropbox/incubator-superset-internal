@@ -340,12 +340,6 @@ export default function sqlLabReducer(state = {}, action) {
         errorMessage: null,
         cached: false,
       };
-
-      const resultsKey = action?.results?.query?.resultsKey;
-      if (resultsKey) {
-        alts.resultsKey = resultsKey;
-      }
-
       return alterInObject(state, 'queries', action.query, alts);
     },
     [actions.QUERY_FAILED]() {
