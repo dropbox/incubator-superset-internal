@@ -151,14 +151,14 @@ export default function SouthPane({
         latestQuery.errors = latestQuery.extra.errors;
       }
 
-      console.log(isFeatureEnabled(FeatureFlag.SQLLAB_BACKEND_PERSISTENCE))
+      console.log(isFeatureEnabled(FeatureFlag.SQLLAB_BACKEND_PERSISTENCE));
       if (
         isFeatureEnabled(FeatureFlag.SQLLAB_BACKEND_PERSISTENCE) &&
         latestQuery.state === 'success' &&
         !latestQuery.resultsKey &&
         !latestQuery.results
       ) {
-        console.log("Here")
+        console.log('Here');
         results = (
           <Alert
             type="warning"

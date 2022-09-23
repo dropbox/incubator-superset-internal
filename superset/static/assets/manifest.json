@@ -13,10 +13,10 @@
     },
     "theme": {
       "css": [
-        "/static/assets/theme.91a5f59a6fe5fcf8fd7a.entry.css"
+        "/static/assets/theme.4639b060fd9b6a4b89fb.entry.css"
       ],
       "js": [
-        "/static/assets/theme.91a5f59a6fe5fcf8fd7a.entry.js"
+        "/static/assets/theme.4639b060fd9b6a4b89fb.entry.js"
       ]
     },
     "menu": {
@@ -148,7 +148,7 @@
     },
     "sqllab": {
       "css": [
-        "/static/assets/sqllab.ae5567997078fbdaacd6.entry.css"
+        "/static/assets/sqllab.5a54a5ca4a938fe44eef.entry.css"
       ],
       "js": [
         "/static/assets/vendors.57b36d6e3a2ad4b369c5.entry.js",
@@ -166,7 +166,7 @@
         "/static/assets/4113.a57f2982ca08c88b13db.entry.js",
         "/static/assets/2569.916c1cd39e37ed533a44.entry.js",
         "/static/assets/4593.d68c5ae37590aeca12f4.entry.js",
-        "/static/assets/sqllab.ae5567997078fbdaacd6.entry.js"
+        "/static/assets/sqllab.5a54a5ca4a938fe44eef.entry.js"
       ]
     },
     "profile": {
