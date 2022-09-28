@@ -84,6 +84,7 @@ class CacheManager:
             default_timeout = app.config.get("CACHE_DEFAULT_TIMEOUT")
             cache_config["CACHE_DEFAULT_TIMEOUT"] = default_timeout
 
+        logger.info(f"[zhaorui] cache config in dev mode: {cache_config}")
         cache.init_app(app, cache_config)
 
     def init_app(self, app: Flask) -> None:
