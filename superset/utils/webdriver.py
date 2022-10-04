@@ -138,10 +138,13 @@ class WebDriverProxy:
             img = element.screenshot_as_png
 
             # Check if there is any alert in the screenshot
+            logger.info("============= zhaorui test===============")
             logger.info("Check if there is any alert in the screenshot")
             alert_elements = \
                 EC.presence_of_all_elements_located((By.CLASS_NAME, "alert"))
             logger.info(alert_elements)
+            logger.info(type(alert_elements))
+            logger.info("=========================================")
 
         except TimeoutException:
             logger.warning("Selenium timed out requesting url %s", url, exc_info=True)
