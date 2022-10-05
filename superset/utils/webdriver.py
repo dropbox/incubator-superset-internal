@@ -137,65 +137,8 @@ class WebDriverProxy:
             sleep(selenium_animation_wait)
             logger.info("Taking a PNG screenshot of url %s", url)
 
-            # Check if there is any alert in the screenshot
-            logger.info("============= zhaorui test===============")
-            logger.info("Check if there is any alert in the screenshot")
-
-            logger.info("--------method 3: find See More elements directly----------")
-            try:
-                # Find alert divs
-                alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
-
-                logger.info(json.dumps(alert_divs))
-
-                if alert_divs:
-                    for alert_div in alert_divs:
-                        # "See More" button
-                        see_more_btn = alert_div.find_element(
-                            By.XPATH,
-                            "//*[@role = 'button']"
-                        )
-
-                        logger.info(f"See more button: {json.dumps(see_more_btn)}")
-                        see_more_btn.click()
-
-
-                        # err_message = driver.find_element(
-                        #     By.CLASS_NAME,
-                        #     "ant-modal-body")
-
-                        # logger.info("------------------------")
-                        # logger.info(driver.page_source)
-                        # logger.info("------------------------")
-                        sleep(30)
-                        driver.switch_to.default_content()
-                        err_message = driver.find_element(
-                            By.XPATH,
-                            "//div[@class = 'ant-modal-body'][last()]")
-                        logger.info(err_message.get_attribute("innerText"))
-                        driver.switch_to.default_content()
-                        # logger.info(driver.page_source)
-
-                        # err_message = WebDriverWait(driver, 30).until(
-                        #     EC.presence_of_element_located((By.CLASS_NAME,
-                        #                                     "ant-modal-body"))
-                        # )
-
-                        logger.info(err_message)
-                        logger.error(err_message.text)
-                        logger.error(err_message.get_attribute("innerText"))
-
-                        driver.execute_script(
-                            f"arguments[0].innterText = '{err_message.text}'",
-                            alert_div
-                        )
-
-
-            except:
-                logger.error("method 3 failed", exc_info=True)
-
-            logger.info("=========================================")
-
+            self.capture_unexpected_errors(driver)
+            
             img = element.screenshot_as_png
         except TimeoutException:
             logger.warning("Selenium timed out requesting url %s", url, exc_info=True)
@@ -210,3 +153,31 @@ class WebDriverProxy:
         finally:
             self.destroy(driver, current_app.config["SCREENSHOT_SELENIUM_RETRIES"])
         return img
+
+    def capture_unexpected_errors(self, driver: WebDriver):
+        logger.info("==========zhaorui test=================")
+        logger.info("locating unexpected errors")
+        try:
+            alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
+            logger.info(f"alert_divs: {alert_divs}")
+
+            for alert_div in alert_divs:
+                # See More button
+                logger.info(alert_div.get_attribute("innerHTML"))
+                see_more = alert_div.find_element(By.XPATH, "//*[@role = 'button']")
+                logger.info(see_more.get_attribute("innerHTML"))
+
+                see_more.click()
+
+                err_msg = "insert error message here."
+                driver.execute_script(
+                    f"arguments[0].innterText = '{err_msg}'",
+                    alert_div
+                )
+
+                modal = driver.find_element(By.XPATH, "//*[@role = 'dialog']")
+                logger.info(modal.get_attribute("innerHTML"))
+        except:
+            logger.error("Failed to capture unexpected errors", exc_info=True)
+
+        logger.info("=========================================================")
