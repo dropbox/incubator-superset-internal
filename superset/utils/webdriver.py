@@ -138,7 +138,7 @@ class WebDriverProxy:
             logger.info("Taking a PNG screenshot of url %s", url)
 
             self.capture_unexpected_errors(driver)
-            
+
             img = element.screenshot_as_png
         except TimeoutException:
             logger.warning("Selenium timed out requesting url %s", url, exc_info=True)
@@ -159,23 +159,24 @@ class WebDriverProxy:
         logger.info("locating unexpected errors")
         try:
             alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
-            logger.info(f"alert_divs: {alert_divs}")
+            #logger.info(f"alert_divs: {alert_divs}")
 
             for alert_div in alert_divs:
                 # See More button
-                logger.info(alert_div.get_attribute("innerHTML"))
-                see_more = alert_div.find_element(By.XPATH, "//*[@role = 'button']")
-                logger.info(see_more.get_attribute("innerHTML"))
+                logger.info(f"alert div ID: {alert_div.id}")
+                logger.info(f'alert_div: {alert_div.get_attribute("innerHTML")}')
+                see_more = alert_div.find_element(By.XPATH, ".//*[@role = 'button']")
+                logger.info(f'see_more: {see_more.get_attribute("innerHTML")}')
 
                 see_more.click()
 
                 err_msg = "insert error message here."
                 driver.execute_script(
                     f"arguments[0].innterText = '{err_msg}'",
-                    alert_div
+                    driver.find_element(By.ID, alert_div.id)
                 )
 
-                modal = driver.find_element(By.XPATH, "//*[@role = 'dialog']")
+                modal = driver.find_element(By.XPATH, "//*[@role = 'dialog'][last()]")
                 logger.info(modal.get_attribute("innerHTML"))
         except:
             logger.error("Failed to capture unexpected errors", exc_info=True)
