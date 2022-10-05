@@ -158,6 +158,10 @@ class WebDriverProxy:
                         logger.info(f"See more button: {see_more_btn}")
                         see_more_btn.click()
 
+                        err_message = driver.find_element(By.CLASS_NAME, "modal-body")
+                        logger.info(err_message)
+                        logger.error(err_message.text)
+
             except:
                 logger.error("method 3 failed", exc_info=True)
 
