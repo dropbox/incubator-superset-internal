@@ -173,7 +173,7 @@ class WebDriverProxy:
                 err_msg = "insert error message here."
                 driver.execute_script(
                     f"arguments[0].innterText = '{err_msg}'",
-                    driver.find_element(By.ID, alert_div.id)
+                    alert_div
                 )
 
                 modal = driver.find_element(By.XPATH, "//*[@role = 'dialog'][last()]")
