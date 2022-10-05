@@ -135,41 +135,34 @@ class WebDriverProxy:
             logger.debug("Wait %i seconds for chart animation", selenium_animation_wait)
             sleep(selenium_animation_wait)
             logger.info("Taking a PNG screenshot of url %s", url)
-            img = element.screenshot_as_png
 
             # Check if there is any alert in the screenshot
             logger.info("============= zhaorui test===============")
             logger.info("Check if there is any alert in the screenshot")
 
-            logger.info("--------method 1: wait for element----------")
+            logger.info("--------method 3: find See More elements directly----------")
             try:
-                alert_elements = WebDriverWait(driver, 20).until(
-                    EC.presence_of_all_elements_located((By.CLASS_NAME, "alert"))
-                )
-                logger.info(alert_elements)
-                logger.info(type(alert_elements))
-            except Exception as e:
-                logger.error("method 1 failed", e)
+                # Find alert divs
+                alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
 
-            logger.info("--------method 2: find elements directly----------")
-            try:
-                elements2 = driver.find_elements(By.CLASS_NAME, "alert")
-                try:
-                    for element in elements2:
-                        element.click()
-                except:
-                    try:
-                        element.click()
-                    except:
-                        pass
+                logger.info(alert_divs)
 
-                logger.info(elements2)
-                logger.info(type(elements2))
-            except Exception as e:
-                logger.error("method 2 failed", e)
+                if alert_divs:
+                    for alert_div in alert_divs:
+                        # "See More" button
+                        see_more_btn = alert_div.find_element(
+                            By.XPATH,
+                            "//*[@role = 'button']"
+                        )
+
+                        see_more_btn.click()
+
+            except:
+                logger.error("method 3 failed", exc_info=True)
 
             logger.info("=========================================")
 
+            img = element.screenshot_as_png
         except TimeoutException:
             logger.warning("Selenium timed out requesting url %s", url, exc_info=True)
         except StaleElementReferenceException:
