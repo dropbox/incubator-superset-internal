@@ -207,7 +207,7 @@ class WebDriverProxy:
                 err_msg = err_msg_div.text
                 try:
                     driver.execute_script(
-                        f"arguments[0].innerText = '{err_msg}'",
+                        f"arguments[0].innerHTML = '<p>{err_msg}<p>'",
                         alert_div
                     )
 
@@ -216,6 +216,7 @@ class WebDriverProxy:
                     logger.error("Failed to update error messages using alert_div",
                                  exc_info=True)
 
+                logger.info(f"source: {driver.page_source}")
                 # try:
                 #     driver.execute_script(
                 #         f"arguments[0].innerText = '{err_msg_div.text}'",
