@@ -201,7 +201,8 @@ class WebDriverProxy:
                 )
 
                 err_msg = err_msg_div.text
-                error_as_html = err_msg_div.get_attribute("innerHTML")
+                error_as_html = err_msg_div.get_attribute("innerHTML")\
+                    .replace("'", "\\'")
 
                 logger.info(f"Error message HTML: \n\n{error_as_html}\n\n")
                 try:
