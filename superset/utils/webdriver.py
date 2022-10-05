@@ -168,13 +168,13 @@ class WebDriverProxy:
 
             for alert_div in alert_divs:
 
-                data_test_chart_id = ""
-                data_test_chart_id_div = alert_div
-
-                while data_test_chart_id_div and not id:
-                    data_test_chart_id_div = data_test_chart_id_div.parent
-                    data_test_chart_id = \
-                        data_test_chart_id_div.get_attribute("data-test-chart-id")
+                # data_test_chart_id = ""
+                # data_test_chart_id_div = alert_div
+                #
+                # while data_test_chart_id_div and not id:
+                #     data_test_chart_id_div = data_test_chart_id_div.parent
+                #     data_test_chart_id = \
+                #         data_test_chart_id_div.get_attribute("data-test-chart-id")
 
                 # See More button
                 alert_div.find_element(By.XPATH, ".//*[@role = 'button']").click()
@@ -204,26 +204,29 @@ class WebDriverProxy:
                     EC.invisibility_of_element(modal)
                 )
 
+                err_msg = err_msg_div.text
                 try:
                     driver.execute_script(
-                        f"arguments[0].innerText = '{err_msg_div.text}'",
+                        f"arguments[0].innerText = '{err_msg}'",
                         alert_div
                     )
+
+                    logger.info(f"updating {alert_div} to {err_msg}")
                 except:
                     logger.error("Failed to update error messages using alert_div",
                                  exc_info=True)
 
-                try:
-                    driver.execute_script(
-                        f"arguments[0].innerText = '{err_msg_div.text}'",
-                        driver.find_element(
-                            By.XPATH,
-                            f"//*[@data-test-chart-id] = '{data_test_chart_id}'"
-                        ).find_element(".//div[@role = 'alert'")
-                    )
-                except:
-                    logger.error("Failed to update error messages using chart id",
-                                 exc_info=True)
+                # try:
+                #     driver.execute_script(
+                #         f"arguments[0].innerText = '{err_msg_div.text}'",
+                #         driver.find_element(
+                #             By.XPATH,
+                #             f"//*[@data-test-chart-id] = '{data_test_chart_id}'"
+                #         ).find_element(".//div[@role = 'alert'")
+                #     )
+                # except:
+                #     logger.error("Failed to update error messages using chart id",
+                #                  exc_info=True)
 
         except:
             logger.error("Failed to capture unexpected errors", exc_info=True)
