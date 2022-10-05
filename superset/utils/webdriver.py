@@ -159,8 +159,6 @@ class WebDriverProxy:
         logger.info("==========zhaorui test=================")
         logger.info("locating unexpected errors")
         error_messages = []
-        error_images = []
-        id_to_error = {}
 
         try:
             alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
@@ -168,15 +166,15 @@ class WebDriverProxy:
             logger.info(
                 f"{len(alert_divs)} alert elements have been found in the screenshot")
 
-            error_index = 0
             for alert_div in alert_divs:
 
-                id = ""
-                id_div = alert_div
+                data_test_chart_id = ""
+                data_test_chart_id_div = alert_div
 
-                while id_div and not id:
-                    id_div = id_div.find_element("..")
-                    id = alert_div.get_attribute("data-test-chart-id")
+                while data_test_chart_id_div and not id:
+                    data_test_chart_id_div = data_test_chart_id_div.parent
+                    data_test_chart_id = \
+                        data_test_chart_id_div.get_attribute("data-test-chart-id")
 
                 # See More button
                 alert_div.find_element(By.XPATH, ".//*[@role = 'button']").click()
@@ -211,7 +209,7 @@ class WebDriverProxy:
                         f"arguments[0].innerText = '{err_msg_div.text}'",
                         driver.find_element(
                             By.XPATH,
-                            "//*[@data-test-chart-id] = '{id}'"
+                            f"//*[@data-test-chart-id] = '{data_test_chart_id}'"
                         ).find_element(".//div[@role = 'alert'")
                     )
                 except:
