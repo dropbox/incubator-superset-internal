@@ -163,10 +163,16 @@ class WebDriverProxy:
                         #     By.CLASS_NAME,
                         #     "ant-modal-body")
 
-                        err_message = driver.find_element(
+                        logger.info("------------------------")
+                        logger.info(driver.page_source)
+                        logger.info("------------------------")
+                        modal = driver.switch_to.active_element
+                        
+                        err_message = modal.find_element(
                             By.XPATH,
-                            "//div[@class = 'ant-modal-body']")
-
+                            "//div[@class = 'ant-modal-body'][last()]")
+                        logger.info(err_message.get_attribute("innerText"))
+                        driver.switch_to.default_content()
                         # logger.info(driver.page_source)
 
                         # err_message = WebDriverWait(driver, 30).until(
