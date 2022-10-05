@@ -164,11 +164,11 @@ class WebDriverProxy:
                         #     "ant-modal-body")
 
                         err_message = driver.find_element(
-                            By.CLASS_NAME,
-                            "modal-body")
+                            By.XPATH,
+                            "//div[@class = 'ant-modal-body']")
 
-                        logger.info(driver.page_source)
-                        
+                        # logger.info(driver.page_source)
+
                         # err_message = WebDriverWait(driver, 30).until(
                         #     EC.presence_of_element_located((By.CLASS_NAME,
                         #                                     "ant-modal-body"))
