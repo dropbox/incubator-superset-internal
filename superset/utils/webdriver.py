@@ -161,13 +161,16 @@ class WebDriverProxy:
                         err_message = driver.find_element(By.CLASS_NAME, "modal-body")
                         logger.info(err_message)
                         logger.error(err_message.text)
-
+                        driver.execute_script(
+                            f"arguments[0].innterText = '{err_message.text}'",
+                            alert_div
+                        )
             except:
                 logger.error("method 3 failed", exc_info=True)
 
             logger.info("=========================================")
 
-            img = driver.get_screenshot_as_png()
+            img = element.screenshot_as_png
         except TimeoutException:
             logger.warning("Selenium timed out requesting url %s", url, exc_info=True)
         except StaleElementReferenceException:
