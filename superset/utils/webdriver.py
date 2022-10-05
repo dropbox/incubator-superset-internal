@@ -171,7 +171,7 @@ class WebDriverProxy:
         sleep(selenium_animation_wait)
         logger.info("Taking a PNG screenshot of url %s", url)
 
-        unexpected_errors = self.find_unexpected_errors(element)
+        unexpected_errors = self.find_unexpected_errors(driver)
 
         img = element.screenshot_as_png
 
