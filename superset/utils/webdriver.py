@@ -184,7 +184,7 @@ class WebDriverProxy:
                     EC.visibility_of_any_elements_located(
                         (By.CLASS_NAME, "ant-modal-content")
                     )
-                )
+                )[0]
 
                 err_msg_div = modal.find_element(By.CLASS_NAME, "ant-modal-body")
                 error_messages.append(err_msg_div.text)
@@ -207,13 +207,23 @@ class WebDriverProxy:
                 try:
                     driver.execute_script(
                         f"arguments[0].innerText = '{err_msg_div.text}'",
+                        alert_div
+                    )
+                except:
+                    logger.error("Failed to update error messages using alert_div",
+                                 exc_info=True)
+
+                try:
+                    driver.execute_script(
+                        f"arguments[0].innerText = '{err_msg_div.text}'",
                         driver.find_element(
                             By.XPATH,
                             f"//*[@data-test-chart-id] = '{data_test_chart_id}'"
                         ).find_element(".//div[@role = 'alert'")
                     )
                 except:
-                    logger.error("Failed to update error messages", exc_info=True)
+                    logger.error("Failed to update error messages using chart id",
+                                 exc_info=True)
 
         except:
             logger.error("Failed to capture unexpected errors", exc_info=True)
