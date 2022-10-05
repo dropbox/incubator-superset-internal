@@ -158,6 +158,9 @@ class WebDriverProxy:
     def capture_unexpected_errors(self, driver: WebDriver):
         logger.info("==========zhaorui test=================")
         logger.info("locating unexpected errors")
+        error_messages = []
+        error_images = []
+
         try:
             alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
             #logger.info(f"alert_divs: {alert_divs}")
@@ -171,9 +174,12 @@ class WebDriverProxy:
 
                 see_more.click()
 
+                # modal = driver.find_element(
+                #     By.XPATH,
+                #     "//*[@class = 'ant-modal-content'][last()]"
+                # )
 
-
-                modal = driver.find_element(By.XPATH, "//*[@role = 'dialog'][last()]")
+                modal = driver.find_elements(By.CLASS_NAME, "ant-modal-content")[-1]
                 logger.info(f'inner HTML: {modal.get_attribute("innerHTML")}')
                 logger.info(f'inner text: {modal.get_attribute("innerText")}')
                 logger.info(f'text: {modal.text}')
