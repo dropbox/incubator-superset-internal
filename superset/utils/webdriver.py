@@ -16,7 +16,6 @@
 # under the License.
 
 import logging
-import json
 from enum import Enum
 from time import sleep
 from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
@@ -35,11 +34,15 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from superset.extensions import machine_auth_provider_factory
 from superset.utils.retries import retry_call
-from superset.reports.commands.exceptions import ReportScheduleScreenshotUnexpectedErrors
 
 WindowSize = Tuple[int, int]
 logger = logging.getLogger(__name__)
 
+class ReportScheduleScreenshotUnexpectedErrors(Exception):
+    def __int__(self, num_errors: int, unexpected_errors: list[str]):
+        message = f"{num_errors} error(s) have been found in screenshot. Error messages" \
+                  f"are: {unexpected_errors}"
+        super().__init__(message)
 
 if TYPE_CHECKING:
     from flask_appbuilder.security.sqla.models import User
