@@ -174,18 +174,13 @@ class WebDriverProxy:
 
                 see_more.click()
 
-                # modal = driver.find_element(
-                #     By.XPATH,
-                #     "//*[@class = 'ant-modal-content'][last()]"
-                # )
-
+                # a new modal is appended to the end every time clicking on "See More"
                 modal = driver.find_elements(By.CLASS_NAME, "ant-modal-content")[-1]
-                logger.info(f'inner HTML: {modal.get_attribute("innerHTML")}')
-                logger.info(f'inner text: {modal.get_attribute("innerText")}')
-                logger.info(f'text: {modal.text}')
+                err_msg_div = modal.find_element(By.CLASS_NAME, "ant-modal-body")
+                error_messages.append(err_msg_div.text)
 
-                # close modal, otherwise it will be in the screenshot
-                modal.find_element(".//*[@aria-label = 'Close']").click()
+                # close modal after collecting error messages
+                modal.find_element(By.CLASS_NAME, "ant-modal-close").click()
 
                 # err_msg = "insert error message here."
                 # driver.execute_script(
@@ -196,4 +191,5 @@ class WebDriverProxy:
         except:
             logger.error("Failed to capture unexpected errors", exc_info=True)
 
+        logger.info(f"Errors: {error_messages}")
         logger.info("=========================================================")
