@@ -22,7 +22,7 @@ from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 
 from flask import current_app
 from selenium.common.exceptions import (
-    JavascriptException, StaleElementReferenceException,
+    StaleElementReferenceException,
     TimeoutException,
     WebDriverException,
 )
@@ -39,10 +39,11 @@ WindowSize = Tuple[int, int]
 logger = logging.getLogger(__name__)
 
 class ReportScheduleScreenshotUnexpectedErrors(Exception):
-    def __init__(self, num_errors: int, unexpected_errors: list[str]):
-        message = f"{num_errors} error(s) have been found in screenshot. Error messages" \
-                  f"are: {unexpected_errors}"
+    def __init__(self, unexpected_errors: list[str], screenshot_with_errors: bytes):
+        message = f"{len(unexpected_errors)} error(s) have been found in screenshot. " \
+                  f"Error messages are: {unexpected_errors}"
         super().__init__(message)
+        self.screenshot_with_errors = screenshot_with_errors
 
 if TYPE_CHECKING:
     from flask_appbuilder.security.sqla.models import User
@@ -121,30 +122,11 @@ class WebDriverProxy:
         sleep(selenium_headstart)
 
         try:
-            logger.info("Wait for the presence of %s", element_name)
-            element = WebDriverWait(driver, self._screenshot_locate_wait).until(
-                EC.presence_of_element_located((By.CLASS_NAME, element_name))
+            img = self.get_screenshot_attempt(
+                driver=driver,
+                url=url,
+                element_name=element_name,
             )
-            logger.info("Wait for .loading to be done")
-            WebDriverWait(driver, self._screenshot_load_wait).until_not(
-                EC.presence_of_all_elements_located((By.CLASS_NAME, "loading"))
-            )
-            logger.info("Wait for chart to have content")
-            WebDriverWait(driver, self._screenshot_locate_wait).until(
-                EC.visibility_of_all_elements_located(
-                    (By.CLASS_NAME, "slice_container")
-                )
-            )
-            selenium_animation_wait = current_app.config[
-                "SCREENSHOT_SELENIUM_ANIMATION_WAIT"
-            ]
-            logger.info("Wait %i seconds for chart animation", selenium_animation_wait)
-            sleep(selenium_animation_wait)
-            logger.info("Taking a PNG screenshot of url %s", url)
-
-            self.capture_unexpected_errors(driver)
-
-            img = element.screenshot_as_png
         except TimeoutException:
             logger.warning("Selenium timed out requesting url %s", url, exc_info=True)
         except StaleElementReferenceException:
@@ -155,17 +137,54 @@ class WebDriverProxy:
             )
         except WebDriverException as ex:
             logger.error(ex, exc_info=True)
-        except ReportScheduleScreenshotUnexpectedErrors:
+        except ReportScheduleScreenshotUnexpectedErrors as ex:
             logger.warning(
                 "Unexpected errors have been found in screenshot for url %s",
                 url,
                 exc_info=True)
+            # Update screenshot showing real errors
+            img = ex.screenshot_with_errors
         finally:
             self.destroy(driver, current_app.config["SCREENSHOT_SELENIUM_RETRIES"])
         return img
 
-    def capture_unexpected_errors(self, driver: WebDriver):
-        logger.info("==========zhaorui test=================")
+    def get_screenshot_attempt(self, driver: WebDriver, url: str, element_name: str) -> \
+    Optional[bytes]:
+        logger.info("Wait for the presence of %s", element_name)
+        element = WebDriverWait(driver, self._screenshot_locate_wait).until(
+            EC.presence_of_element_located((By.CLASS_NAME, element_name))
+        )
+        logger.info("Wait for .loading to be done")
+        WebDriverWait(driver, self._screenshot_load_wait).until_not(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "loading"))
+        )
+        logger.info("Wait for chart to have content")
+        WebDriverWait(driver, self._screenshot_locate_wait).until(
+            EC.visibility_of_all_elements_located(
+                (By.CLASS_NAME, "slice_container")
+            )
+        )
+        selenium_animation_wait = current_app.config[
+            "SCREENSHOT_SELENIUM_ANIMATION_WAIT"
+        ]
+        logger.info("Wait %i seconds for chart animation", selenium_animation_wait)
+        sleep(selenium_animation_wait)
+        logger.info("Taking a PNG screenshot of url %s", url)
+
+        unexpected_errors = self.find_unexpected_errors(element)
+
+        img = element.screenshot_as_png
+
+        if unexpected_errors:
+            raise ReportScheduleScreenshotUnexpectedErrors(
+                unexpected_errors=unexpected_errors,
+                screenshot_with_errors=img,
+            )
+
+        return img
+
+
+    def find_unexpected_errors(self, driver: WebDriver) -> list[str]:
         error_messages = []
 
         try:
@@ -194,35 +213,27 @@ class WebDriverProxy:
 
                 # wait until the modal becomes invisible
                 WebDriverWait(driver, 10).until(
-                    # EC.invisibility_of_element_located(
-                    #     (By.CLASS_NAME, "ant-modal-content")
-                    # )
                     EC.invisibility_of_element(modal)
                 )
 
-                err_msg = err_msg_div.text
-                error_as_html = err_msg_div.get_attribute("innerHTML")\
+                # err_msg = err_msg_div.text
+                error_as_html = err_msg_div.get_attribute("innerHTML") \
                     .replace("'", "\\'")
 
-                logger.info(f"Error message HTML: \n\n{error_as_html}\n\n")
+                # logger.info(f"Error message HTML: \n\n{error_as_html}\n\n")
                 try:
                     driver.execute_script(
                         f"arguments[0].innerHTML = '{error_as_html}'",
                         alert_div
                     )
-
-                    logger.info(f"updating {alert_div} to {err_msg}")
-                    logger.info(
-                        f'alert_div: \n{alert_div.get_attribute("innerHTML")}\n')
-                except JavascriptException:
+                    #
+                    # logger.info(f"updating {alert_div} to {err_msg}")
+                    # logger.info(
+                    #     f'alert_div: \n{alert_div.get_attribute("innerHTML")}\n')
+                except WebDriverException:
                     logger.error("Failed to update error messages using alert_div",
                                  exc_info=True)
-        except (TimeoutException, WebDriverException):
+        except WebDriverException:
             logger.error("Failed to capture unexpected errors", exc_info=True)
 
-        if error_messages:
-            raise ReportScheduleScreenshotUnexpectedErrors(
-                num_errors=len(error_messages),
-                unexpected_errors=error_messages,
-            )
-
+        return error_messages
