@@ -1116,6 +1116,9 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         schema_parsed = utils.parse_js_uri_path_item(schema, eval_undefined=True)
         substr_parsed = utils.parse_js_uri_path_item(substr, eval_undefined=True)
 
+        if not schema_parsed:
+            return json_error_response(_("Schema undefined"), status=422)
+
         if schema_parsed:
             tables = [
                 utils.DatasourceName(*datasource_name)
