@@ -205,6 +205,14 @@ class AlertQueryTimeout(CommandException):
 class ReportScheduleScreenshotTimeout(CommandException):
     message = _("A timeout occurred while taking a screenshot.")
 
+class ReportScheduleScreenshotUnexpectedErrors(ValidationError):
+    def __int__(self, num_errors: int, unexpected_errors: list[str]):
+        message = _("%(%num_errors) error(s) have been found in screenshot. "
+                    "Error messages are: %(unexpected_errors)",
+                    num_errors=num_errors,
+                    unexpected_errors=unexpected_errors,
+                    )
+        super().__init__([message], field_name="screenshot")
 
 class ReportScheduleCsvTimeout(CommandException):
     message = _("A timeout occurred while generating a csv.")

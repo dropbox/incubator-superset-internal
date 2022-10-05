@@ -23,7 +23,7 @@ from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 
 from flask import current_app
 from selenium.common.exceptions import (
-    StaleElementReferenceException,
+    JavascriptException, StaleElementReferenceException,
     TimeoutException,
     WebDriverException,
 )
@@ -35,6 +35,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from superset.extensions import machine_auth_provider_factory
 from superset.utils.retries import retry_call
+from superset.reports.commands.exceptions import ReportScheduleScreenshotUnexpectedErrors
 
 WindowSize = Tuple[int, int]
 logger = logging.getLogger(__name__)
@@ -151,31 +152,25 @@ class WebDriverProxy:
             )
         except WebDriverException as ex:
             logger.error(ex, exc_info=True)
+        except ReportScheduleScreenshotUnexpectedErrors:
+            logger.warning(
+                "Unexpected errors have been found in screenshot for url %s",
+                url,
+                exc_info=True)
         finally:
             self.destroy(driver, current_app.config["SCREENSHOT_SELENIUM_RETRIES"])
         return img
 
     def capture_unexpected_errors(self, driver: WebDriver):
         logger.info("==========zhaorui test=================")
-        logger.info("locating unexpected errors")
         error_messages = []
 
         try:
             alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
-            #logger.info(f"alert_divs: {alert_divs}")
             logger.info(
                 f"{len(alert_divs)} alert elements have been found in the screenshot")
 
             for alert_div in alert_divs:
-
-                # data_test_chart_id = ""
-                # data_test_chart_id_div = alert_div
-                #
-                # while data_test_chart_id_div and not id:
-                #     data_test_chart_id_div = data_test_chart_id_div.parent
-                #     data_test_chart_id = \
-                #         data_test_chart_id_div.get_attribute("data-test-chart-id")
-
                 # See More button
                 alert_div.find_element(By.XPATH, ".//*[@role = 'button']").click()
 
@@ -187,11 +182,9 @@ class WebDriverProxy:
                 )[0]
 
                 err_msg_div = modal.find_element(By.CLASS_NAME, "ant-modal-body")
-                error_messages.append(err_msg_div.text)
 
-                logger.info(
-                    f"{alert_div.get_attribute('data-test-chart-name')} :"
-                    f" {err_msg_div.text}")
+                # collect error message
+                error_messages.append(err_msg_div.text)
 
                 # close modal after collecting error messages
                 modal.find_element(By.CLASS_NAME, "ant-modal-close").click()
@@ -206,33 +199,27 @@ class WebDriverProxy:
 
                 err_msg = err_msg_div.text
                 error_as_html = err_msg_div.get_attribute("innerHTML")
+
+                logger.info("Error message HTML: \n%html\n", error_as_html)
                 try:
                     driver.execute_script(
-                        f"arguments[0].innerHTML = '{err_msg_div.text}'",
+                        f"arguments[0].innerHTML = '{error_as_html}'",
                         alert_div
                     )
 
                     logger.info(f"updating {alert_div} to {err_msg}")
                     logger.info(
                         f'alert_div: \n{alert_div.get_attribute("innerHTML")}\n')
-                except:
+                except JavascriptException:
                     logger.error("Failed to update error messages using alert_div",
                                  exc_info=True)
 
-                # try:
-                #     driver.execute_script(
-                #         f"arguments[0].innerText = '{err_msg_div.text}'",
-                #         driver.find_element(
-                #             By.XPATH,
-                #             f"//*[@data-test-chart-id] = '{data_test_chart_id}'"
-                #         ).find_element(".//div[@role = 'alert'")
-                #     )
-                # except:
-                #     logger.error("Failed to update error messages using chart id",
-                #                  exc_info=True)
-
-        except:
+        except (TimeoutException, WebDriverException):
             logger.error("Failed to capture unexpected errors", exc_info=True)
 
-        logger.info(f"Errors: {error_messages}")
-        logger.info("=========================================================")
+        if error_messages:
+            raise ReportScheduleScreenshotUnexpectedErrors(
+                num_errors=len(error_messages),
+                unexpected_errors=error_messages,
+            )
+
