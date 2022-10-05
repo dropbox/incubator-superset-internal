@@ -56,6 +56,7 @@ class WebDriverProxy:
         self._window: WindowSize = window or (800, 600)
         self._screenshot_locate_wait = current_app.config["SCREENSHOT_LOCATE_WAIT"]
         self._screenshot_load_wait = current_app.config["SCREENSHOT_LOAD_WAIT"]
+        self._screenshot_retries = 3
 
     def create(self) -> WebDriver:
         pixel_density = current_app.config["WEBDRIVER_WINDOW"].get("pixel_density", 1)
@@ -170,14 +171,22 @@ class WebDriverProxy:
 
                 see_more.click()
 
-                err_msg = "insert error message here."
-                driver.execute_script(
-                    f"arguments[0].innterText = '{err_msg}'",
-                    alert_div
-                )
+
 
                 modal = driver.find_element(By.XPATH, "//*[@role = 'dialog'][last()]")
-                logger.info(modal.get_attribute("innerHTML"))
+                logger.info(f'inner HTML: {modal.get_attribute("innerHTML")}')
+                logger.info(f'inner text: {modal.get_attribute("innerText")}')
+                logger.info(f'text: {modal.text}')
+
+                # close modal, otherwise it will be in the screenshot
+                modal.find_element(".//*[@aria-label = 'Close']").click()
+
+                # err_msg = "insert error message here."
+                # driver.execute_script(
+                #     f"arguments[0].innterText = '{err_msg}'",
+                #     alert_div
+                # )
+
         except:
             logger.error("Failed to capture unexpected errors", exc_info=True)
 
