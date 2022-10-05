@@ -39,7 +39,7 @@ WindowSize = Tuple[int, int]
 logger = logging.getLogger(__name__)
 
 class ReportScheduleScreenshotUnexpectedErrors(Exception):
-    def __int__(self, num_errors: int, unexpected_errors: list[str]):
+    def __init__(self, num_errors: int, unexpected_errors: list[str]):
         message = f"{num_errors} error(s) have been found in screenshot. Error messages" \
                   f"are: {unexpected_errors}"
         super().__init__(message)
