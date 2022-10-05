@@ -16,6 +16,7 @@
 # under the License.
 
 import logging
+import json
 from enum import Enum
 from time import sleep
 from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
@@ -145,7 +146,7 @@ class WebDriverProxy:
                 # Find alert divs
                 alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
 
-                logger.info(alert_divs)
+                logger.info(json.dumps(alert_divs))
 
                 if alert_divs:
                     for alert_div in alert_divs:
@@ -155,7 +156,7 @@ class WebDriverProxy:
                             "//*[@role = 'button']"
                         )
 
-                        logger.info(f"See more button: {see_more_btn}")
+                        logger.info(f"See more button: {json.dumps(see_more_btn)}")
                         see_more_btn.click()
 
 
@@ -163,12 +164,12 @@ class WebDriverProxy:
                         #     By.CLASS_NAME,
                         #     "ant-modal-body")
 
-                        logger.info("------------------------")
-                        logger.info(driver.page_source)
-                        logger.info("------------------------")
-                        modal = driver.switch_to.active_element
-                        
-                        err_message = modal.find_element(
+                        # logger.info("------------------------")
+                        # logger.info(driver.page_source)
+                        # logger.info("------------------------")
+                        sleep(30)
+                        driver.switch_to.default_content()
+                        err_message = driver.find_element(
                             By.XPATH,
                             "//div[@class = 'ant-modal-body'][last()]")
                         logger.info(err_message.get_attribute("innerText"))
