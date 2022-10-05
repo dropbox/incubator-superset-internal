@@ -175,7 +175,7 @@ class WebDriverProxy:
                 id_div = alert_div
 
                 while id_div and not id:
-                    id_div = id_div.parent
+                    id_div = id_div.find_element("..")
                     id = alert_div.get_attribute("data-test-chart-id")
 
                 # See More button
@@ -200,9 +200,10 @@ class WebDriverProxy:
 
                 # wait until the modal becomes invisible
                 WebDriverWait(driver, 10).until(
-                    EC.invisibility_of_element_located(
-                        (By.CLASS_NAME, "ant-modal-content")
-                    )
+                    # EC.invisibility_of_element_located(
+                    #     (By.CLASS_NAME, "ant-modal-content")
+                    # )
+                    EC.invisibility_of_element(modal)
                 )
 
                 try:
