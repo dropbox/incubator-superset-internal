@@ -179,9 +179,7 @@ class WebDriverProxy:
                     id = alert_div.get_attribute("data-test-chart-id")
 
                 # See More button
-                WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.XPATH, ".//*[@role = 'button']"))
-                ).click()
+                alert_div.find_element(By.XPATH, ".//*[@role = 'button']").click()
 
                 # wait for modal to show up
                 modal = WebDriverWait(driver, 10).until(
@@ -199,6 +197,13 @@ class WebDriverProxy:
 
                 # close modal after collecting error messages
                 modal.find_element(By.CLASS_NAME, "ant-modal-close").click()
+
+                # wait until the modal becomes invisible
+                WebDriverWait(driver, 10).until(
+                    EC.invisibility_of_element_located(
+                        (By.CLASS_NAME, "ant-modal-content")
+                    )
+                )
 
                 try:
                     driver.execute_script(
