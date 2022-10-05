@@ -176,11 +176,11 @@ class WebDriverProxy:
 
                 # wait for modal to show up
                 modal = WebDriverWait(driver, 10).until(
-                    EC.visibility_of_any_elements_located("ant-modal-content")
+                    EC.visibility_of_any_elements_located(
+                        (By.CLASS_NAME, "ant-modal-content")
+                    )
                 )
 
-                # a new modal is appended to the end every time clicking on "See More"
-                modal = driver.find_elements(By.CLASS_NAME, "ant-modal-content")[-1]
                 err_msg_div = modal.find_element(By.CLASS_NAME, "ant-modal-body")
                 error_messages.append(err_msg_div.text)
 
