@@ -141,24 +141,32 @@ class WebDriverProxy:
             logger.info("============= zhaorui test===============")
             logger.info("Check if there is any alert in the screenshot")
 
-            alert_elements = WebDriverWait(driver, 20).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME, "alert"))
-            )
-            logger.info(alert_elements)
-            logger.info(type(alert_elements))
-            logger.info("--------method 2----------")
-            elements2 = driver.find_elements(By.CLASS_NAME, "alert")
+            logger.info("--------method 1: wait for element----------")
             try:
-                for element in elements2:
-                    element.click()
-            except:
-                try:
-                    element.click()
-                except:
-                    pass
+                alert_elements = WebDriverWait(driver, 20).until(
+                    EC.presence_of_all_elements_located((By.CLASS_NAME, "alert"))
+                )
+                logger.info(alert_elements)
+                logger.info(type(alert_elements))
+            except Exception as e:
+                logger.error("method 1 failed", e)
 
-            logger.info(elements2)
-            logger.info(type(elements2))
+            logger.info("--------method 2: find elements directly----------")
+            try:
+                elements2 = driver.find_elements(By.CLASS_NAME, "alert")
+                try:
+                    for element in elements2:
+                        element.click()
+                except:
+                    try:
+                        element.click()
+                    except:
+                        pass
+
+                logger.info(elements2)
+                logger.info(type(elements2))
+            except Exception as e:
+                logger.error("method 2 failed", e)
 
             logger.info("=========================================")
 
