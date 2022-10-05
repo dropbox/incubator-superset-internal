@@ -160,6 +160,7 @@ class WebDriverProxy:
         logger.info("locating unexpected errors")
         error_messages = []
         error_images = []
+        id_to_error = {}
 
         try:
             alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
@@ -169,6 +170,14 @@ class WebDriverProxy:
 
             error_index = 0
             for alert_div in alert_divs:
+
+                id = ""
+                id_div = alert_div
+
+                while id_div and not id:
+                    id_div = id_div.parent
+                    id = alert_div.get_attribute("data-test-chart-id")
+
                 # See More button
                 WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable((By.XPATH, ".//*[@role = 'button']"))
@@ -184,13 +193,20 @@ class WebDriverProxy:
                 err_msg_div = modal.find_element(By.CLASS_NAME, "ant-modal-body")
                 error_messages.append(err_msg_div.text)
 
+                logger.info(
+                    f"{alert_div.get_attribute('data-test-chart-name')} :"
+                    f" {err_msg_div.text}")
+
                 # close modal after collecting error messages
                 modal.find_element(By.CLASS_NAME, "ant-modal-close").click()
 
                 try:
                     driver.execute_script(
                         f"arguments[0].innerText = '{err_msg_div.text}'",
-                        alert_div
+                        driver.find_element(
+                            By.XPATH,
+                            "//*[@data-test-chart-id] = '{id}'"
+                        ).find_element(".//div[@role = 'alert'")
                     )
                 except:
                     logger.error("Failed to update error messages", exc_info=True)
