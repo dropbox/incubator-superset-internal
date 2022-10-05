@@ -115,15 +115,15 @@ class WebDriverProxy:
         sleep(selenium_headstart)
 
         try:
-            logger.debug("Wait for the presence of %s", element_name)
+            logger.info("Wait for the presence of %s", element_name)
             element = WebDriverWait(driver, self._screenshot_locate_wait).until(
                 EC.presence_of_element_located((By.CLASS_NAME, element_name))
             )
-            logger.debug("Wait for .loading to be done")
+            logger.info("Wait for .loading to be done")
             WebDriverWait(driver, self._screenshot_load_wait).until_not(
                 EC.presence_of_all_elements_located((By.CLASS_NAME, "loading"))
             )
-            logger.debug("Wait for chart to have content")
+            logger.info("Wait for chart to have content")
             WebDriverWait(driver, self._screenshot_locate_wait).until(
                 EC.visibility_of_all_elements_located(
                     (By.CLASS_NAME, "slice_container")
@@ -132,7 +132,7 @@ class WebDriverProxy:
             selenium_animation_wait = current_app.config[
                 "SCREENSHOT_SELENIUM_ANIMATION_WAIT"
             ]
-            logger.debug("Wait %i seconds for chart animation", selenium_animation_wait)
+            logger.info("Wait %i seconds for chart animation", selenium_animation_wait)
             sleep(selenium_animation_wait)
             logger.info("Taking a PNG screenshot of url %s", url)
 
@@ -155,6 +155,7 @@ class WebDriverProxy:
                             "//*[@role = 'button']"
                         )
 
+                        logger.info(f"See more button: {see_more_btn}")
                         see_more_btn.click()
 
             except:
@@ -162,7 +163,7 @@ class WebDriverProxy:
 
             logger.info("=========================================")
 
-            img = element.screenshot_as_png
+            img = driver.get_screenshot_as_png()
         except TimeoutException:
             logger.warning("Selenium timed out requesting url %s", url, exc_info=True)
         except StaleElementReferenceException:
