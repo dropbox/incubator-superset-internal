@@ -203,7 +203,7 @@ class WebDriverProxy:
                 err_msg = err_msg_div.text
                 error_as_html = err_msg_div.get_attribute("innerHTML")
 
-                logger.info("Error message HTML: \n%html\n", error_as_html)
+                logger.info(f"Error message HTML: \n\n{error_as_html}\n\n")
                 try:
                     driver.execute_script(
                         f"arguments[0].innerHTML = '{error_as_html}'",
@@ -216,7 +216,6 @@ class WebDriverProxy:
                 except JavascriptException:
                     logger.error("Failed to update error messages using alert_div",
                                  exc_info=True)
-
         except (TimeoutException, WebDriverException):
             logger.error("Failed to capture unexpected errors", exc_info=True)
 
