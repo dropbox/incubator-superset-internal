@@ -158,19 +158,26 @@ class WebDriverProxy:
                         logger.info(f"See more button: {see_more_btn}")
                         see_more_btn.click()
 
+
                         # err_message = driver.find_element(
                         #     By.CLASS_NAME,
                         #     "ant-modal-body")
-                        #
-                        err_message = WebDriverWait(driver, 30).until(
-                            EC.presence_of_element_located((By.CLASS_NAME,
-                                                            "ant-modal-body"))
-                        )
+
+                        err_message = driver.find_element(
+                            By.CLASS_NAME,
+                            "modal-body")
+
+                        logger.info(driver.page_source)
+                        
+                        # err_message = WebDriverWait(driver, 30).until(
+                        #     EC.presence_of_element_located((By.CLASS_NAME,
+                        #                                     "ant-modal-body"))
+                        # )
 
                         logger.info(err_message)
                         logger.error(err_message.text)
                         logger.error(err_message.get_attribute("innerText"))
-                        logger.info(driver.page_source)
+
                         driver.execute_script(
                             f"arguments[0].innterText = '{err_message.text}'",
                             alert_div
