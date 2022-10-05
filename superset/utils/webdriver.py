@@ -164,15 +164,20 @@ class WebDriverProxy:
         try:
             alert_divs = driver.find_elements(By.XPATH, "//div[@role = 'alert']")
             #logger.info(f"alert_divs: {alert_divs}")
+            logger.info(
+                f"{len(alert_divs)} alert elements have been found in the screenshot")
 
+            error_index = 0
             for alert_div in alert_divs:
                 # See More button
-                logger.info(f"alert div ID: {alert_div.id}")
-                logger.info(f'alert_div: {alert_div.get_attribute("innerHTML")}')
-                see_more = alert_div.find_element(By.XPATH, ".//*[@role = 'button']")
-                logger.info(f'see_more: {see_more.get_attribute("innerHTML")}')
+                WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, ".//*[@role = 'button']"))
+                ).click()
 
-                see_more.click()
+                # wait for modal to show up
+                modal = WebDriverWait(driver, 10).until(
+                    EC.visibility_of_any_elements_located("ant-modal-content")
+                )
 
                 # a new modal is appended to the end every time clicking on "See More"
                 modal = driver.find_elements(By.CLASS_NAME, "ant-modal-content")[-1]
@@ -182,11 +187,13 @@ class WebDriverProxy:
                 # close modal after collecting error messages
                 modal.find_element(By.CLASS_NAME, "ant-modal-close").click()
 
-                # err_msg = "insert error message here."
-                # driver.execute_script(
-                #     f"arguments[0].innterText = '{err_msg}'",
-                #     alert_div
-                # )
+                try:
+                    driver.execute_script(
+                        f"arguments[0].innerText = '{err_msg_div.text}'",
+                        alert_div
+                    )
+                except:
+                    logger.error("Failed to update error messages", exc_info=True)
 
         except:
             logger.error("Failed to capture unexpected errors", exc_info=True)
