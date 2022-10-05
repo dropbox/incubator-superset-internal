@@ -140,10 +140,26 @@ class WebDriverProxy:
             # Check if there is any alert in the screenshot
             logger.info("============= zhaorui test===============")
             logger.info("Check if there is any alert in the screenshot")
-            alert_elements = \
+
+            alert_elements = WebDriverWait(driver, 20).until(
                 EC.presence_of_all_elements_located((By.CLASS_NAME, "alert"))
+            )
             logger.info(alert_elements)
             logger.info(type(alert_elements))
+            logger.info("--------method 2----------")
+            elements2 = driver.find_elements(By.CLASS_NAME, "alert")
+            try:
+                for element in elements2:
+                    element.click()
+            except:
+                try:
+                    element.click()
+                except:
+                    pass
+
+            logger.info(elements2)
+            logger.info(type(elements2))
+
             logger.info("=========================================")
 
         except TimeoutException:
