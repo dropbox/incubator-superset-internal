@@ -205,7 +205,7 @@ class WebDriverProxy:
                 )
 
                 err_msg = err_msg_div.text
-                error_as_html = alert_div.get_attribute("innerHTML")
+                error_as_html = err_msg_div.get_attribute("innerHTML")
                 try:
                     driver.execute_script(
                         f"arguments[0].innerHTML = '{error_as_html}'",
