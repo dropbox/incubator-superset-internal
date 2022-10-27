@@ -47,7 +47,6 @@ import {
 import setPeriodicRunner, {
   stopPeriodicRender,
 } from 'src/dashboard/util/setPeriodicRunner';
-import { options as PeriodicRefreshOptions } from 'src/dashboard/components/RefreshIntervalModal';
 import findPermission from 'src/dashboard/util/findPermission';
 import { FILTER_BOX_MIGRATION_STATES } from 'src/explore/constants';
 import { PageHeaderWithActions } from 'src/components/PageHeaderWithActions';
@@ -279,12 +278,17 @@ class Header extends React.PureComponent {
 
   startPeriodicRender(interval) {
     let intervalMessage;
+
     if (interval) {
-      const predefinedValue = PeriodicRefreshOptions.find(
-        option => option.value === interval / 1000,
+      const { dashboardInfo } = this.props;
+      const periodicRefreshOptions =
+        dashboardInfo.common?.conf?.DASHBOARD_AUTO_REFRESH_INTERVALS;
+      const predefinedValue = periodicRefreshOptions.find(
+        option => Number(option[0]) === interval / 1000,
       );
+
       if (predefinedValue) {
-        intervalMessage = predefinedValue.label;
+        intervalMessage = t(predefinedValue[1]);
       } else {
         intervalMessage = moment.duration(interval, 'millisecond').humanize();
       }
