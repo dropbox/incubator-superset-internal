@@ -1,0 +1,6 @@
+[console_scripts]
+superset = superset.cli.main:superset
+
+[sqlalchemy.dialects]
+postgres = sqlalchemy.dialects.postgresql:dialect
+postgres.psycopg2 = sqlalchemy.dialects.postgresql:dialect
