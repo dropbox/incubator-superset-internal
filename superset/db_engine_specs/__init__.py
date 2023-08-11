@@ -152,9 +152,11 @@ def get_available_engine_specs() -> Dict[Type[BaseEngineSpec], Set[str]]:
     # installed 3rd-party dialects
     for ep in iter_entry_points("sqlalchemy.dialects"):
         try:
+            logger.warning("Found module: %s", ep)
             dialect = ep.load()
+            logger.warning("loaded dialect: %s", dialect)
         except Exception as ex:  # pylint: disable=broad-except
-            logger.warning("Unable to load SQLAlchemy dialect %s: %s", dialect, ex)
+            logger.warning("Unable to load SQLAlchemy dialect %s: %s", ep, ex)
         else:
             backend = dialect.name
             if isinstance(backend, bytes):
