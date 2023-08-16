@@ -59,6 +59,7 @@ For test code please refer to `benchmark` directory.
 
 - **nodeclub** - A Node.js bbs using MongoDB - https://github.com/cnodejs/nodeclub
 - **cnpmjs.org** - Private npm registry and web for Enterprise - https://github.com/cnpm/cnpmjs.org
+- **cocalc.com** - Collaborative Calculation and Data Science - https://cocalc.com
 
 ## Install
 
@@ -193,6 +194,8 @@ var options = {
 ```
 
 For the default whitelist, please refer `xss.whiteList`.
+
+`allowList` is also supported, and has the same function as `whiteList`.
 
 ### Customize the handler function for matched tags
 
