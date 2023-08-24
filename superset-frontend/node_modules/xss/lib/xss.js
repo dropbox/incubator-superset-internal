@@ -60,11 +60,25 @@ function shallowCopyObject(obj) {
   return ret;
 }
 
+function keysToLowerCase(obj) {
+  var ret = {};
+  for (var i in obj) {
+    if (Array.isArray(obj[i])) {
+      ret[i.toLowerCase()] = obj[i].map(function (item) {
+        return item.toLowerCase();
+      });
+    } else {
+      ret[i.toLowerCase()] = obj[i];
+    }
+  }
+  return ret;
+}
+
 /**
  * FilterXSS class
  *
  * @param {Object} options
- *        whiteList, onTag, onTagAttr, onIgnoreTag,
+ *        whiteList (or allowList), onTag, onTagAttr, onIgnoreTag,
  *        onIgnoreTagAttr, safeAttrValue, escapeHtml
  *        stripIgnoreTagBody, allowCommentTag, stripBlankChar
  *        css{whiteList, onAttr, onIgnoreAttr} `css=false` means don't use `cssfilter`
@@ -80,8 +94,12 @@ function FilterXSS(options) {
     }
     options.onIgnoreTag = DEFAULT.onIgnoreTagStripAll;
   }
+  if (options.whiteList || options.allowList) {
+    options.whiteList = keysToLowerCase(options.whiteList || options.allowList);
+  } else {
+    options.whiteList = DEFAULT.whiteList;
+  }
 
-  options.whiteList = options.whiteList || DEFAULT.whiteList;
   options.onTag = options.onTag || DEFAULT.onTag;
   options.onTagAttr = options.onTagAttr || DEFAULT.onTagAttr;
   options.onIgnoreTag = options.onIgnoreTag || DEFAULT.onIgnoreTag;
@@ -134,7 +152,7 @@ FilterXSS.prototype.process = function (html) {
   // if enable stripIgnoreTagBody
   var stripIgnoreTagBody = false;
   if (options.stripIgnoreTagBody) {
-    var stripIgnoreTagBody = DEFAULT.StripTagBody(
+    stripIgnoreTagBody = DEFAULT.StripTagBody(
       options.stripIgnoreTagBody,
       onIgnoreTag
     );
@@ -148,7 +166,7 @@ FilterXSS.prototype.process = function (html) {
         sourcePosition: sourcePosition,
         position: position,
         isClosing: isClosing,
-        isWhite: whiteList.hasOwnProperty(tag),
+        isWhite: Object.prototype.hasOwnProperty.call(whiteList, tag),
       };
 
       // call `onTag()`
@@ -178,21 +196,21 @@ FilterXSS.prototype.process = function (html) {
             }
           } else {
             // call `onIgnoreTagAttr()`
-            var ret = onIgnoreTagAttr(tag, name, value, isWhiteAttr);
+            ret = onIgnoreTagAttr(tag, name, value, isWhiteAttr);
             if (!isNull(ret)) return ret;
             return;
           }
         });
 
         // build new tag html
-        var html = "<" + tag;
+        html = "<" + tag;
         if (attrsHtml) html += " " + attrsHtml;
         if (attrs.closing) html += " /";
         html += ">";
         return html;
       } else {
         // call `onIgnoreTag()`
-        var ret = onIgnoreTag(tag, html, info);
+        ret = onIgnoreTag(tag, html, info);
         if (!isNull(ret)) return ret;
         return escapeHtml(html);
       }
