@@ -178,7 +178,7 @@ export default function transformProps(
 
   const labelMap = Object.entries(label_map).reduce((acc, entry) => {
     if (
-      entry[1].length > groupby.length &&
+      entry[1].length > (groupby?.length || 0) &&
       Array.isArray(timeCompare) &&
       timeCompare.includes(entry[1][0])
     ) {
@@ -210,7 +210,7 @@ export default function transformProps(
     getMetricLabel,
   );
 
-  const isMultiSeries = groupby.length || metrics.length > 1;
+  const isMultiSeries = groupby?.length || metrics.length > 1;
 
   const [rawSeries, sortedTotalValues, minPositiveValue] = extractSeries(
     rebasedData,
