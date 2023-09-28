@@ -508,14 +508,13 @@ class PrestoBaseEngineSpec(BaseEngineSpec, metaclass=ABCMeta):
         }
 
         for col_name, value in zip(col_names, values):
-            col_type = column_type_by_name.get(col_name)
-
-            if isinstance(col_type, types.DATE):
-                col_type = Date()
-            elif isinstance(col_type, types.TIMESTAMP):
-                col_type = TimeStamp()
-
-            query = query.where(Column(col_name, col_type) == value)
+            if col_name in column_type_by_name:
+                if column_type_by_name.get(col_name) == "TIMESTAMP":
+                    query = query.where(Column(col_name, TimeStamp()) == value)
+                elif column_type_by_name.get(col_name) == "DATE":
+                    query = query.where(Column(col_name, Date()) == value)
+                else:
+                    query = query.where(Column(col_name) == value)
 
         return query
 
