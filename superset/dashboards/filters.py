@@ -109,17 +109,20 @@ class DashboardAccessFilter(BaseFilter):  # pylint: disable=too-few-public-metho
         if is_feature_enabled("DASHBOARD_RBAC"):
             is_rbac_disabled_filter.append(~dashboard_has_roles)
 
+        # See https://github.com/apache/superset/issues/25560 for more details.
+        datasource_perms = security_manager.user_view_menu_names("datasource_access")
+        schema_perms = security_manager.user_view_menu_names("schema_access")
+
         datasource_perm_query = (
             db.session.query(Dashboard.id)
             .join(Dashboard.slices, isouter=True)
-            .join(SqlaTable, Slice.datasource_id == SqlaTable.id)
-            .join(Database, SqlaTable.database_id == Database.id)
             .filter(
-                and_(
+                or_(
                     Dashboard.published.is_(True),
                     *is_rbac_disabled_filter,
-                    get_dataset_access_filters(
-                        Slice,
+                    or_(
+                        Slice.perm.in_(datasource_perms),
+                        Slice.schema_perm.in_(schema_perms),
                         security_manager.can_access_all_datasources(),
                     ),
                 )
