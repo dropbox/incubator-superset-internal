@@ -118,10 +118,10 @@ class DashboardAccessFilter(BaseFilter):  # pylint: disable=too-few-public-metho
                 and_(
                     Dashboard.published.is_(True),
                     *is_rbac_disabled_filter,
-                    get_dataset_access_filters(
+                    or_(get_dataset_access_filters(
                         Slice,
                         security_manager.can_access_all_datasources(),
-                    ),
+                    )),
                 )
             )
         )
