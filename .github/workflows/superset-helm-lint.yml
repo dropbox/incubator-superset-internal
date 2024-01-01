@@ -32,7 +32,7 @@ jobs:
         run: |
           changed=$(ct list-changed  --print-config)
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+            echo "changed=true" >> $GITHUB_ENV
           fi
         env:
           CT_CHART_DIRS: helm
