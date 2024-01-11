@@ -74,6 +74,8 @@ setup(
     },
     install_requires=[
         "backoff>=1.8.0",
+        "bleach>=3.0.2, <4.0.0",
+        "cachelib>=0.9.0,<0.10.0",
         "celery>=5.2.2, <6.0.0",
         "click>=8.0.3",
         "click-option-group",
@@ -102,7 +104,6 @@ setup(
         "Mako>=1.2.2",
         "markdown>=3.0",
         "msgpack>=1.0.0, <1.1",
-        "nh3>=0.2.11, <0.3",
         "numpy==1.23.5",
         "packaging",
         "pandas[performance]>=2.0.3, <2.1",

@@ -30,12 +30,15 @@ bcrypt==4.0.1
     # via paramiko
 billiard==3.6.4.0
     # via celery
+bleach==3.3.1
+    # via apache-superset
 bottleneck==1.3.7
     # via pandas
 brotli==1.0.9
     # via flask-compress
 cachelib==0.9.0
     # via
+    #   apache-superset
     #   flask-caching
     #   flask-session
 cattrs==23.2.1
@@ -143,9 +146,7 @@ geographiclib==1.52
 geopy==2.2.0
     # via apache-superset
 greenlet==2.0.2
-    # via
-    #   shillelagh
-    #   sqlalchemy
+    # via shillelagh
 gunicorn==21.2.0
     # via apache-superset
 hashids==1.3.1
@@ -211,8 +212,6 @@ mdurl==0.1.2
     # via markdown-it-py
 msgpack==1.0.2
     # via apache-superset
-nh3==0.2.11
-    # via apache-superset
 numba==0.57.1
     # via pandas
 numexpr==2.8.4
@@ -231,6 +230,7 @@ packaging==23.1
     # via
     #   apache-superset
     #   apispec
+    #   bleach
     #   deprecation
     #   gunicorn
     #   limits
@@ -316,6 +316,7 @@ simplejson==3.17.3
     # via apache-superset
 six==1.16.0
     # via
+    #   bleach
     #   click-repl
     #   isodate
     #   paramiko
@@ -367,6 +368,8 @@ vine==5.0.0
     #   kombu
 wcwidth==0.2.5
     # via prompt-toolkit
+webencodings==0.5.1
+    # via bleach
 werkzeug==2.3.3
     # via
     #   apache-superset
