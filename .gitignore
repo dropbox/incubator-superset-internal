@@ -13,7 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
+
+
 *.bak
 *.db
 *.pyc
@@ -36,15 +38,9 @@ cover
 .python-version
 .tox
 .vscode
-_build
-_images
-_modules
-_static
-build
 app.db
 apache_superset.egg-info/
 changelog.sh
-dist
 dump.rdb
 env
 venv*
@@ -59,26 +55,12 @@ superset/bin/supersetc
 tmp
 rat-results.txt
 superset/app/
-superset-websocket/config.json
 
-# Node.js, webpack artifacts, storybook
-*.entry.js
-*.js.map
-node_modules
-npm-debug.log*
-superset-frontend/**/storybook-static/*
-yarn-error.log
-*.map
-*.min.js
-test-changelog.md
-*.tsbuildinfo
 
 # Ignore package-lock in packages
 plugins/*/package-lock.json
 packages/*/package-lock.json
 
-
-yarn-error.log
 # For country map geojson conversion script
 .ipynb_checkpoints/
 scripts/*.zip
