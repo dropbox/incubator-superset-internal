@@ -1,0 +1,10 @@
+export declare const PNG_SIGNATURE: number[];
+export declare const TYPE_IHDR = 1229472850;
+export declare const TYPE_IEND = 1229278788;
+export declare const TYPE_IDAT = 1229209940;
+export declare const TYPE_PLTE = 1347179589;
+export declare const TYPE_tRNS = 1951551059;
+export declare const TYPE_gAMA = 1732332865;
+export declare const COLOR_PALETTE = 1;
+export declare const COLOR_COLOR = 2;
+export declare const COLOR_ALPHA = 4;

@@ -1,0 +1,40 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.formatDate = formatDate;
+
+var _utils = require('../util/utils');
+
+/**
+ * A formatDate helper to format date using moment js with optional locale designation.
+ *
+ * @example
+ *      {{formatDate 'MM/DD/YYYY' date 'es'}}
+ *
+ * @param {string} formatString Based on moment.js.
+ * @param {Date} date
+ * @param {object} localeString Language or language-country locale string (or array of strings) available in https://github.com/moment/moment/tree/develop/locale .
+ * @returns {string}
+ */
+function formatDate(formatString, date, localeString) {
+  var moment = global.moment;
+
+  if (!moment) {
+    moment = require('moment/min/moment-with-locales');
+  }
+
+  formatString = (0, _utils.isString)(formatString) ? formatString : '';
+
+  if ((0, _utils.isString)(localeString) || (0, _utils.isArray)(localeString)) {
+    var localeMoment = moment(date || new Date());
+
+    localeMoment.locale(localeString);
+
+    return localeMoment.format(formatString);
+  }
+
+  // use global moment and format with default locale
+  return moment(date || new Date()).format(formatString);
+}
