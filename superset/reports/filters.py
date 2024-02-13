@@ -20,14 +20,21 @@ from flask_babel import lazy_gettext as _
 from sqlalchemy import or_
 from sqlalchemy.orm.query import Query
 
-from superset import db, security_manager
+from superset import app, db, security_manager
 from superset.reports.models import ReportSchedule
 from superset.views.base import BaseFilter
+
+
+config = app.config
 
 
 class ReportScheduleFilter(BaseFilter):  # pylint: disable=too-few-public-methods
     def apply(self, query: Query, value: Any) -> Query:
         if security_manager.can_access_all_datasources():
+            return query
+
+        # show reports and alerts to all users regardless ownership
+        if config["ALERT_REPORTS_READ_ONLY_FULL_ACCESS"]:
             return query
         owner_ids_query = (
             db.session.query(ReportSchedule.id)
