@@ -14,12 +14,14 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import logging
 from typing import Any, Optional, Union
 
 from sqlalchemy.engine.url import make_url, URL
 
 from superset.commands.database.exceptions import DatabaseInvalidError
 
+logger = logging.getLogger(__name__)
 
 def get_foreign_keys_metadata(
     database: Any,
@@ -64,19 +66,28 @@ def get_table_metadata(
     :return: Dict table metadata ready for API response
     """
     keys = []
+    logger.info("In get_table_metadata for %s.%s", schema_name, table_name)
+
     columns = database.get_columns(table_name, schema_name)
+    logger.info("Columns: %s", columns)
     primary_key = database.get_pk_constraint(table_name, schema_name)
+    logger.info("Primary key: %s", primary_key)
     if primary_key and primary_key.get("constrained_columns"):
         primary_key["column_names"] = primary_key.pop("constrained_columns")
         primary_key["type"] = "pk"
         keys += [primary_key]
     foreign_keys = get_foreign_keys_metadata(database, table_name, schema_name)
+    logger.info("Foreign keys: %s", foreign_keys)
     indexes = get_indexes_metadata(database, table_name, schema_name)
+    logger.info("indexes: %s", indexes)
     keys += foreign_keys + indexes
     payload_columns: list[dict[str, Any]] = []
     table_comment = database.get_table_comment(table_name, schema_name)
+    logger.info("table_comment: %s", table_comment)
     for col in columns:
+        logger.info("\tcol: %s", col)
         dtype = get_col_type(col)
+        logger.info("\tcol type: %s", dtype)
         payload_columns.append(
             {
                 "name": col["column_name"],
@@ -86,6 +97,7 @@ def get_table_metadata(
                 "comment": col.get("comment"),
             }
         )
+    logger.info("before returning")
     return {
         "name": table_name,
         "columns": payload_columns,

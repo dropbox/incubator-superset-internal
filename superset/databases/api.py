@@ -740,6 +740,7 @@ class DatabaseRestApi(BaseSupersetModelRestApi):
             table_info = get_table_metadata(database, table_name, schema_name)
         except SQLAlchemyError as ex:
             self.incr_stats("error", self.table_metadata.__name__)
+            logger.exception("Exception in table_metadata API.", exc_info=True)
             return self.response_422(error_msg_from_exception(ex))
         except SupersetException as ex:
             return self.response(ex.status, message=ex.message)
