@@ -515,6 +515,7 @@ class PrestoBaseEngineSpec(BaseEngineSpec, metaclass=ABCMeta):
             elif isinstance(col_type, types.TIMESTAMP):
                 col_type = TimeStamp()
 
+            logger.info("column name: %s, column type: %s, value: %s", col_name, col_type, value)
             query = query.where(Column(col_name, col_type) == value)
 
         return query
