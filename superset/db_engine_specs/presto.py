@@ -1277,6 +1277,20 @@ class PrestoEngineSpec(PrestoBaseEngineSpec):
 
                 return rows[0][0]
             except DatabaseError:  # not a VIEW
+                logger.exception(
+                    "Found database error while testing views for %s.%s",
+                    schema,
+                    table,
+                    exc_info=True,
+                )
+                return None
+            except:
+                logger.exception(
+                    "Found unknown error while testing views for %s.%s",
+                    schema,
+                    table,
+                    exc_info=True,
+                )
                 return None
 
     @classmethod
