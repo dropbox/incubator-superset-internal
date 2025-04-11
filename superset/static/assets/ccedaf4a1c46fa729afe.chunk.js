@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunksuperset=globalThis.webpackChunksuperset||[]).push([[4858],{154858:(e,n,t)=>{t.r(n),t.d(n,{default:()=>a});var r=t(667294);function s(){return s=Object.assign?Object.assign.bind():function(e){for(var n=1;n<arguments.length;n++){var t=arguments[n];for(var r in t)({}).hasOwnProperty.call(t,r)&&(e[r]=t[r])}return e},s.apply(null,arguments)}const a=e=>r.createElement("svg",s({xmlns:"http://www.w3.org/2000/svg",width:24,height:24,fill:"none"},e))}}]);
+//# sourceMappingURL=ccedaf4a1c46fa729afe.chunk.js.map
