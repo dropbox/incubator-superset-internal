@@ -15,175 +15,236 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-set -eo pipefail
 
-GITHUB_RELEASE_TAG_NAME="$1"
+set -euo pipefail
 
-SHA=$(git rev-parse HEAD)
-REPO_NAME="apache/superset"
+readonly REPO_NAME="apache/superset"
+readonly CACHE_DIR="/tmp/superset"
+readonly ARCHITECTURE_AMD64="linux/amd64"
+readonly ARCHITECTURE_ARM64="linux/arm64"
 
-if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-  REFSPEC=$(echo "${GITHUB_HEAD_REF}" | sed 's/[^a-zA-Z0-9]/-/g' | head -c 40)
-  PR_NUM=$(echo "${GITHUB_REF}" | sed 's:refs/pull/::' | sed 's:/merge::')
-  LATEST_TAG="pr-${PR_NUM}"
-elif [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
-  REFSPEC=$(echo "${GITHUB_REF}" | sed 's:refs/tags/::' | head -c 40)
-  LATEST_TAG="${REFSPEC}"
-else
-  REFSPEC=$(echo "${GITHUB_REF}" | sed 's:refs/heads/::' | sed 's/[^a-zA-Z0-9]/-/g' | head -c 40)
-  LATEST_TAG="${REFSPEC}"
-fi
+readonly GITHUB_RELEASE_TAG_NAME="${1:-}"
+readonly SHA=$(git rev-parse HEAD)
+readonly GITHUB_EVENT_NAME="${GITHUB_EVENT_NAME:-}"
+readonly GITHUB_HEAD_REF="${GITHUB_HEAD_REF:-}"
+readonly GITHUB_REF="${GITHUB_REF:-}"
+readonly GITHUB_ACTOR="${GITHUB_ACTOR:-unknown}"
+readonly TEST_ENV="${TEST_ENV:-false}"
 
+readonly DOCKERHUB_USER="${DOCKERHUB_USER:-}"
+readonly DOCKERHUB_TOKEN="${DOCKERHUB_TOKEN:-}"
 
-if [[ "${REFSPEC}" == "master" ]]; then
-  LATEST_TAG="master"
-fi
+log_info() {
+    echo "[INFO] $*" >&2
+}
 
-# get the latest release tag
-if [ -n "${GITHUB_RELEASE_TAG_NAME}" ]; then
-  output=$(source ./scripts/tag_latest_release.sh "${GITHUB_RELEASE_TAG_NAME}" --dry-run) || true
-  SKIP_TAG=$(echo "${output}" | grep "SKIP_TAG" | cut -d'=' -f2)
-  if [[ "${SKIP_TAG}" == "SKIP_TAG::false" ]]; then
-    LATEST_TAG="latest"
-  fi
-fi
+log_error() {
+    echo "[ERROR] $*" >&2
+}
 
-if [[ "${TEST_ENV}" == "true" ]]; then
-  # don't run the build in test environment
-  echo "LATEST_TAG is ${LATEST_TAG}"
-  exit 0
-fi
+log_debug() {
+    if [[ "${DEBUG:-false}" == "true" ]]; then
+        echo "[DEBUG] $*" >&2
+    fi
+}
 
+cleanup() {
+    local exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        log_error "Script failed with exit code $exit_code"
+    fi
+    exit $exit_code
+}
 
-cat<<EOF
-  Rolling with tags:
-  - ${REPO_NAME}:${SHA}
-  - ${REPO_NAME}:${REFSPEC}
-  - ${REPO_NAME}:${LATEST_TAG}
-EOF
+trap cleanup EXIT
 
-if [ -z "${DOCKERHUB_TOKEN}" ]; then
-  # Skip if secrets aren't populated -- they're only visible for actions running in the repo (not on forks)
-  echo "Skipping Docker push"
-  # By default load it back
-  DOCKER_ARGS="--load"
-  ARCHITECTURE_FOR_BUILD="linux/amd64 linux/arm64"
-else
-  # Login and push
-  docker logout
-  docker login --username "${DOCKERHUB_USER}" --password "${DOCKERHUB_TOKEN}"
-  DOCKER_ARGS="--push"
-  ARCHITECTURE_FOR_BUILD="linux/amd64,linux/arm64"
-fi
-set -x
+determine_tags() {
+    local refspec latest_tag
+    
+    case "${GITHUB_EVENT_NAME}" in
+        "pull_request")
+            refspec=$(echo "${GITHUB_HEAD_REF}" | sed 's/[^a-zA-Z0-9]/-/g' | head -c 40)
+            local pr_num=$(echo "${GITHUB_REF}" | sed 's:refs/pull/::' | sed 's:/merge::')
+            latest_tag="pr-${pr_num}"
+            ;;
+        "release")
+            refspec=$(echo "${GITHUB_REF}" | sed 's:refs/tags/::' | head -c 40)
+            latest_tag="${refspec}"
+            ;;
+        *)
+            refspec=$(echo "${GITHUB_REF}" | sed 's:refs/heads/::' | sed 's/[^a-zA-Z0-9]/-/g' | head -c 40)
+            latest_tag="${refspec}"
+            ;;
+    esac
 
-# for the dev image, it's ok to tag master as latest-dev
-# for production, we only want to tag the latest official release as latest
-if [ "${LATEST_TAG}" = "master" ]; then
-  DEV_TAG="${REPO_NAME}:latest-dev"
-else
-  DEV_TAG="${REPO_NAME}:${LATEST_TAG}-dev"
-fi
+    if [[ "${refspec}" == "master" ]]; then
+        latest_tag="master"
+    fi
 
-for BUILD_PLATFORM in $ARCHITECTURE_FOR_BUILD; do
-#
-# Build the dev image
-#
-docker buildx build --target dev \
-  $DOCKER_ARGS \
-  --cache-from=type=registry,ref=apache/superset:master-dev \
-  --cache-from=type=local,src=/tmp/superset \
-  --cache-to=type=local,ignore-error=true,dest=/tmp/superset \
-  -t "${REPO_NAME}:${SHA}-dev" \
-  -t "${REPO_NAME}:${REFSPEC}-dev" \
-  -t "${DEV_TAG}" \
-  --platform ${BUILD_PLATFORM} \
-  --label "sha=${SHA}" \
-  --label "built_at=$(date)" \
-  --label "target=dev" \
-  --label "build_actor=${GITHUB_ACTOR}" \
-  .
+    if [[ -n "${GITHUB_RELEASE_TAG_NAME}" ]]; then
+        if command -v ./scripts/tag_latest_release.sh >/dev/null 2>&1; then
+            local output
+            output=$(./scripts/tag_latest_release.sh "${GITHUB_RELEASE_TAG_NAME}" --dry-run 2>/dev/null || true)
+            local skip_tag=$(echo "${output}" | grep "SKIP_TAG" | cut -d'=' -f2 || echo "")
+            
+            if [[ "${skip_tag}" == "SKIP_TAG::false" ]]; then
+                latest_tag="latest"
+            fi
+        else
+            log_error "tag_latest_release.sh script not found"
+        fi
+    fi
 
-#
-# Build the "lean" image
-#
-docker buildx build --target lean \
-  $DOCKER_ARGS \
-  --cache-from=type=local,src=/tmp/superset \
-  --cache-to=type=local,ignore-error=true,dest=/tmp/superset \
-  -t "${REPO_NAME}:${SHA}" \
-  -t "${REPO_NAME}:${REFSPEC}" \
-  -t "${REPO_NAME}:${LATEST_TAG}" \
-  --platform ${BUILD_PLATFORM} \
-  --label "sha=${SHA}" \
-  --label "built_at=$(date)" \
-  --label "target=lean" \
-  --label "build_actor=${GITHUB_ACTOR}" \
-  .
+    echo "${refspec}" "${latest_tag}"
+}
 
-#
-# Build the "lean310" image
-#
-docker buildx build --target lean \
-  $DOCKER_ARGS \
-  --cache-from=type=local,src=/tmp/superset \
-  --cache-to=type=local,ignore-error=true,dest=/tmp/superset \
-  -t "${REPO_NAME}:${SHA}-py310" \
-  -t "${REPO_NAME}:${REFSPEC}-py310" \
-  -t "${REPO_NAME}:${LATEST_TAG}-py310" \
-  --platform ${BUILD_PLATFORM} \
-  --build-arg PY_VER="3.10-slim-bookworm"\
-  --label "sha=${SHA}" \
-  --label "built_at=$(date)" \
-  --label "target=lean310" \
-  --label "build_actor=${GITHUB_ACTOR}" \
-  .
+setup_docker() {
+    local docker_args architecture_list
+    
+    if [[ -z "${DOCKERHUB_TOKEN}" ]]; then
+        log_info "Skipping Docker push (no credentials provided)"
+        docker_args="--load"
+        architecture_list="${ARCHITECTURE_AMD64} ${ARCHITECTURE_ARM64}"
+    else
+        log_info "Setting up Docker authentication and push"
+        docker logout 2>/dev/null || true
+        
+        if ! docker login --username "${DOCKERHUB_USER}" --password "${DOCKERHUB_TOKEN}"; then
+            log_error "Docker login failed"
+            return 1
+        fi
+        
+        docker_args="--push"
+        architecture_list="${ARCHITECTURE_AMD64},${ARCHITECTURE_ARM64}"
+    fi
+    
+    echo "${docker_args}" "${architecture_list}"
+}
 
-#
-# Build the "lean39" image
-#
-docker buildx build --target lean \
-  $DOCKER_ARGS \
-  --cache-from=type=local,src=/tmp/superset \
-  --cache-to=type=local,ignore-error=true,dest=/tmp/superset \
-  -t "${REPO_NAME}:${SHA}-py39" \
-  -t "${REPO_NAME}:${REFSPEC}-py39" \
-  -t "${REPO_NAME}:${LATEST_TAG}-py39" \
-  --platform ${BUILD_PLATFORM} \
-  --build-arg PY_VER="3.9-slim-bullseye"\
-  --label "sha=${SHA}" \
-  --label "built_at=$(date)" \
-  --label "target=lean39" \
-  --label "build_actor=${GITHUB_ACTOR}" \
-  .
+build_docker_image() {
+    local target="$1"
+    local dockerfile="${2:-Dockerfile}"
+    local build_args="${3:-}"
+    local suffix="${4:-}"
+    local docker_args="$5"
+    local platform="$6"
+    local refspec="$7"
+    local latest_tag="$8"
+    
+    local image_tags=(
+        "${REPO_NAME}:${SHA}${suffix}"
+        "${REPO_NAME}:${refspec}${suffix}"
+        "${REPO_NAME}:${latest_tag}${suffix}"
+    )
+    
+    local tag_args=()
+    for tag in "${image_tags[@]}"; do
+        tag_args+=("-t" "${tag}")
+    done
+    
+    local cache_args=(
+        "--cache-from=type=local,src=${CACHE_DIR}"
+        "--cache-to=type=local,ignore-error=true,dest=${CACHE_DIR}"
+    )
+    
+    if [[ "${target}" == "dev" ]]; then
+        cache_args+=("--cache-from=type=registry,ref=apache/superset:master-dev")
+    elif [[ "${target}" == "websocket" ]]; then
+        cache_args+=("--cache-from=type=registry,ref=apache/superset:master-websocket")
+    elif [[ "${target}" == "dockerize" ]]; then
+        cache_args+=("--cache-from=type=registry,ref=apache/superset:dockerize")
+    fi
+    
+    local label_args=(
+        "--label" "sha=${SHA}"
+        "--label" "built_at=$(date -Iseconds)"
+        "--label" "target=${target}"
+        "--label" "build_actor=${GITHUB_ACTOR}"
+    )
+    
+    log_info "Building ${target} image for platform ${platform}"
+    log_debug "Tags: ${image_tags[*]}"
+    
+    local cmd=(
+        docker buildx build
+        ${docker_args}
+        "${cache_args[@]}"
+        "${tag_args[@]}"
+        --platform "${platform}"
+        "${label_args[@]}"
+    )
+    
+    if [[ -n "${target}" && "${target}" != "dockerize" ]]; then
+        cmd+=(--target "${target}")
+    fi
+    
+    if [[ -n "${build_args}" ]]; then
+        cmd+=(${build_args})
+    fi
+    
+    if [[ -n "${dockerfile}" && "${dockerfile}" != "Dockerfile" ]]; then
+        cmd+=(-f "${dockerfile}")
+    fi
+    
+    if [[ "${target}" == "websocket" ]]; then
+        cmd+=(superset-websocket)
+    else
+        cmd+=(.)
+    fi
+    
+    "${cmd[@]}"
+}
 
-#
-# Build the "websocket" image
-#
-docker buildx build \
-  $DOCKER_ARGS \
-  --cache-from=type=registry,ref=apache/superset:master-websocket \
-  -t "${REPO_NAME}:${SHA}-websocket" \
-  -t "${REPO_NAME}:${REFSPEC}-websocket" \
-  -t "${REPO_NAME}:${LATEST_TAG}-websocket" \
-  --platform ${BUILD_PLATFORM} \
-  --label "sha=${SHA}" \
-  --label "built_at=$(date)" \
-  --label "target=websocket" \
-  --label "build_actor=${GITHUB_ACTOR}" \
-  superset-websocket
+main() {
+    log_info "Starting Docker build process"
+    log_info "SHA: ${SHA}"
+    log_info "Event: ${GITHUB_EVENT_NAME}"
+    
+    local tag_info
+    tag_info=$(determine_tags)
+    read -r refspec latest_tag <<< "${tag_info}"
+    
+    log_info "REFSPEC: ${refspec}"
+    log_info "LATEST_TAG: ${latest_tag}"
+    
+    if [[ "${TEST_ENV}" == "true" ]]; then
+        log_info "Test environment detected, skipping actual build"
+        return 0
+    fi
+    
+    local docker_setup
+    docker_setup=$(setup_docker)
+    read -r docker_args architecture_list <<< "${docker_setup}"
+    
+    log_info "Rolling with tags:"
+    log_info "- ${REPO_NAME}:${SHA}"
+    log_info "- ${REPO_NAME}:${refspec}"
+    log_info "- ${REPO_NAME}:${latest_tag}"
+    
+    local dev_tag
+    if [[ "${latest_tag}" == "master" ]]; then
+        dev_tag="${REPO_NAME}:latest-dev"
+    else
+        dev_tag="${REPO_NAME}:${latest_tag}-dev"
+    fi
+    
+    for platform in ${architecture_list//,/ }; do
+        log_info "Building for platform: ${platform}"
+        
+        build_docker_image "dev" "Dockerfile" "" "-dev" "${docker_args}" "${platform}" "${refspec}" "${latest_tag}"
+        
+        build_docker_image "lean" "Dockerfile" "" "" "${docker_args}" "${platform}" "${refspec}" "${latest_tag}"
+        
+        build_docker_image "lean" "Dockerfile" "--build-arg PY_VER=3.10-slim-bookworm" "-py310" "${docker_args}" "${platform}" "${refspec}" "${latest_tag}"
+        
+        build_docker_image "lean" "Dockerfile" "--build-arg PY_VER=3.9-slim-bullseye" "-py39" "${docker_args}" "${platform}" "${refspec}" "${latest_tag}"
+        
+        build_docker_image "websocket" "" "" "-websocket" "${docker_args}" "${platform}" "${refspec}" "${latest_tag}"
+        
+        build_docker_image "dockerize" "dockerize.Dockerfile" "" "" "${docker_args}" "${platform}" "dockerize" "dockerize"
+    done
+    
+    log_info "Docker build process completed successfully"
+}
 
-#
-# Build the dockerize image
-#
-docker buildx build \
-  $DOCKER_ARGS \
-  --cache-from=type=registry,ref=apache/superset:dockerize \
-  -t "${REPO_NAME}:dockerize" \
-  --platform ${BUILD_PLATFORM} \
-  --label "sha=${SHA}" \
-  --label "built_at=$(date)" \
-  --label "build_actor=${GITHUB_ACTOR}" \
-  -f dockerize.Dockerfile \
-  .
-done
+main "$@"
