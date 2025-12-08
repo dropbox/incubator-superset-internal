@@ -48,7 +48,7 @@ def deliver_slack_msg(
         response = cast(
             SlackResponse,
             client.files_upload_v2(
-                channels=slack_channel, file=file, initial_comment=body, title=subject
+                channel=slack_channel, file=file, initial_comment=body, title=subject, filename="file"
             ),
         )
         assert response["file"], str(response)  # the uploaded file

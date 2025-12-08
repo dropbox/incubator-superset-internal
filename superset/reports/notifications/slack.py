@@ -183,12 +183,12 @@ Error: %(text)s
             # files_upload returns SlackResponse as we run it in sync mode.
             if files:
                 for file in files:
-                    client.files_upload(
-                        channels=channel,
+                    client.files_upload_v2(
+                        channel=channel,
                         file=file,
                         initial_comment=body,
                         title=title,
-                        filetype=file_type,
+                        filename=f"{title}.{file_type}",
                     )
             else:
                 client.chat_postMessage(channel=channel, text=body)
