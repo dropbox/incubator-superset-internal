@@ -51,6 +51,7 @@ def deliver_slack_msg(
                 channel=slack_channel, file=file, initial_comment=body, title=subject, filename="file"
             ),
         )
+        logger.info(response)
         assert response["file"], str(response)  # the uploaded file
     else:
         response = cast(
